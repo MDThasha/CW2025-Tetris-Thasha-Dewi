@@ -206,7 +206,6 @@ public class GuiController implements Initializable {
     public void bindScore(IntegerProperty scoreProperty) {
         scoreProperty.addListener((obs, oldVal, newVal) -> {
             double newSpeed = Math.max(100, 400 - (newVal.intValue() / 500) * 25);
-            //initial speed of 400ms increases by 25ms every 500 score increase, not less than 100ms
 
             javafx.application.Platform.runLater(() -> {
                 boolean wasRunning = timeLine != null &&
@@ -216,7 +215,7 @@ public class GuiController implements Initializable {
                 timeLine.getKeyFrames().setAll(new KeyFrame(
                         Duration.millis(newSpeed),
                         ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
-                )); //overwrite the initial speed dropping code with new speed
+                ));
 
                 if (wasRunning) timeLine.play();
             });
