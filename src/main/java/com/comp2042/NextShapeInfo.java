@@ -1,7 +1,7 @@
 package com.comp2042;
 
 public final class NextShapeInfo {
-//NOT SHOWING
+
     private final int[][] shape;
     private final int position;
 
