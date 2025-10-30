@@ -6,18 +6,14 @@ public class GameController implements InputEventListener {
 //CREATES BOARD
     private final GuiController viewGuiController;
 //MAKES UI AND LISTENS TO EVENT INPUTS
-    public GameController(GuiController c) {
-        viewGuiController = c;
-        board.createNewBrick();
-        viewGuiController.setEventListener(this);
-        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
-        viewGuiController.bindScore(board.getScore().scoreProperty());
-    //STORES GUI
-    //GETS 1ST BRICK
-    //SENDS ALL EVENTS TO THIS CLASS
-    //START DISPLAY
-    //BINDS SCORE TO GUI
-    }
+        public GameController(GuiController c) {
+            viewGuiController = c; // Store reference to GUI controller
+            board.createNewBrick(); // Generate and display the first brick
+            viewGuiController.setEventListener(this); // Register GameController as input listener
+            viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData()); // Initialize game display
+            viewGuiController.bindScore(board.getScore().scoreProperty()); // Link score logic to GUI score label
+        }
+
 
     @Override
     public DownData onDownEvent(MoveEvent event) { //TRIGGER WHEN BRICK MOVES DOWN

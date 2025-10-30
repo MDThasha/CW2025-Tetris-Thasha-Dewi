@@ -116,7 +116,7 @@ public class GuiController implements Initializable {
 // BRICK POSITIONS SET
 
         timeLine = new Timeline(new KeyFrame(
-                Duration.millis(400), //BRICK FALLS EVERY 400MS
+                Duration.millis(400), //INITIAL BRICK FALLS EVERY 400MS
                 ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
@@ -201,10 +201,31 @@ public class GuiController implements Initializable {
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
     }
-    //CONNECTS TO GAMECONTROLLER
-    public void bindScore(IntegerProperty integerProperty) {
+
+    //Edited this part, making bricks fall faster as score increases
+    public void bindScore(IntegerProperty scoreProperty) {
+        scoreProperty.addListener((obs, oldVal, newVal) -> {
+            double newSpeed = Math.max(100, 400 - (newVal.intValue() / 500) * 25);
+            //initial speed of 400ms increases by 25ms every 500 score increase, not less than 100ms
+
+            javafx.application.Platform.runLater(() -> {
+                boolean wasRunning = timeLine != null &&
+                        timeLine.getStatus() == javafx.animation.Animation.Status.RUNNING;
+
+                timeLine.stop();
+                timeLine.getKeyFrames().setAll(new KeyFrame(
+                        Duration.millis(newSpeed),
+                        ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
+                )); //overwrite the initial speed dropping code with new speed
+
+                if (wasRunning) timeLine.play();
+            });
+        });
     }
-    //CONNECTS TO BINDSCORE
+
+//Original Code
+//    public void bindScore(IntegerProperty integerProperty) {
+//    }
 
     public void gameOver() {
         timeLine.stop(); //STOPS GAME
