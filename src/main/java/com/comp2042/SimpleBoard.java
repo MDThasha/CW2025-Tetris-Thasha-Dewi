@@ -85,7 +85,7 @@ public class SimpleBoard implements Board {
     public boolean createNewBrick() {
         Brick currentBrick = brickGenerator.getBrick();
         brickRotator.setBrick(currentBrick);
-        currentOffset = new Point(4, 2); //CHANGED THE SPAWN LOCATION OF THE BRICKS TO BE HIGHER (originally was y:10)
+        currentOffset = new Point(4, 2);
         return MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
