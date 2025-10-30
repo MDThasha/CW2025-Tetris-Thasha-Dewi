@@ -30,3 +30,4 @@ public final class ViewData {
         return MatrixOperations.copy(nextBrickData);
     }
 }
+

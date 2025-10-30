@@ -14,7 +14,6 @@ public class GameController implements InputEventListener {
             viewGuiController.bindScore(board.getScore().scoreProperty()); // Link score logic to GUI score label
         }
 
-
     @Override
     public DownData onDownEvent(MoveEvent event) { //TRIGGER WHEN BRICK MOVES DOWN
         boolean canMove = board.moveBrickDown();

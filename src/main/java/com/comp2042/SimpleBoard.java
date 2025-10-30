@@ -117,7 +117,6 @@ public class SimpleBoard implements Board {
         return score;
     }
 
-
     @Override
     public void newGame() {
         currentGameMatrix = new int[width][height];
@@ -125,3 +124,4 @@ public class SimpleBoard implements Board {
         createNewBrick();
     }
 }
+

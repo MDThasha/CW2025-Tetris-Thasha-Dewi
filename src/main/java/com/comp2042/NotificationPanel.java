@@ -25,6 +25,7 @@ public class NotificationPanel extends BorderPane {
         score.setTextFill(Color.WHITE);
         setCenter(score);
 //UI OF NOTIFICATION PANEL OF ADD SCORE
+
     }
 
     public void showScore(ObservableList<Node> list) {

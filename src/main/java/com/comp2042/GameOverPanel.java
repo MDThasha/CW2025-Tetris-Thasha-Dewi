@@ -12,4 +12,5 @@ public class GameOverPanel extends BorderPane {
         setCenter(gameOverLabel);
     }
 //MAKES GAME OVER DISPLAY
+
 }

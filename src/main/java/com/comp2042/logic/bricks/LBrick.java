@@ -40,4 +40,5 @@ final class LBrick implements Brick {
     public List<int[][]> getShapeMatrix() {
         return MatrixOperations.deepCopyList(brickMatrix);
     }
+
 }

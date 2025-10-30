@@ -33,7 +33,7 @@ public class RandomBrickGenerator implements BrickGenerator {
         }
         return nextBricks.poll();
     }
-//CAN USE THE ABOVE TO SHOW UI OF NEXT BRICK
+
     @Override
     public Brick getNextBrick() {
         return nextBricks.peek();

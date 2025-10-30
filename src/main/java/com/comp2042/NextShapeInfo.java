@@ -18,3 +18,4 @@ public final class NextShapeInfo {
         return position;
     }
 }
+

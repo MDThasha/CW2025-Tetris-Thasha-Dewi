@@ -30,4 +30,5 @@ final class IBrick implements Brick {
         return MatrixOperations.deepCopyList(brickMatrix);
     }
 // Saves int getShapeMatrix without effecting others
+
 }
