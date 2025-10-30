@@ -28,7 +28,7 @@ public class Main extends Application {
         new GameController(c);
     }
 
-
+//TEST
     public static void main(String[] args) {
         launch(args);
     }
