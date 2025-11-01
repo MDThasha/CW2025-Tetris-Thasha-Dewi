@@ -13,6 +13,7 @@ import javafx.scene.Group;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -22,6 +23,8 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+
 
 public class GuiController implements Initializable {
 
@@ -50,6 +53,10 @@ public class GuiController implements Initializable {
     private final BooleanProperty isPause = new SimpleBooleanProperty();
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
+
+    @FXML private AnchorPane nextBrickContainer;
+
+    private Rectangle[][] nextBrickRects;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -116,11 +123,68 @@ public class GuiController implements Initializable {
 // BRICK POSITIONS SET
 
         timeLine = new Timeline(new KeyFrame(
-                Duration.millis(400), //INITIAL BRICK FALLS EVERY 400MS
+                Duration.millis(400), //BRICK FALLS EVERY 400MS
                 ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
+    }
+
+    //Next Shape info
+    public void showNextBrick(NextShapeInfo nextShapeInfo) {
+        if (nextShapeInfo == null || nextBrickContainer == null) return;
+
+        // Clear previous preview
+        nextBrickContainer.getChildren().clear();
+
+        int[][] shape = nextShapeInfo.getShape();
+        if (shape == null || shape.length == 0 || shape[0].length == 0) return;
+
+        // UI based on the brick
+        final int rows = shape.length;
+        final int cols = shape[0].length;
+        final double blockSize = BRICK_SIZE;
+        double containerWidth = nextBrickContainer.getWidth();
+        double containerHeight = nextBrickContainer.getHeight();
+        if (containerWidth <= 0) containerWidth = nextBrickContainer.getPrefWidth();
+        if (containerHeight <= 0) containerHeight = nextBrickContainer.getPrefHeight();
+
+        //validation just to make sure it works
+        if (containerWidth <= 0 || containerHeight <= 0) {
+            Platform.runLater(() -> showNextBrick(nextShapeInfo));
+            return;
+        }
+        // preview is centered
+        double totalWidth = cols * blockSize;
+        double totalHeight = rows * blockSize;
+        double startX = Math.max(0, (containerWidth - totalWidth) / 2.0);
+        double startY = Math.max(0, (containerHeight - totalHeight) / 2.0);
+
+        nextBrickRects = new Rectangle[rows][cols];
+
+        //Loopingg to add the colour to correct place for the correct next brick
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (shape[r][c] != 0) {
+                    Rectangle rect = new Rectangle(blockSize, blockSize);
+                    rect.setFill(getFillColor(shape[r][c]));
+                    rect.setArcWidth(6);
+                    rect.setArcHeight(6);
+                    rect.setStroke(Color.rgb(30, 30, 30, 0.5));
+                    rect.setStrokeWidth(1);
+
+                    double x = startX + c * blockSize;
+                    double y = startY + r * blockSize;
+                    rect.setLayoutX(x);
+                    rect.setLayoutY(y);
+
+                    nextBrickContainer.getChildren().add(rect);
+                    nextBrickRects[r][c] = rect;
+                } else {
+                    nextBrickRects[r][c] = null;
+                }
+            }
+        }
     }
 
     private Paint getFillColor(int i) { //COLOURS BRICK AT RANDOM
@@ -201,30 +265,10 @@ public class GuiController implements Initializable {
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
     }
-
-    //Edited this part, making bricks fall faster as score increases
-    public void bindScore(IntegerProperty scoreProperty) {
-        scoreProperty.addListener((obs, oldVal, newVal) -> {
-            double newSpeed = Math.max(100, 400 - (newVal.intValue() / 500) * 25);
-
-            javafx.application.Platform.runLater(() -> {
-                boolean wasRunning = timeLine != null &&
-                        timeLine.getStatus() == javafx.animation.Animation.Status.RUNNING;
-
-                timeLine.stop();
-                timeLine.getKeyFrames().setAll(new KeyFrame(
-                        Duration.millis(newSpeed),
-                        ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
-                ));
-
-                if (wasRunning) timeLine.play();
-            });
-        });
+    //CONNECTS TO GAMECONTROLLER
+    public void bindScore(IntegerProperty integerProperty) {
     }
-
-//Original Code
-//    public void bindScore(IntegerProperty integerProperty) {
-//    }
+    //CONNECTS TO BINDSCORE
 
     public void gameOver() {
         timeLine.stop(); //STOPS GAME

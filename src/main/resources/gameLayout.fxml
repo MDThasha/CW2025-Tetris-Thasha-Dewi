@@ -6,14 +6,27 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
+
+<?import javafx.scene.image.ImageView?>
 <Pane fx:controller="com.comp2042.GuiController"
-      xmlns:fx="http://javafx.com/fxml">
+           xmlns:fx="http://javafx.com/fxml">
+
     <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
     <BorderPane styleClass="gameBoard" fx:id="gameBoard">
         <center>
             <GridPane fx:id="gamePanel" hgap="1" vgap="1" layoutY="30" layoutX="40"/>
         </center>
     </BorderPane>
+
+    <VBox spacing="10" alignment="CENTER_RIGHT" styleClass="vbox" layoutX="700" layoutY="60">
+        <Label text="NEXT" styleClass="nextBrickLabel"/>
+
+        <!-- changed from GridPane to AnchorPane -->
+        <AnchorPane fx:id="nextBrickContainer"
+                    prefWidth="120" prefHeight="120"
+                    styleClass="nextBrick"
+                    VBox.vgrow="NEVER"/>
+    </VBox>
 
 
     <Group fx:id="groupNotification" layoutX="14" layoutY="203">
