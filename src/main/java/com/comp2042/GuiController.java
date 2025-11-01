@@ -269,7 +269,7 @@ public class GuiController implements Initializable {
     //Edited this part, making bricks fall faster as score increases
     public void bindScore(IntegerProperty scoreProperty) {
         scoreProperty.addListener((obs, oldVal, newVal) -> {
-            double newSpeed = Math.max(100, 400 - (newVal.intValue() / 450) * 25);
+            double newSpeed = Math.max(100, 400 - (newVal.intValue() / 500) * 25);
 
             javafx.application.Platform.runLater(() -> {
                 boolean wasRunning = timeLine != null &&
