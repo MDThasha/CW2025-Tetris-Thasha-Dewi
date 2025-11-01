@@ -140,7 +140,7 @@ public class GuiController implements Initializable {
         int[][] shape = nextShapeInfo.getShape();
         if (shape == null || shape.length == 0 || shape[0].length == 0) return;
 
-        // UI based on the brick
+        // UI based on the brick and the container in css ect
         final int rows = shape.length;
         final int cols = shape[0].length;
         final double blockSize = BRICK_SIZE;
@@ -266,7 +266,24 @@ public class GuiController implements Initializable {
         this.eventListener = eventListener;
     }
     //CONNECTS TO GAMECONTROLLER
-    public void bindScore(IntegerProperty integerProperty) {
+    //Edited this part, making bricks fall faster as score increases
+    public void bindScore(IntegerProperty scoreProperty) {
+        scoreProperty.addListener((obs, oldVal, newVal) -> {
+            double newSpeed = Math.max(100, 400 - (newVal.intValue() / 450) * 25);
+
+            javafx.application.Platform.runLater(() -> {
+                boolean wasRunning = timeLine != null &&
+                        timeLine.getStatus() == javafx.animation.Animation.Status.RUNNING;
+
+                timeLine.stop();
+                timeLine.getKeyFrames().setAll(new KeyFrame(
+                        Duration.millis(newSpeed),
+                        ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
+                ));
+
+                if (wasRunning) timeLine.play();
+            });
+        });
     }
     //CONNECTS TO BINDSCORE
 
