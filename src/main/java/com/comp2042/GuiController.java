@@ -24,6 +24,7 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 
 
 public class GuiController implements Initializable {
@@ -54,7 +55,11 @@ public class GuiController implements Initializable {
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
-    @FXML private AnchorPane nextBrickContainer;
+    @FXML
+    private AnchorPane nextBrickContainer;
+
+    @FXML
+    private Label scoreLabel;
 
     private Rectangle[][] nextBrickRects;
 
@@ -268,8 +273,9 @@ public class GuiController implements Initializable {
     //CONNECTS TO GAMECONTROLLER
     //Edited this part, making bricks fall faster as score increases
     public void bindScore(IntegerProperty scoreProperty) {
+        scoreLabel.textProperty().bind(scoreProperty.asString());
         scoreProperty.addListener((obs, oldVal, newVal) -> {
-            double newSpeed = Math.max(100, 400 - (newVal.intValue() / 450) * 25);
+            double newSpeed = Math.max(100, 400 - (newVal.intValue() / 500) * 25);
 
             javafx.application.Platform.runLater(() -> {
                 boolean wasRunning = timeLine != null &&

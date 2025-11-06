@@ -20,13 +20,18 @@
 
     <VBox spacing="10" alignment="CENTER_RIGHT" styleClass="vbox" layoutX="700" layoutY="60">
         <Label text="NEXT" styleClass="nextBrickLabel"/>
-
-        <!-- changed from GridPane to AnchorPane -->
         <AnchorPane fx:id="nextBrickContainer"
                     prefWidth="120" prefHeight="120"
                     styleClass="nextBrick"
                     VBox.vgrow="NEVER"/>
     </VBox>
+
+    <VBox fx:id="scoreContainer" styleClass="scoreBox" alignment="CENTER">
+        <Label text="SCORE" styleClass="ScoreTextLabel"/>
+        <Label fx:id="scoreLabel" text="0" styleClass="ScoreLabel"/>
+    </VBox>
+
+
 
 
     <Group fx:id="groupNotification" layoutX="14" layoutY="203">
