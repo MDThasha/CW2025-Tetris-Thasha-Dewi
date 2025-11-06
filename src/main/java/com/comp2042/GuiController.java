@@ -94,7 +94,6 @@ public class GuiController implements Initializable {
                 }
             }
         });
-        //FANCY UI FOR GAMEOVER PANNEL.... MAYBE CAN MOVE IT TO GAMEOVERPANEL FILE?
         gameOverPanel.setVisible(false);
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
@@ -125,7 +124,7 @@ public class GuiController implements Initializable {
         }
         brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
         brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
-// BRICK POSITIONS SET
+        //BRICK POSITIONS SET
 
         timeLine = new Timeline(new KeyFrame(
                 Duration.millis(400), //BRICK FALLS EVERY 400MS
@@ -270,8 +269,8 @@ public class GuiController implements Initializable {
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
     }
-    //CONNECTS TO GAMECONTROLLER
-    //Edited this part, making bricks fall faster as score increases
+
+    //Edited this part, making bricks fall faster as score increases and display score
     public void bindScore(IntegerProperty scoreProperty) {
         scoreLabel.textProperty().bind(scoreProperty.asString());
         scoreProperty.addListener((obs, oldVal, newVal) -> {
