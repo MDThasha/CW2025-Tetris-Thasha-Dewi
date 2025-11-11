@@ -1,7 +1,9 @@
 package com.comp2042;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -10,11 +12,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -26,42 +30,28 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 
-
 public class GuiController implements Initializable {
 
     private static final int BRICK_SIZE = 20;
 
-    @FXML
-    private GridPane gamePanel;
-
-    @FXML
-    private Group groupNotification;
-
-    @FXML
-    private GridPane brickPanel;
-
-    @FXML
-    private GameOverPanel gameOverPanel;
-
-    private Rectangle[][] displayMatrix;
-
-    private InputEventListener eventListener;
-
-    private Rectangle[][] rectangles;
-
-    private Timeline timeLine;
-
-    private final BooleanProperty isPause = new SimpleBooleanProperty();
-
-    private final BooleanProperty isGameOver = new SimpleBooleanProperty();
-
-    @FXML
-    private AnchorPane nextBrickContainer;
-
-    @FXML
-    private Label scoreLabel;
+    @FXML private GridPane gamePanel;
+    @FXML private Group groupNotification;
+    @FXML private GridPane brickPanel;
+    @FXML private GameOverPanel gameOverPanel;
+    @FXML private Rectangle blackScreen;
+    @FXML private AnchorPane nextBrickContainer;
+    @FXML private Label scoreLabel;
 
     private Rectangle[][] nextBrickRects;
+    private Rectangle[][] displayMatrix;
+    private InputEventListener eventListener;
+    private Rectangle[][] rectangles;
+    private Timeline timeLine;
+    private final BooleanProperty isPause = new SimpleBooleanProperty();
+    private final BooleanProperty isGameOver = new SimpleBooleanProperty();
+
+    private final Score score = new Score();        // current score
+    private final Score highScore = new Score();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -293,20 +283,41 @@ public class GuiController implements Initializable {
     //CONNECTS TO BINDSCORE
 
     public void gameOver() {
-        timeLine.stop(); //STOPS GAME
-        gameOverPanel.setVisible(true); //SHOW GAME OVER PANEL
+        timeLine.stop(); // Stop the game
+
+        int finalScore = 0;
+        try {
+            finalScore = Integer.parseInt(scoreLabel.getText());
+        } catch (NumberFormatException e) {
+            finalScore = 0;
+        }
+        // Show final score in Game Over panel
+        gameOverPanel.showGameOver(finalScore, 0);
+
+        // Fade in blackScreen done here as i made blackscreen behind the gameover text so it was easier to fade in animation here
+        blackScreen.setVisible(true);
+        FadeTransition fade = new FadeTransition(Duration.seconds(1), blackScreen);
+        fade.setFromValue(0.0);
+        fade.setToValue(0.7);
+        fade.play();
+
+
         isGameOver.setValue(Boolean.TRUE);
     }
+
 
     //START NEWGAME
     public void newGame(ActionEvent actionEvent) {
         timeLine.stop();
-        gameOverPanel.setVisible(false);
         eventListener.createNewGame();
         gamePanel.requestFocus();
         timeLine.play();
         isPause.setValue(Boolean.FALSE);
+
         isGameOver.setValue(Boolean.FALSE);
+        gameOverPanel.reset();
+        blackScreen.setVisible(false);
+        blackScreen.setOpacity(0.0);
     }
 
     public void pauseGame(ActionEvent actionEvent) {

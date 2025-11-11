@@ -2,16 +2,13 @@
     -fx-background-color: black;
 }
 
-
 .GContainer {
     -fx-background-image: url("background_image.png");
     -fx-background-size: cover;
     -fx-background-position: center;
 }
 
-
-
-/*ADDED THE NEXT BRICK CSS*/
+/*NEXT BRICK CSS*/
 .NBrickContainer {
     -fx-border-width: 4px;
     -fx-border-radius: 10px;
@@ -30,8 +27,9 @@
     -fx-font-size: 16px;
     -fx-text-fill: yellow;
 }
+/*NEXT BRICK CSS*/
 
-/* Score CSS */
+/* SCORE CSS */
 .scoreContainer {
     -fx-border-width: 4px;
     -fx-border-radius: 10px;
@@ -43,7 +41,9 @@
     -fx-alignment: center;
     -fx-padding: 6px;
 }
+/* SCORE CSS */
 
+/**CONTROLS CSS**/
 .NTextLabel {
     -fx-font-family: "Let's go Digital";
     -fx-font-size: 20px;
@@ -56,11 +56,11 @@
      -fx-text-fill: yellow;
  }
 
- .STextLabel {
-     -fx-font-family: "Let's go Digital";
-     -fx-font-size: 12px;
-     -fx-text-fill: yellow;
- }
+.STextLabel {
+ -fx-font-family: "Let's go Digital";
+ -fx-font-size: 12px;
+ -fx-text-fill: yellow;
+}
 
 .controlContainer {
     -fx-border-width: 4px;
@@ -73,6 +73,43 @@
     -fx-alignment: center;
     -fx-padding: 6px;
 }
+/**CONTROLS CSS**/
+
+/**GAMEOVER CSS**/
+.gameOverStyle {
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 48;
+    -fx-background-color: red;
+}
+
+.gameOverStyleWhite {
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 48;
+    -fx-text-fill: white;   /* only change text color */
+    -fx-background-color: transparent; /* remove red background */
+}
+
+.gameOverScoreStyle {
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 32;
+    -fx-text-fill: white;
+}
+
+.scoreDisplayGO {
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 24;
+    -fx-text-fill: white;
+}
+
+.HTextGO {
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 18;
+    -fx-text-fill: yellow;
+    -fx-opacity: 0.85;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+/**GAMEOVER CSS**/
 
 .gameBoard {
     -fx-border-color: linear-gradient(#2A5058, #61a2b1);
@@ -116,17 +153,4 @@
 .bonusStyle {
     -fx-font-size: 40px;
     -fx-font-weight: bold;
-}
-
-.gameOverStyle {
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 48;
-    -fx-background-color: red;
-}
-
-.scoreClass{
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 38;
-    -fx-fill: yellow;
-    -fx-text-fill: yellow;
 }

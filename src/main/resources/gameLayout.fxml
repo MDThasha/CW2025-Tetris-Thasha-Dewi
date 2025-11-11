@@ -8,6 +8,7 @@
 <?import java.net.URL?>
 <?import javafx.scene.image.ImageView?>
 
+<?import javafx.scene.shape.Rectangle?>
 <StackPane fx:controller="com.comp2042.GuiController"
            xmlns:fx="http://javafx.com/fxml"
            styleClass="root">
@@ -38,13 +39,6 @@
                               alignment="CENTER" />
                 </center>
             </BorderPane>
-
-            <Group fx:id="groupNotification" layoutX="7" layoutY="203">
-                <VBox alignment="CENTER">
-                    <GameOverPanel fx:id="gameOverPanel"/>
-                </VBox>
-            </Group>
-
 
             <VBox fx:id="SideP" alignment="TOP_LEFT" spacing="0">
                 <!-- NEXT section -->
@@ -91,11 +85,14 @@
                                 layoutX="-125" layoutY="-240"/>
                 </AnchorPane>
             </VBox>
-
-
         </AnchorPane>
-
     </HBox>
+
+    <Rectangle fx:id="blackScreen" fill="black" opacity="0" visible="false"
+               width="6000" height="6000"/>
+    <GameOverPanel fx:id="gameOverPanel" visible="false"/>
+
+
     <stylesheets>
         <URL value="@window_style.css"/>
     </stylesheets>
