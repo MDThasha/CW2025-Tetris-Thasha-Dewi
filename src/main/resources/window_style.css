@@ -1,22 +1,27 @@
 .root {
-    -fx-background-image: url("background_image.png");
+    -fx-background-color: black;
 }
 
+
+.GContainer {
+    -fx-background-image: url("background_image.png");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+}
+
+
+
 /*ADDED THE NEXT BRICK CSS*/
-.nextBrick {
+.NBrickContainer {
     -fx-border-width: 4px;
-    -fx-border-color: linear-gradient(#2A5058, #61a2b1);
     -fx-border-radius: 10px;
-    -fx-background-color: rgba(0, 0, 0, 0.35);
+    -fx-border-color: linear-gradient(#2A5058, #61a2b1);
     -fx-min-width: 120px;
     -fx-min-height: 120px;
     -fx-pref-width: 120px;
     -fx-pref-height: 120px;
     -fx-alignment: center;
     -fx-padding: 6px;
-
-    -fx-translate-x: -475px;
-    -fx-translate-y: -100px;
 }
 
 .nextBrickLabel {
@@ -24,49 +29,56 @@
     -fx-padding: 20px 0 0 0;
     -fx-font-size: 16px;
     -fx-text-fill: yellow;
-
-    -fx-translate-x: -555px;
-    -fx-translate-y: -65px;
 }
 
 /* Score CSS */
-.scoreBox {
+.scoreContainer {
     -fx-border-width: 4px;
-    -fx-border-color: linear-gradient(#2A5058, #61a2b1);
     -fx-border-radius: 10px;
-    -fx-background-color: rgba(0, 0, 0, 0.35);
-    -fx-background-radius: 10px
+    -fx-border-color: linear-gradient(#2A5058, #61a2b1);
     -fx-min-width: 120px;
     -fx-min-height: 80px;
     -fx-pref-width: 120px;
     -fx-pref-height: 80px;
     -fx-alignment: center;
     -fx-padding: 6px;
-
-    -fx-translate-x: 225px;
-    -fx-translate-y: 135px;
 }
 
-.ScoreTextLabel {
+.NTextLabel {
     -fx-font-family: "Let's go Digital";
     -fx-font-size: 20px;
     -fx-text-fill: yellow;
 }
 
-.ScoreLabel {
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 20px;
-    -fx-text-fill: yellow;
+.HTextLabel {
+     -fx-font-family: "Let's go Digital";
+     -fx-font-size: 25px;
+     -fx-text-fill: yellow;
+ }
+
+ .STextLabel {
+     -fx-font-family: "Let's go Digital";
+     -fx-font-size: 12px;
+     -fx-text-fill: yellow;
+ }
+
+.controlContainer {
+    -fx-border-width: 4px;
+    -fx-border-radius: 10px;
+    -fx-border-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-min-width: 120px;
+    -fx-min-height: 215px;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 215px;
+    -fx-alignment: center;
+    -fx-padding: 6px;
 }
 
 .gameBoard {
     -fx-border-color: linear-gradient(#2A5058, #61a2b1);
     -fx-border-width: 5px;
     -fx-border-radius: 10px;
-
     -fx-translate-y: 10px;
-
-
 }
 
 .ipad-dark-grey {
