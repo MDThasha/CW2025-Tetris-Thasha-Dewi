@@ -21,8 +21,8 @@ public class GameOverPanel extends StackPane {
 
     public GameOverPanel() {
         // Transparent overlay
-        overlay = new Rectangle();
-        overlay.setFill(Color.rgb(0, 0, 0, 0)); // start fully transparent
+        overlay = new Rectangle();overlay.setFill(Color.BLACK);
+        overlay.setOpacity(0); // start fully transparent
         overlay.widthProperty().bind(this.widthProperty());
         overlay.heightProperty().bind(this.heightProperty());
 
@@ -57,6 +57,13 @@ public class GameOverPanel extends StackPane {
 
     public void showGameOver(int score, int highScore) {
         setVisible(true);
+
+
+        // Fade in dark overlay
+        FadeTransition fade = new FadeTransition(Duration.seconds(1), overlay);
+        fade.setFromValue(0.0);
+        fade.setToValue(0.7);
+        fade.play();
 
         gameOverLabel.getStyleClass().remove("gameOverStyleWhite");
         if (!gameOverLabel.getStyleClass().contains("gameOverStyle")) {
@@ -111,7 +118,9 @@ public class GameOverPanel extends StackPane {
         }
 
         // Hide panel and overlay
+        overlay.setFill(Color.rgb(0, 0, 0, 0));
         setVisible(false);
+
 
     }
 

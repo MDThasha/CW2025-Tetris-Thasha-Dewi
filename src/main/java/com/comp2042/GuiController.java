@@ -1,9 +1,7 @@
 package com.comp2042;
 
-import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,13 +10,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -38,7 +34,6 @@ public class GuiController implements Initializable {
     @FXML private Group groupNotification;
     @FXML private GridPane brickPanel;
     @FXML private GameOverPanel gameOverPanel;
-    @FXML private Rectangle blackScreen;
     @FXML private AnchorPane nextBrickContainer;
     @FXML private Label scoreLabel;
 
@@ -293,15 +288,6 @@ public class GuiController implements Initializable {
         }
         // Show final score in Game Over panel
         gameOverPanel.showGameOver(finalScore, 0);
-
-        // Fade in blackScreen done here as i made blackscreen behind the gameover text so it was easier to fade in animation here
-        blackScreen.setVisible(true);
-        FadeTransition fade = new FadeTransition(Duration.seconds(1), blackScreen);
-        fade.setFromValue(0.0);
-        fade.setToValue(0.7);
-        fade.play();
-
-
         isGameOver.setValue(Boolean.TRUE);
     }
 
@@ -316,8 +302,6 @@ public class GuiController implements Initializable {
 
         isGameOver.setValue(Boolean.FALSE);
         gameOverPanel.reset();
-        blackScreen.setVisible(false);
-        blackScreen.setOpacity(0.0);
     }
 
     public void pauseGame(ActionEvent actionEvent) {
