@@ -5,12 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Main extends Application {
-
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -25,7 +23,7 @@ public class Main extends Application {
         primaryStage.setMinHeight(700);
         primaryStage.setMinWidth(500);
 
-        Scene scene = new Scene(root, 500, 700);
+        Scene scene = new Scene(root, 500, 700); // Window size when game starts
         primaryStage.setScene(scene);
         primaryStage.show();
         new GameController(c);
@@ -34,6 +32,4 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-
 }

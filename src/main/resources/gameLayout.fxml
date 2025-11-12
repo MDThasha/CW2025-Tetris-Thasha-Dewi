@@ -1,14 +1,10 @@
 <?import com.comp2042.GameOverPanel?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
 <?import java.net.URL?>
-<?import javafx.scene.image.ImageView?>
 
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.Group?>
 <StackPane fx:controller="com.comp2042.GuiController"
            xmlns:fx="http://javafx.com/fxml"
            styleClass="root">
@@ -91,7 +87,7 @@
     <Rectangle fx:id="blackScreen" fill="black" opacity="0" visible="false"
                width="6000" height="6000"/>
     <GameOverPanel fx:id="gameOverPanel" visible="false"/>
-
+    <Group fx:id="groupNotification" layoutX="7" layoutY="203"/>
 
     <stylesheets>
         <URL value="@window_style.css"/>

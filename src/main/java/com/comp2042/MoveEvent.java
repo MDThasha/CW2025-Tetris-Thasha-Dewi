@@ -12,9 +12,7 @@ public final class MoveEvent {
     public EventType getEventType() {
         return eventType;
     }
-
     public EventSource getEventSource() {
         return eventSource;
     }
-}
-//CARRIES WHAT EVEN CORROLATES TO MOVEMENT
+} // CARRIES WHAT EVEN CORRELATES TO MOVEMENT

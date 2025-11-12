@@ -1,7 +1,6 @@
 package com.comp2042;
 
 public final class ViewData {
-
     private final int[][] brickData;
     private final int xPosition;
     private final int yPosition;
@@ -17,15 +16,12 @@ public final class ViewData {
     public int[][] getBrickData() {
         return MatrixOperations.copy(brickData);
     }
-
     public int getxPosition() {
         return xPosition;
     }
-
     public int getyPosition() {
         return yPosition;
     }
-
     public int[][] getNextBrickData() {
         return MatrixOperations.copy(nextBrickData);
     }

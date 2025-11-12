@@ -13,7 +13,8 @@ import javafx.scene.effect.Glow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-public class NotificationPanel extends BorderPane {
+
+public class NotificationPanel extends BorderPane { // Animation and design of bonus score
 
     public NotificationPanel(String text) {
         setMinHeight(200);
@@ -24,8 +25,6 @@ public class NotificationPanel extends BorderPane {
         score.setEffect(glow);
         score.setTextFill(Color.WHITE);
         setCenter(score);
-//UI OF NOTIFICATION PANEL OF ADD SCORE
-
     }
 
     public void showScore(ObservableList<Node> list) {

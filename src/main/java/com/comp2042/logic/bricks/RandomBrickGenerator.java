@@ -7,12 +7,9 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomBrickGenerator implements BrickGenerator {
-
     private final List<Brick> brickList;
-
     private final Deque<Brick> nextBricks = new ArrayDeque<>();
-//Class to insert all bricks and rotations
-    public RandomBrickGenerator() {
+    public RandomBrickGenerator() { // Class to insert all bricks and rotations
         brickList = new ArrayList<>();
         brickList.add(new IBrick());
         brickList.add(new JBrick());
@@ -23,8 +20,7 @@ public class RandomBrickGenerator implements BrickGenerator {
         brickList.add(new ZBrick());
         nextBricks.add(brickList.get(ThreadLocalRandom.current().nextInt(brickList.size())));
         nextBricks.add(brickList.get(ThreadLocalRandom.current().nextInt(brickList.size())));
-        //Gets random 2 next brick as back up
-    }
+    } //Gets random 2 next brick as back up
 
     @Override
     public Brick getBrick() {

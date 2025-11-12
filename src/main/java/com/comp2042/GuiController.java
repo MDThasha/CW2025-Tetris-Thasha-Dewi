@@ -20,15 +20,12 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 
 public class GuiController implements Initializable {
-
-    private static final int BRICK_SIZE = 20;
 
     @FXML private GridPane gamePanel;
     @FXML private Group groupNotification;
@@ -37,6 +34,7 @@ public class GuiController implements Initializable {
     @FXML private AnchorPane nextBrickContainer;
     @FXML private Label scoreLabel;
 
+    private static final int BRICK_SIZE = 20;
     private Rectangle[][] nextBrickRects;
     private Rectangle[][] displayMatrix;
     private InputEventListener eventListener;
@@ -45,40 +43,42 @@ public class GuiController implements Initializable {
     private final BooleanProperty isPause = new SimpleBooleanProperty();
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
-    private final Score score = new Score();        // current score
-    private final Score highScore = new Score();
-
-    @Override
+    @Override // Start
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
         gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
-            public void handle(KeyEvent keyEvent) { //KEYBIND KEYS TO ACTIONS
+            public void handle(KeyEvent keyEvent) { // Keybinds key to actions
                 if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
                     if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
                         refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
                         keyEvent.consume();
                     }
+
                     if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.D) {
                         refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
                         keyEvent.consume();
                     }
+
                     if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
                         refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
                         keyEvent.consume();
                     }
+
                     if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
                         moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
                         keyEvent.consume();
                     }
                 }
-                if (keyEvent.getCode() == KeyCode.N) {
+
+                if (keyEvent.getCode() == KeyCode.N) { // Restart
                     newGame(null);
                 }
             }
         });
+
         gameOverPanel.setVisible(false);
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
@@ -86,11 +86,11 @@ public class GuiController implements Initializable {
         reflection.setTopOffset(-12);
     }
 
-    //SETS UP VISUAL BOARD
+    // SETS UP VISUAL BOARD
     public void initGameView(int[][] boardMatrix, ViewData brick) {
-        displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length]; //MAKE GRID
-        for (int i = 2; i < boardMatrix.length; i++) { //NUM OF ROWS
-            for (int j = 0; j < boardMatrix[i].length; j++) { //NUM OF COLMS
+        displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length]; // MAKE GRID
+        for (int i = 2; i < boardMatrix.length; i++) { // NUM OF ROWS
+            for (int j = 0; j < boardMatrix[i].length; j++) { // NUM OF COLMS
                 Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
                 rectangle.setFill(Color.TRANSPARENT);
                 displayMatrix[i][j] = rectangle;
@@ -98,23 +98,24 @@ public class GuiController implements Initializable {
             }
         }
 
-        rectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length]; //GET BRICK
+        rectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length]; // GET BRICK
         for (int i = 0; i < brick.getBrickData().length; i++) {
             for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                 Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
-                rectangle.setFill(getFillColor(brick.getBrickData()[i][j])); //COLOURS BRICK
+                rectangle.setFill(getFillColor(brick.getBrickData()[i][j])); // COLOURS BRICK
                 rectangles[i][j] = rectangle;
                 brickPanel.add(rectangle, j, i);
             }
         }
+
         brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
         brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
         //BRICK POSITIONS SET
-
         timeLine = new Timeline(new KeyFrame(
-                Duration.millis(400), //BRICK FALLS EVERY 400MS
+                Duration.millis(400), // BRICK FALLS EVERY 400MS
                 ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
         ));
+
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
     }
@@ -122,14 +123,9 @@ public class GuiController implements Initializable {
     //Next Shape info
     public void showNextBrick(NextShapeInfo nextShapeInfo) {
         if (nextShapeInfo == null || nextBrickContainer == null) return;
-
-        // Clear previous preview
-        nextBrickContainer.getChildren().clear();
-
+        nextBrickContainer.getChildren().clear(); // Clear previous preview
         int[][] shape = nextShapeInfo.getShape();
         if (shape == null || shape.length == 0 || shape[0].length == 0) return;
-
-        // UI based on the brick and the container in css ect
         final int rows = shape.length;
         final int cols = shape[0].length;
         final double blockSize = BRICK_SIZE;
@@ -137,21 +133,20 @@ public class GuiController implements Initializable {
         double containerHeight = nextBrickContainer.getHeight();
         if (containerWidth <= 0) containerWidth = nextBrickContainer.getPrefWidth();
         if (containerHeight <= 0) containerHeight = nextBrickContainer.getPrefHeight();
-
         //validation just to make sure it works
         if (containerWidth <= 0 || containerHeight <= 0) {
             Platform.runLater(() -> showNextBrick(nextShapeInfo));
             return;
         }
+
         // preview is centered
         double totalWidth = cols * blockSize;
         double totalHeight = rows * blockSize;
         double startX = Math.max(0, (containerWidth - totalWidth) / 2.0);
         double startY = Math.max(0, (containerHeight - totalHeight) / 2.0);
-
         nextBrickRects = new Rectangle[rows][cols];
 
-        //Loopingg to add the colour to correct place for the correct next brick
+        //Looping to add the colour to correct place for the correct next brick
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 if (shape[r][c] != 0) {
@@ -169,14 +164,16 @@ public class GuiController implements Initializable {
 
                     nextBrickContainer.getChildren().add(rect);
                     nextBrickRects[r][c] = rect;
-                } else {
+                }
+
+                else {
                     nextBrickRects[r][c] = null;
                 }
             }
         }
     }
 
-    private Paint getFillColor(int i) { //COLOURS BRICK AT RANDOM
+    private Paint getFillColor(int i) { // COLOURS BRICK AT RANDOM
         Paint returnPaint;
         switch (i) {
             case 0:
@@ -210,8 +207,7 @@ public class GuiController implements Initializable {
         return returnPaint;
     }
 
-
-    private void refreshBrick(ViewData brick) { //UPDATES BRICKS POSITION AND COLOUR AS IT MOVES
+    private void refreshBrick(ViewData brick) { // UPDATES BRICKS POSITION AND COLOUR AS IT MOVES
         if (isPause.getValue() == Boolean.FALSE) {
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
             brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
@@ -223,7 +219,7 @@ public class GuiController implements Initializable {
         }
     }
 
-    public void refreshGameBackground(int[][] board) { //UPDATES THE BG TO REFLECT BRICK MOVING
+    public void refreshGameBackground(int[][] board) { // UPDATES THE BG TO REFLECT BRICK MOVING
         for (int i = 2; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 setRectangleData(board[i][j], displayMatrix[i][j]);
@@ -233,17 +229,16 @@ public class GuiController implements Initializable {
 
     private void setRectangleData(int color, Rectangle rectangle) {
         rectangle.setFill(getFillColor(color));
-        rectangle.setArcHeight(9); //SMOOTH MOVEMENT OF BRICKS
+        rectangle.setArcHeight(9); // SMOOTH MOVEMENT OF BRICKS
         rectangle.setArcWidth(9);
     }
 
-    private void moveDown(MoveEvent event) { //UPDATE BRICK POSITION AFTER CLEAR ROW
+    private void moveDown(MoveEvent event) { // UPDATE BRICK POSITION AFTER CLEAR ROW
         if (isPause.getValue() == Boolean.FALSE) {
             DownData downData = eventListener.onDownEvent(event);
             if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
                 NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
-                //NOTIFICATION OF SCORE BONUS
-                groupNotification.getChildren().add(notificationPanel);
+                groupNotification.getChildren().add(notificationPanel); //NOTIFICATION OF SCORE BONUS
                 notificationPanel.showScore(groupNotification.getChildren());
             }
             refreshBrick(downData.getViewData());
@@ -255,16 +250,15 @@ public class GuiController implements Initializable {
         this.eventListener = eventListener;
     }
 
-    //Edited this part, making bricks fall faster as score increases and display score
+    // Edited this part, making bricks fall faster as score increases and display score
     public void bindScore(IntegerProperty scoreProperty) {
         scoreLabel.textProperty().bind(scoreProperty.asString());
         scoreProperty.addListener((obs, oldVal, newVal) -> {
             double newSpeed = Math.max(100, 400 - (newVal.intValue() / 500) * 25);
+            //Initial speed of 400ms and increases by 25 every 500 points, limits at 100ms
 
             javafx.application.Platform.runLater(() -> {
-                boolean wasRunning = timeLine != null &&
-                        timeLine.getStatus() == javafx.animation.Animation.Status.RUNNING;
-
+                boolean wasRunning = timeLine != null && timeLine.getStatus() == javafx.animation.Animation.Status.RUNNING;
                 timeLine.stop();
                 timeLine.getKeyFrames().setAll(new KeyFrame(
                         Duration.millis(newSpeed),
@@ -275,22 +269,21 @@ public class GuiController implements Initializable {
             });
         });
     }
-    //CONNECTS TO BINDSCORE
 
     public void gameOver() {
         timeLine.stop(); // Stop the game
 
+        //get finalScore to display in gameoverpanel
         int finalScore = 0;
         try {
             finalScore = Integer.parseInt(scoreLabel.getText());
         } catch (NumberFormatException e) {
             finalScore = 0;
         }
-        // Show final score in Game Over panel
-        gameOverPanel.showGameOver(finalScore, 0);
+
+        gameOverPanel.showGameOver(finalScore, 0); // Show final score in Game Over panel
         isGameOver.setValue(Boolean.TRUE);
     }
-
 
     //START NEWGAME
     public void newGame(ActionEvent actionEvent) {
@@ -299,7 +292,6 @@ public class GuiController implements Initializable {
         gamePanel.requestFocus();
         timeLine.play();
         isPause.setValue(Boolean.FALSE);
-
         isGameOver.setValue(Boolean.FALSE);
         gameOverPanel.reset();
     }

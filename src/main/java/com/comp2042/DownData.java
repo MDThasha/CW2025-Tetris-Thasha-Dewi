@@ -12,11 +12,7 @@ public final class DownData {
     public ClearRow getClearRow() {
         return clearRow;
     }
-
     public ViewData getViewData() {
         return viewData;
     }
 }
-
-//move set bricks down logic
-

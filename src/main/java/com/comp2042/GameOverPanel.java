@@ -13,11 +13,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class GameOverPanel extends StackPane {
-
     public final Label gameOverLabel, scoreLabelGO, highScoreLabelGO, RnMMLabelGO;
     private final Rectangle overlay;
     @FXML private Rectangle blackScreen;
-
 
     public GameOverPanel() {
         // Transparent overlay
@@ -65,13 +63,13 @@ public class GameOverPanel extends StackPane {
 
     public void showGameOver(int score, int highScore) {
         setVisible(true);
-
         // Fade in dark overlay
         FadeTransition fade = new FadeTransition(Duration.seconds(1), overlay);
         fade.setFromValue(0.0);
         fade.setToValue(0.7);
         fade.play();
 
+        // Make sure start with original GameOver Label Style
         gameOverLabel.getStyleClass().remove("gameOverStyleWhite");
         if (!gameOverLabel.getStyleClass().contains("gameOverStyle1")) {
             gameOverLabel.getStyleClass().add("gameOverStyle1");
@@ -111,7 +109,7 @@ public class GameOverPanel extends StackPane {
             fadeHigh.setDelay(Duration.seconds(2));
             fadeHigh.play();
 
-            // Fade in Restart and mainmenu stuff
+            // Fade in Restart and main menu stuff
             FadeTransition fadeRnMM = new FadeTransition(Duration.seconds(1.5), RnMMLabelGO);
             fadeRnMM.setFromValue(0);
             fadeRnMM.setToValue(1);

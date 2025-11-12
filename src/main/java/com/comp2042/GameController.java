@@ -2,62 +2,45 @@ package com.comp2042;
 
 public class GameController implements InputEventListener {
 
-    private final Board board = new SimpleBoard(25, 10);
-    // Creats the game board
-
-    private final GuiController viewGuiController;
-    // Make ui and listen to events
+    private final Board board = new SimpleBoard(25, 10); // Creats the game board
+    private final GuiController viewGuiController; // Make ui and listen to events
 
     public GameController(GuiController c) {
-        viewGuiController = c; // stores gui reference
-
-        board.createNewBrick(); // gets first brick
-
-        viewGuiController.setEventListener(this); // sends all events to this class
-        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData()); // start display
-        viewGuiController.bindScore(board.getScore().scoreProperty()); // binds score to gui
-
-        // Next brick preview
-        viewGuiController.showNextBrick(board.getNextShapeInfo());
+        viewGuiController = c; // Stores gui reference
+        board.createNewBrick(); // Gets first brick
+        viewGuiController.setEventListener(this); // Sends all events to this class
+        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData()); // Start display
+        viewGuiController.bindScore(board.getScore().scoreProperty()); // Binds score to gui
+        viewGuiController.showNextBrick(board.getNextShapeInfo()); // Next brick preview
     }
 
     @Override
-    public DownData onDownEvent(MoveEvent event) {
-        // Trigger when brick moves down
-
+    public DownData onDownEvent(MoveEvent event) { // Trigger when brick moves down
         boolean canMove = board.moveBrickDown();
         ClearRow clearRow = null;
-
         if (!canMove) {
-            // Brick has landed ten merge into backgrond
-            board.mergeBrickToBackground();
+            board.mergeBrickToBackground(); // Brick has landed ten merge into backgrond
+            clearRow = board.clearRows(); // Check for and clear completed rows
 
-            // Check for and clear completed rows
-            clearRow = board.clearRows();
             if (clearRow.getLinesRemoved() > 0) {
                 board.getScore().add(clearRow.getScoreBonus());
             }
 
-            // Create new brick then if collision on spawn, game over
-            if (board.createNewBrick()) {
+            if (board.createNewBrick()) { // Create new brick then if collision on spawn, game over
                 viewGuiController.gameOver();
             }
 
-            // Refresh game board visuals
-            viewGuiController.refreshGameBackground(board.getBoardMatrix());
+            viewGuiController.refreshGameBackground(board.getBoardMatrix()); // Refresh game board visuals
+            viewGuiController.showNextBrick(board.getNextShapeInfo()); // Update the next brick preview after a new brick spawns
+        }
 
-            // Update the next brick preview after a new brick spawns
-            viewGuiController.showNextBrick(board.getNextShapeInfo());
-
-        } else {
-            // Add score for user-controlled drop (not auto drop)
-            if (event.getEventSource() == EventSource.USER) {
+        else {
+            if (event.getEventSource() == EventSource.USER) { // Add score for user-controlled drop (not auto drop)
                 board.getScore().add(1);
             }
         }
 
-        // Return updated view data
-        return new DownData(clearRow, board.getViewData());
+        return new DownData(clearRow, board.getViewData()); // Return updated view data
     }
 
     @Override
@@ -80,8 +63,8 @@ public class GameController implements InputEventListener {
 
     @Override
     public void createNewGame() {
-        board.newGame(); // resets the board
-        viewGuiController.refreshGameBackground(board.getBoardMatrix()); // restart the game when restartng
-        viewGuiController.showNextBrick(board.getNextShapeInfo()); // show initial next brick
+        board.newGame();
+        viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        viewGuiController.showNextBrick(board.getNextShapeInfo());
     }
 }

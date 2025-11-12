@@ -15,19 +15,10 @@ public final class ClearRow {
     public int getLinesRemoved() {
         return linesRemoved;
     }
-
     public int[][] getNewMatrix() {
         return MatrixOperations.copy(newMatrix);
     }
-
     public int getScoreBonus() {
         return scoreBonus;
     }
 }
-
-//This class is a data holder used to represent the result of clearing rows on the board.
-//When the game detects that one or more rows are completely filled, it:
-//Removes those rows
-//Updates the board’s matrix
-//Awards score points
-

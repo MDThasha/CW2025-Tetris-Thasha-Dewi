@@ -1,14 +1,11 @@
 package com.comp2042.logic.bricks;
 
 import com.comp2042.MatrixOperations;
-
 import java.util.ArrayList;
 import java.util.List;
 
 final class IBrick implements Brick {
-
     private final List<int[][]> brickMatrix = new ArrayList<>();
-
     public IBrick() {
         brickMatrix.add(new int[][]{
                 {0, 0, 0, 0},
@@ -22,13 +19,10 @@ final class IBrick implements Brick {
                 {0, 1, 0, 0},
                 {0, 1, 0, 0}
         });
-    }
-//Diffrent rotaions on Bricks to store in IBrick
+    } // Different rotations on Bricks to store in IBrick
 
     @Override
     public List<int[][]> getShapeMatrix() {
         return MatrixOperations.deepCopyList(brickMatrix);
-    }
-// Saves int getShapeMatrix without effecting others
-
+    } // Saves int getShapeMatrix without effecting others
 }
