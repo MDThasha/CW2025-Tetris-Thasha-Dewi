@@ -76,7 +76,7 @@
 /**CONTROLS CSS**/
 
 /**GAMEOVER CSS**/
-.gameOverStyle {
+.gameOverStyle1 {
     -fx-font-family: "Let's go Digital";
     -fx-font-size: 48;
     -fx-background-color: red;
@@ -89,26 +89,18 @@
     -fx-background-color: transparent; /* remove red background */
 }
 
-.gameOverScoreStyle {
+.gameOverStyle2 {
     -fx-font-family: "Let's go Digital";
     -fx-font-size: 32;
     -fx-text-fill: white;
 }
 
-.scoreDisplayGO {
+.gameOverStyle3 {
     -fx-font-family: "Let's go Digital";
-    -fx-font-size: 24;
+    -fx-font-size: 28;
     -fx-text-fill: white;
 }
 
-.HTextGO {
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 18;
-    -fx-text-fill: yellow;
-    -fx-opacity: 0.85;
-    -fx-alignment: center;
-    -fx-text-alignment: center;
-}
 /**GAMEOVER CSS**/
 
 .gameBoard {

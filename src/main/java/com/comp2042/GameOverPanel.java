@@ -14,7 +14,7 @@ import javafx.util.Duration;
 
 public class GameOverPanel extends StackPane {
 
-    public final Label gameOverLabel, scoreLabelGO, highScoreLabelGO;
+    public final Label gameOverLabel, scoreLabelGO, highScoreLabelGO, RnMMLabelGO;
     private final Rectangle overlay;
     @FXML private Rectangle blackScreen;
 
@@ -28,13 +28,13 @@ public class GameOverPanel extends StackPane {
 
         // Game over label
         gameOverLabel = new Label("GAME OVER");
-        gameOverLabel.getStyleClass().add("gameOverStyle"); // start with red
+        gameOverLabel.getStyleClass().add("gameOverStyle1"); // start with red
         gameOverLabel.setAlignment(Pos.CENTER);
         StackPane.setAlignment(gameOverLabel, Pos.CENTER);
 
         // Score label
         scoreLabelGO = new Label();
-        scoreLabelGO.getStyleClass().add("gameOverScoreStyle");
+        scoreLabelGO.getStyleClass().add("gameOverStyle2");
         scoreLabelGO.setAlignment(Pos.CENTER);
         scoreLabelGO.setOpacity(0);
         scoreLabelGO.setTranslateY(-150);
@@ -42,14 +42,22 @@ public class GameOverPanel extends StackPane {
 
         // High score label
         highScoreLabelGO = new Label();
-        highScoreLabelGO.getStyleClass().add("gameOverScoreStyle");
+        highScoreLabelGO.getStyleClass().add("gameOverStyle2");
         highScoreLabelGO.setAlignment(Pos.CENTER);
         highScoreLabelGO.setOpacity(0);
         highScoreLabelGO.setTranslateY(-100);
         StackPane.setAlignment(highScoreLabelGO, Pos.CENTER);
 
+        // Restart and main menu label
+        RnMMLabelGO = new Label("PRESS N TO RESTART, ESC FOR MAIN MENU");
+        RnMMLabelGO.getStyleClass().add("gameOverStyle3");
+        RnMMLabelGO.setAlignment(Pos.CENTER);
+        RnMMLabelGO.setOpacity(0);
+        RnMMLabelGO.setTranslateY(-50);
+        StackPane.setAlignment(RnMMLabelGO, Pos.CENTER);
+
         // Add overlay and all labels to panel
-        getChildren().addAll(overlay, gameOverLabel, scoreLabelGO, highScoreLabelGO);
+        getChildren().addAll(overlay, gameOverLabel, scoreLabelGO, highScoreLabelGO, RnMMLabelGO);
 
         // Hide by default
         setVisible(false);
@@ -58,7 +66,6 @@ public class GameOverPanel extends StackPane {
     public void showGameOver(int score, int highScore) {
         setVisible(true);
 
-
         // Fade in dark overlay
         FadeTransition fade = new FadeTransition(Duration.seconds(1), overlay);
         fade.setFromValue(0.0);
@@ -66,8 +73,8 @@ public class GameOverPanel extends StackPane {
         fade.play();
 
         gameOverLabel.getStyleClass().remove("gameOverStyleWhite");
-        if (!gameOverLabel.getStyleClass().contains("gameOverStyle")) {
-            gameOverLabel.getStyleClass().add("gameOverStyle");
+        if (!gameOverLabel.getStyleClass().contains("gameOverStyle1")) {
+            gameOverLabel.getStyleClass().add("gameOverStyle1");
         }
 
         // Update score labels
@@ -76,11 +83,12 @@ public class GameOverPanel extends StackPane {
 
         scoreLabelGO.setOpacity(0);
         highScoreLabelGO.setOpacity(0);
+        RnMMLabelGO.setOpacity(0);
 
         PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
         pause.setOnFinished(event -> {
             // Change label to white
-            gameOverLabel.getStyleClass().remove("gameOverStyle");
+            gameOverLabel.getStyleClass().remove("gameOverStyle1");
             gameOverLabel.getStyleClass().add("gameOverStyleWhite");
 
             // Move label up
@@ -103,6 +111,13 @@ public class GameOverPanel extends StackPane {
             fadeHigh.setDelay(Duration.seconds(2));
             fadeHigh.play();
 
+            // Fade in Restart and mainmenu stuff
+            FadeTransition fadeRnMM = new FadeTransition(Duration.seconds(1.5), RnMMLabelGO);
+            fadeRnMM.setFromValue(0);
+            fadeRnMM.setToValue(1);
+            fadeRnMM.setDelay(Duration.seconds(2.5));
+            fadeRnMM.play();
+
         });
         pause.play();
     }
@@ -113,8 +128,8 @@ public class GameOverPanel extends StackPane {
 
         // Reset style to red
         gameOverLabel.getStyleClass().remove("gameOverStyleWhite");
-        if (!gameOverLabel.getStyleClass().contains("gameOverStyle")) {
-            gameOverLabel.getStyleClass().add("gameOverStyle");
+        if (!gameOverLabel.getStyleClass().contains("gameOverStyle1")) {
+            gameOverLabel.getStyleClass().add("gameOverStyle1");
         }
 
         // Hide panel and overlay
