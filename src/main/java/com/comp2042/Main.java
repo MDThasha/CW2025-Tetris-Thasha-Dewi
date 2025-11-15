@@ -5,12 +5,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class Main extends Application {
 
     private static Stage mainStage;
+    private static Scene mainScene;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -20,11 +19,13 @@ public class Main extends Application {
         mainStage.setMinWidth(500);
         mainStage.setTitle("TetrisJFX");
 
-        loadMenu();  // Start at the menu, ESC
+        Parent menuRoot = FXMLLoader.load(getClass().getClassLoader().getResource("mainMenu.fxml"));
+        mainScene = new Scene(menuRoot); // single scene
+        mainStage.setScene(mainScene);
         mainStage.show();
     }
 
-    // Load Main Menu
+    // Load Main Menu, from Gamescene.
     public static void loadMenu() {
         try {
             // Stop the game if it's running
@@ -32,26 +33,23 @@ public class Main extends Application {
                 GameController.currentController.stopTimeline();
             }
 
-            Parent root = FXMLLoader.load(Main.class.getClassLoader().getResource("mainMenu.fxml"));
-            Scene scene = new Scene(root, 500, 700);
-            mainStage.setScene(scene);
+            Parent menuRoot = FXMLLoader.load(Main.class.getClassLoader().getResource("mainMenu.fxml"));
+            mainScene.setRoot(menuRoot); // just swap root, scene stays the same
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    // Load the Game, Start Game (cant use newgame in gui cause that only works if we in the game already)
+    // Load the Game, From Menu scene. Start Game
     public static void loadGame() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getClassLoader().getResource("gameLayout.fxml"));
-            Parent root = loader.load();
-
+            Parent gameRoot = loader.load();
             GuiController c = loader.getController();
             new GameController(c);
-
-            Scene scene = new Scene(root, 500, 700);
-            mainStage.setScene(scene);
+            mainScene.setRoot(gameRoot);
 
         } catch (Exception e) {
             e.printStackTrace();

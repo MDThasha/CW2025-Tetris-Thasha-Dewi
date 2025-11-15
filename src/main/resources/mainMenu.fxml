@@ -9,7 +9,8 @@
 
     <VBox alignment="CENTER" spacing="30">
 
-        <Label text="TETRIS" style="-fx-font-size: 48; -fx-text-fill: white;" />
+        <Label text="TETRIS"
+               style="-fx-font-size: 48; -fx-text-fill: white;" />
 
         <Button text="START GAME" fx:id="startBtn"
                 style="-fx-font-size: 24; -fx-padding: 10 40;" />
@@ -21,5 +22,4 @@
                 style="-fx-font-size: 18; -fx-padding: 10 40;" />
 
     </VBox>
-
 </StackPane>

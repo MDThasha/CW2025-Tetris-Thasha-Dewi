@@ -310,4 +310,4 @@ public class GuiController implements Initializable {
     public void pauseGame(ActionEvent actionEvent) {
         gamePanel.requestFocus();
     }
-    }
+}
