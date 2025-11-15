@@ -19,5 +19,3 @@ public interface Board {
 
 }
 //Defines how brick interacts with board, and Gameplay loop
-
-
