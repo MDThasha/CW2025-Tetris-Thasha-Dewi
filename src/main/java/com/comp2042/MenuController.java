@@ -29,11 +29,11 @@ public class MenuController {
     public void openControls() {
         try {
             Parent controlsRoot = FXMLLoader.load(getClass().getClassLoader().getResource("controlsLayout.fxml"));
-            Stage stage = (Stage) rootPane.getScene().getWindow();
-            stage.setScene(new Scene(controlsRoot, 500, 700));
+            rootPane.getScene().setRoot(controlsRoot); // swap root, keep same scene
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 }

@@ -41,7 +41,6 @@ public class Main extends Application {
         }
     }
 
-
     // Load the Game, From Menu scene. Start Game
     public static void loadGame() {
         try {
