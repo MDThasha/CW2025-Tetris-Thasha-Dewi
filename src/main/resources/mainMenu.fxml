@@ -1,0 +1,25 @@
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.comp2042.MenuController"
+           fx:id="rootPane"
+           style="-fx-background-color: black;">
+
+    <VBox alignment="CENTER" spacing="30">
+
+        <Label text="TETRIS" style="-fx-font-size: 48; -fx-text-fill: white;" />
+
+        <Button text="START GAME" fx:id="startBtn"
+                style="-fx-font-size: 24; -fx-padding: 10 40;" />
+
+        <Button fx:id="controlsButton" text="Controls" onAction="#openControls"
+                style="-fx-font-size: 24; -fx-padding: 10 40;" />
+
+        <Button text="QUIT" fx:id="quitBtn"
+                style="-fx-font-size: 18; -fx-padding: 10 40;" />
+
+    </VBox>
+
+</StackPane>

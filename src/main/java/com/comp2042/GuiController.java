@@ -73,6 +73,11 @@ public class GuiController implements Initializable {
                     }
                 }
 
+                if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                    Main.loadMenu();
+                    keyEvent.consume();
+                }
+
                 if (keyEvent.getCode() == KeyCode.N) { // Restart
                     newGame(null);
                 }
@@ -296,7 +301,13 @@ public class GuiController implements Initializable {
         gameOverPanel.reset();
     }
 
+    public void stopTimeline() {
+        if (timeLine != null) {
+            timeLine.stop();
+        }
+    }
+
     public void pauseGame(ActionEvent actionEvent) {
         gamePanel.requestFocus();
     }
-}
+    }

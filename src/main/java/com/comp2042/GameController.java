@@ -4,6 +4,7 @@ public class GameController implements InputEventListener {
 
     private final Board board = new SimpleBoard(25, 10); // Creats the game board
     private final GuiController viewGuiController; // Make ui and listen to events
+    public static GuiController currentController;
 
     public GameController(GuiController c) {
         viewGuiController = c; // Stores gui reference
@@ -12,7 +13,15 @@ public class GameController implements InputEventListener {
         viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData()); // Start display
         viewGuiController.bindScore(board.getScore().scoreProperty()); // Binds score to gui
         viewGuiController.showNextBrick(board.getNextShapeInfo()); // Next brick preview
+
+        currentController = c;
     }
+
+    public void stopGame() {
+        viewGuiController.stopTimeline();
+    }
+
+
 
     @Override
     public DownData onDownEvent(MoveEvent event) { // Trigger when brick moves down

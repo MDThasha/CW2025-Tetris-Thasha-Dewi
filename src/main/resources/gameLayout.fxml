@@ -63,17 +63,17 @@
                 <AnchorPane prefWidth="150" prefHeight="150">
                     <Label text="CONTROLS" styleClass="HTextLabel"
                            layoutX="-120" layoutY="-230"/>
-                    <Label text="Restart          - N" styleClass="STextLabel"
+                    <Label text="Restart   - N" styleClass="STextLabel"
                            layoutX="-120" layoutY="-190"/>
-                    <Label text="Rotate Right - UP" styleClass="STextLabel"
+                    <Label text="Rotate    - W / ↑" styleClass="STextLabel"
                            layoutX="-120" layoutY="-165"/>
-                    <Label text="Move Left       - LEFT" styleClass="STextLabel"
+                    <Label text="Move Left - A / ←" styleClass="STextLabel"
                            layoutX="-120" layoutY="-140"/>
-                    <Label text="Move Right      - RIGHT" styleClass="STextLabel"
+                    <Label text="Move Right- D / →" styleClass="STextLabel"
                            layoutX="-120" layoutY="-115"/>
-                    <Label text="Move Down       - DOWN" styleClass="STextLabel"
+                    <Label text="Move Down - S / ↓" styleClass="STextLabel"
                            layoutX="-120" layoutY="-90"/>
-                    <Label text="MAIN MENU       - ESC" styleClass="STextLabel"
+                    <Label text="MAIN MENU - ESC" styleClass="STextLabel"
                            layoutX="-120" layoutY="-65"/>
                     <AnchorPane fx:id="ControlContainer"
                                 prefWidth="100" prefHeight="400"
