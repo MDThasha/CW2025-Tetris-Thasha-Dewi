@@ -39,15 +39,17 @@ public class GuiController implements Initializable {
     @FXML private AnchorPane ghostPane;
 
     private static final int BRICK_SIZE = 20;
+    private static final int GHOST_Y_OFFSET = 10;
+    private Rectangle[][] ghostRectangles;
+    private Rectangle[][] rectangles;
     private Rectangle[][] nextBrickRects;
     private Rectangle[][] displayMatrix;
+
     private InputEventListener eventListener;
-    private Rectangle[][] rectangles;
     private Timeline timeLine;
+
     private final BooleanProperty isPause = new SimpleBooleanProperty();
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
-    private Rectangle[][] ghostRectangles;
-    private static final int GHOST_Y_OFFSET = 10;
 
     @Override // Start
     public void initialize(URL location, ResourceBundle resources) {
@@ -225,38 +227,13 @@ public class GuiController implements Initializable {
         }
     }
 
-    private Paint getFillColor(int i) { // COLOURS BRICK AT RANDOM
-        Paint returnPaint;
-        switch (i) {
-            case 0:
-                returnPaint = Color.TRANSPARENT;
-                break;
-            case 1:
-                returnPaint = Color.AQUA;
-                break;
-            case 2:
-                returnPaint = Color.BLUEVIOLET;
-                break;
-            case 3:
-                returnPaint = Color.DARKGREEN;
-                break;
-            case 4:
-                returnPaint = Color.YELLOW;
-                break;
-            case 5:
-                returnPaint = Color.RED;
-                break;
-            case 6:
-                returnPaint = Color.BEIGE;
-                break;
-            case 7:
-                returnPaint = Color.BURLYWOOD;
-                break;
-            default:
-                returnPaint = Color.WHITE;
-                break;
-        }
-        return returnPaint;
+    private static final Color[] COLORS = {
+            Color.TRANSPARENT, Color.AQUA, Color.BLUEVIOLET, Color.DARKGREEN,
+            Color.YELLOW, Color.RED, Color.BEIGE, Color.BURLYWOOD
+    };
+
+    private Paint getFillColor(int i) {
+        return (i >= 0 && i < COLORS.length) ? COLORS[i] : Color.WHITE;
     }
 
     private void refreshBrick(ViewData brick, int[][] board) {
