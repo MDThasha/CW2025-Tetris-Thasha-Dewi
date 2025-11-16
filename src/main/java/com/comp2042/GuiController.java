@@ -228,8 +228,7 @@ public class GuiController implements Initializable {
     }
 
     private static final Color[] COLORS = {
-            Color.TRANSPARENT, Color.AQUA, Color.BLUEVIOLET, Color.DARKGREEN,
-            Color.YELLOW, Color.RED, Color.BEIGE, Color.BURLYWOOD
+            Color.TRANSPARENT, Color.AQUA, Color.BLUEVIOLET, Color.DARKGREEN, Color.YELLOW, Color.RED, Color.BEIGE, Color.BURLYWOOD
     };
 
     private Paint getFillColor(int i) {
