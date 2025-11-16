@@ -3,13 +3,13 @@ package com.comp2042;
 import java.awt.Point;
 
 public final class ViewData {
-    private final int[][] brickData;
-    private final int xPosition;
-    private final int yPosition;
-    private final int[][] nextBrickData;
-    private final Point ghostOffset;
+    private final int[][] brickData;       // Current brick's shape matrix
+    private final int xPosition;           // Current X position of the brick on the board
+    private final int yPosition;           // Current Y position of the brick on the board
+    private final int[][] nextBrickData;   // Next brick's shape matrix for preview
+    private final Point ghostOffset;       // Offset for ghost preview (where brick would land)
 
-    // Updated constructor
+    // Initializes all brick data, positions, and ghost info
     public ViewData(int[][] brickData, int xPosition, int yPosition, int[][] nextBrickData, Point ghostOffset) {
         this.brickData = brickData;
         this.xPosition = xPosition;
@@ -18,9 +18,9 @@ public final class ViewData {
         this.ghostOffset = ghostOffset;
     }
 
-    public Point getGhostOffset() { return ghostOffset; }
-    public int[][] getBrickData() { return MatrixOperations.copy(brickData); }
-    public int getxPosition() { return xPosition; }
-    public int getyPosition() { return yPosition; }
-    public int[][] getNextBrickData() { return MatrixOperations.copy(nextBrickData); }
+    public Point getGhostOffset() { return ghostOffset; }                                   // Get the ghost offset for the current brick
+    public int[][] getBrickData() { return MatrixOperations.copy(brickData); }              // Get a copy of the current brick's shape matrix
+    public int getxPosition() { return xPosition; }                                         // Get the X position of the brick
+    public int getyPosition() { return yPosition; }                                         // Get the Y position of the brick
+    public int[][] getNextBrickData() { return MatrixOperations.copy(nextBrickData); }      // Get a copy of the next brick's shape matrix for preview
 }

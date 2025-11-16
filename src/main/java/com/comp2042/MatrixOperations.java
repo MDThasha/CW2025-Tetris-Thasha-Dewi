@@ -1,10 +1,10 @@
 package com.comp2042;
 
+import java.util.stream.Collectors;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MatrixOperations {
 
@@ -33,7 +33,7 @@ public class MatrixOperations {
         return returnValue;
     }
 
-    // TO MAKE SURE EDITING ONE MATRIX DOESNT EFFECT ANOTHER
+    // CREATE A COPY OF A 2D MATRIX TO AVOID MERGING
     public static int[][] copy(int[][] original) {
         int[][] myInt = new int[original.length][];
         for (int i = 0; i < original.length; i++) {
@@ -45,7 +45,7 @@ public class MatrixOperations {
         return myInt;
     }
 
-    // LOCK PLACED BRICKS
+    // LOCK PLACED BRICKS INTO BG
     public static int[][] merge(int[][] filledFields, int[][] brick, int x, int y) {
         int[][] copy = copy(filledFields);
         for (int i = 0; i < brick.length; i++) {
@@ -60,7 +60,7 @@ public class MatrixOperations {
         return copy;
     }
 
-    // CHECK IF ROW IS COMPLETE
+    // CHECK IF ROW IS COMPLETE AND REMOVE IF IT IS
     public static ClearRow checkRemoving(final int[][] matrix) {
         int[][] tmp = new int[matrix.length][matrix[0].length];
         Deque<int[]> newRows = new ArrayDeque<>();

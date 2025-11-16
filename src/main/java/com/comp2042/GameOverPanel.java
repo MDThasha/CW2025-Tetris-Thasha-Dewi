@@ -133,11 +133,5 @@ public class GameOverPanel extends StackPane {
         // Hide panel and overlay
         overlay.setFill(Color.rgb(0, 0, 0, 0));
         setVisible(false);
-
-
     }
-
-
-
-
 }

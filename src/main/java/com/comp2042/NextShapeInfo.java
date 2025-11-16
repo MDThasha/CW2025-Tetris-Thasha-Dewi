@@ -1,6 +1,6 @@
 package com.comp2042;
 
-public final class NextShapeInfo {
+public final class NextShapeInfo {  // Holds info about a brick's shape and its rotation position
     private final int[][] shape;
     private final int position;
 

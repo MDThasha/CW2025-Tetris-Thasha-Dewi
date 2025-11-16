@@ -8,34 +8,33 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private static Stage mainStage;
-    private static Scene mainScene;
+    private static Stage mainStage;  // Primary stage of the application
+    private static Scene mainScene;  // Single scene used throughout
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         mainStage = primaryStage;
-        mainStage.setResizable(true);
-        mainStage.setMinHeight(700);
-        mainStage.setMinWidth(500);
-        mainStage.setTitle("TetrisJFX");
+        mainStage.setResizable(true);     // Allow resizing
+        mainStage.setMinHeight(700);      // Minimum height of window
+        mainStage.setMinWidth(500);       // Minimum width of window
+        mainStage.setTitle("TetrisJFX");  // Window title
 
+        // Load main menu FXML as initial screen
         Parent menuRoot = FXMLLoader.load(getClass().getClassLoader().getResource("mainMenu.fxml"));
-        mainScene = new Scene(menuRoot); // single scene
-        mainStage.setScene(mainScene);
+        mainScene = new Scene(menuRoot); // Set single scene so if full screen it ddont change
+        mainStage.setScene(mainScene);   // Show menu scene
         mainStage.show();
     }
 
-    // Load Main Menu, from Gamescene.
+    // Load Main Menu from the game scene
     public static void loadMenu() {
         try {
             // Stop the game if it's running
             if (GameController.currentController != null) {
                 GameController.currentController.stopTimeline();
             }
-
             Parent menuRoot = FXMLLoader.load(Main.class.getClassLoader().getResource("mainMenu.fxml"));
             mainScene.setRoot(menuRoot); // just swap root, scene stays the same
-
         } catch (Exception e) {
             e.printStackTrace();
         }

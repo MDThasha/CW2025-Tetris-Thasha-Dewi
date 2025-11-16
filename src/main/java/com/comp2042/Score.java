@@ -1,7 +1,7 @@
 package com.comp2042;
 
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.IntegerProperty;
 
 public final class Score {
 
@@ -11,10 +11,10 @@ public final class Score {
     }
     public void add(int i){
         score.setValue(score.getValue() + i);
-    }
+    }        // Add Value to current score
     public void reset() {
         score.setValue(0);
-    }
+    }                              // reset score to 0
 }
 
 

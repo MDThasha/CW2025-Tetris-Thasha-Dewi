@@ -1,96 +1,101 @@
 package com.comp2042;
 
-import com.comp2042.logic.bricks.Brick;
-import com.comp2042.logic.bricks.BrickGenerator;
 import com.comp2042.logic.bricks.RandomBrickGenerator;
+import com.comp2042.logic.bricks.BrickGenerator;
+import com.comp2042.logic.bricks.Brick;
 import java.awt.*;
 
 public class SimpleBoard implements Board {
+
+    // BOARD DIMENSIONS
     private final int width;
     private final int height;
+
     private final BrickGenerator brickGenerator;
     private final BrickRotator brickRotator;
-    private int[][] currentGameMatrix;
-    private Point currentOffset;
-    private final Score score;
+    private int[][] currentGameMatrix;     // Holds the background n locked bricks
+    private Point currentOffset;           // Current brick position
+    private final Score score;             // Player score
     private Brick nextBrick;
     private Brick currentBrick;
 
+    // INITIALISE BOARD AND BRICKS
     public SimpleBoard(int width, int height) {
         this.width = width;
         this.height = height;
-        currentGameMatrix = new int[width][height];
-        brickGenerator = new RandomBrickGenerator();
-        brickRotator = new BrickRotator();
-        score = new Score();
-        currentBrick = brickGenerator.getBrick();
-        nextBrick = brickGenerator.getBrick();
-        brickRotator.setBrick(currentBrick);
-        currentOffset = new Point(4, 2);
+        currentGameMatrix = new int[width][height];         // Empty game matrix
+        brickGenerator = new RandomBrickGenerator();        // Random brick generator
+        brickRotator = new BrickRotator();                  // Handles rotation of current brick
+        score = new Score();                                // Initialise score
+        currentBrick = brickGenerator.getBrick();           // Get first brick
+        nextBrick = brickGenerator.getBrick();              // Get next brick
+        brickRotator.setBrick(currentBrick);                // Set current brick for rotation
+        currentOffset = new Point(4, 2);              // Default spawn position
     }
 
+    // MOVE BRICK DOWN ONE STEP; RETURN FALSE IF BLOCKED
     @Override
     public boolean moveBrickDown() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
         Point p = new Point(currentOffset);
-        p.translate(0, 1);
+        p.translate(0, 1); // Move down by 1
         boolean conflict = MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY());
-        if (conflict) {
-            return false;
+        if (conflict) { return false; // Cannot move down
         } else {
-            currentOffset = p;
+            currentOffset = p;        // Update position
             return true;
         }
     }
 
+    // MOVE BRICK LEFT ONE STEP; RETURN FALSE IF BLOCKED
     @Override
     public boolean moveBrickLeft() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
         Point p = new Point(currentOffset);
-        p.translate(-1, 0);
+        p.translate(-1, 0);  // Move left by 1
         boolean conflict = MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY());
-        if (conflict) {
-            return false;
+        if (conflict) { return false;
         } else {
             currentOffset = p;
             return true;
         }
     }
 
+    // MOVE BRICK RIGHT ONE STEP; RETURN FALSE IF BLOCKED
     @Override
     public boolean moveBrickRight() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
         Point p = new Point(currentOffset);
-        p.translate(1, 0);
+        p.translate(1, 0); // Move right by 1
         boolean conflict = MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY());
-        if (conflict) {
-            return false;
+        if (conflict) { return false;
         } else {
             currentOffset = p;
             return true;
         }
     }
 
+    // ROTATE CURRENT BRICK LEFT; RETURN FALSE IF BLOCKED
     @Override
     public boolean rotateLeftBrick() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
-        NextShapeInfo nextShape = brickRotator.getNextShape();
+        NextShapeInfo nextShape = brickRotator.getNextShape(); // Get next rotation
         boolean conflict = MatrixOperations.intersect(currentMatrix, nextShape.getShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
-        if (conflict) {
-            return false;
+        if (conflict) { return false;
         } else {
-            brickRotator.setCurrentShape(nextShape.getPosition());
+            brickRotator.setCurrentShape(nextShape.getPosition()); // Apply rotation
             return true;
         }
     }
 
+    // SPAWN NEW BRICK
     @Override
     public boolean createNewBrick() {
-        currentBrick = nextBrick; // Move nextBrick into play
+        currentBrick = nextBrick;                   // Move nextBrick into play
         brickRotator.setBrick(currentBrick);
         currentOffset = new Point(4, 2);
-        nextBrick = brickGenerator.getBrick(); // Generate a new next brick
-        return MatrixOperations.intersect( // Return true if new brick collides immediately
+        nextBrick = brickGenerator.getBrick();      // Generate a new next brick
+        return MatrixOperations.intersect(          // Return true if new brick collides immediately (GAME OVER)
                 currentGameMatrix,
                 brickRotator.getCurrentShape(),
                 (int) currentOffset.getX(),
@@ -98,6 +103,7 @@ public class SimpleBoard implements Board {
         );
     }
 
+    // GET CURRENT BOARD MATRIX (INCLUDES LOCKED BRICKS)
     @Override
     public int[][] getBoardMatrix() {
         return currentGameMatrix;
@@ -105,7 +111,7 @@ public class SimpleBoard implements Board {
 
     @Override
     public ViewData getViewData() {
-        Point ghost = getHardDropPosition();
+        Point ghost = getHardDropPosition();    // Calculate ghost position
         return new ViewData(
                 brickRotator.getCurrentShape(),
                 currentOffset.x,
@@ -144,26 +150,26 @@ public class SimpleBoard implements Board {
         createNewBrick();
     }
 
+    // GET INFO ABOUT NEXT BRICK (FOR GUI PREVIEW)
     @Override
     public NextShapeInfo getNextShapeInfo() {
-        int[][] shape = nextBrick.getShapeMatrix().get(0); // Get the first rotation (default orientation)
+        int[][] shape = nextBrick.getShapeMatrix().get(0); // Get the default orientation
         return new NextShapeInfo(shape, 0);
     }
 
+    // HARD DROP CURRENT BRICK TO LOWEST POSITION AND MERGE
     @Override
     public boolean hardDrop() {
-        // Keep moving down until blocked
-        while (moveBrickDown()) { }
-
-        // Lock brick into the background
-        mergeBrickToBackground();
+        while (moveBrickDown()) { }     // Keep moving down until blocked
+        mergeBrickToBackground();       // Lock brick into the background
         return true;
     }
 
+    // CALCULATE GHOST POSITION (WHERE BRICK WOULD LAND)
     public Point getHardDropPosition() {
         Point p = new Point(currentOffset);
         while (!MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), p.x, p.y + 1)) {
-            p.y += 1;
+            p.y += 1; // Move down until collision
         }
         return p;
     }
