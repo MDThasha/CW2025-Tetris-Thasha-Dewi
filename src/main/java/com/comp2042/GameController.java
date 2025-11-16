@@ -29,7 +29,7 @@ public class GameController implements InputEventListener {
     public DownData onHardDropEvent(MoveEvent event) {
         // drop until blocked and lock
         board.hardDrop();
-
+        board.getScore().add(3);
         // clear rows and award score
         ClearRow cleared = board.clearRows();
         if (cleared.getLinesRemoved() > 0) {
