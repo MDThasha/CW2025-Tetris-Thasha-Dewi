@@ -4,8 +4,7 @@ import javafx.fxml.FXML;
 
 public class ControlsController {
 
-    @FXML
-    public void goBack() {
+    @FXML public void goBack() {
         Main.loadMenu();
     }
 }

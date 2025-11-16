@@ -41,17 +41,17 @@ public class Main extends Application {
     }
 
     // Load the Game, From Menu scene. Start Game
-    public static void loadGame() {
+    public static void loadGame(String playerName) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getClassLoader().getResource("gameLayout.fxml"));
             Parent gameRoot = loader.load();
-            GuiController c = loader.getController();
-            new GameController(c);
-            mainScene.setRoot(gameRoot);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            GuiController guiController = loader.getController();
+            guiController.setPlayerName(playerName);
+            GameController gameController = new GameController(guiController, playerName); // Pass player name via constructor
+            mainScene.setRoot(gameRoot);
         }
+        catch (Exception e) {e.printStackTrace(); }
     }
 
     public static void main(String[] args) {

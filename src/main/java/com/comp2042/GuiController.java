@@ -56,6 +56,8 @@ public class GuiController implements Initializable {
     private final BooleanProperty isPause = new SimpleBooleanProperty();    // True if the game is paused
     private final BooleanProperty isGameOver = new SimpleBooleanProperty(); // True if the game has ended
 
+    private String playerName;
+
     // INITIALIZATION
     // Called automatically when the FXML is loaded to set up the UI and game
     @Override
@@ -102,24 +104,24 @@ public class GuiController implements Initializable {
                         moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
                         keyEvent.consume();
                     }
-                }
 
-                // PLACE BRICK AT BOTTOM WITHOUT FALLING ALL THE WAY DOWN
-                if (keyEvent.getCode() == KeyCode.SPACE) {
-                    DownData result = eventListener.onHardDropEvent(
-                            new MoveEvent(EventType.DOWN, EventSource.USER)
-                    );
+                    // PLACE BRICK AT BOTTOM WITHOUT FALLING ALL THE WAY DOWN
+                    if (keyEvent.getCode() == KeyCode.SPACE) {
+                        DownData result = eventListener.onHardDropEvent(
+                                new MoveEvent(EventType.DOWN, EventSource.USER)
+                        );
 
-                    // Update moving brick visuals from returned ViewData
-                    refreshBrick(result.getViewData(), ((GameController) eventListener).getBoard().getBoardMatrix());
+                        // Update moving brick visuals from returned ViewData
+                        refreshBrick(result.getViewData(), ((GameController) eventListener).getBoard().getBoardMatrix());
 
-                    // show notification if rows were cleared by the hard drop
-                    if (result.getClearRow() != null && result.getClearRow().getLinesRemoved() > 0) {
-                        NotificationPanel notificationPanel = new NotificationPanel("+" + result.getClearRow().getScoreBonus());
-                        groupNotification.getChildren().add(notificationPanel);
-                        notificationPanel.showScore(groupNotification.getChildren());
+                        // show notification if rows were cleared by the hard drop
+                        if (result.getClearRow() != null && result.getClearRow().getLinesRemoved() > 0) {
+                            NotificationPanel notificationPanel = new NotificationPanel("+" + result.getClearRow().getScoreBonus());
+                            groupNotification.getChildren().add(notificationPanel);
+                            notificationPanel.showScore(groupNotification.getChildren());
+                        }
+                        keyEvent.consume();
                     }
-                    keyEvent.consume();
                 }
 
                 // PAUSE THE GAME
@@ -378,13 +380,22 @@ public class GuiController implements Initializable {
         });
     }
 
+    // SET PLAYER NAME FOR HS
+    public void setPlayerName(String name) {
+        this.playerName = (name == null || name.isEmpty()) ? "Unknown" : name;
+    }
+
     // GAME OVER
     public void gameOver() {
         timeLine.stop();                                                     // Stop brick movement
-        int finalScore = 0;                                                  // Get final score safely
+        int finalScore = 0;                                                  // Get final score
         try { finalScore = Integer.parseInt(scoreLabel.getText()); }
         catch (NumberFormatException e) { finalScore = 0; }
-        gameOverPanel.showGameOver(finalScore, 0);                  // Show final score in Game Over panel with the panel
+
+        HighScoreManager.addScore(playerName, finalScore);                   // Add Score to HS with name
+        int highScore = HighScoreManager.getHighScore();                     // Get HS
+
+        gameOverPanel.showGameOver(finalScore, highScore);                   // Show final score and HS with the GO panel
         isGameOver.setValue(Boolean.TRUE);                                   // Mark game as over
     }
 

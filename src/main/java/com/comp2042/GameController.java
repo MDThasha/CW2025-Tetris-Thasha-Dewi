@@ -2,12 +2,20 @@ package com.comp2042;
 
 public class GameController implements InputEventListener {
 
-    private final Board board = new SimpleBoard(25, 10); // Creats the game board
-    private final GuiController viewGuiController; // Make ui and listen to events
+    private final Board board = new SimpleBoard(25, 10);  // Creats the game board
+    private final GuiController viewGuiController;                    // Make ui and listen to events
     public static GuiController currentController;
 
-    public GameController(GuiController c) {
+    private final String playerName;
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public GameController(GuiController c, String playerName) {
         viewGuiController = c; // Stores gui reference
+        this.playerName = (playerName == null || playerName.isEmpty()) ? "Unknown" : playerName;
+
         board.createNewBrick(); // Gets first brick
         viewGuiController.setEventListener(this); // Sends all events to this class
         viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData()); // Start display

@@ -11,14 +11,21 @@
         <Label text="TETRIS"
                style="-fx-font-size: 48; -fx-text-fill: white;" />
 
+        <TextField fx:id="playerNameField" promptText="Enter your name"
+                   style="-fx-font-size: 14; -fx-padding: 10 40;
+                   -fx-max-height: 100px; -fx-max-width: 200px;"/>
+
         <Button text="START GAME" fx:id="startBtn"
                 style="-fx-font-size: 24; -fx-padding: 10 40;" />
 
-        <Button fx:id="controlsButton" text="Controls" onAction="#openControls"
+        <Button text="Controls" fx:id="controlsBtn" onAction="#openControls"
+                style="-fx-font-size: 24; -fx-padding: 10 40;" />
+
+        <Button text="LeaderBoard" fx:id="LeadBtn" onAction="#openLeaderBoard"
                 style="-fx-font-size: 24; -fx-padding: 10 40;" />
 
         <Button text="QUIT" fx:id="quitBtn"
-                style="-fx-font-size: 18; -fx-padding: 10 40;" />
+                style="-fx-font-size: 24; -fx-padding: 10 40;" />
 
         <Label text="Thasha Dewi Suresh Kumar"
                style="-fx-font-size: 18; -fx-text-fill: white;" />
