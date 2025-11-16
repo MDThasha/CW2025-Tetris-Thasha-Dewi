@@ -17,5 +17,6 @@ public interface Board {
     void newGame();
     NextShapeInfo getNextShapeInfo();
 
+    boolean hardDrop();
 }
 //Defines how brick interacts with board, and Gameplay loop

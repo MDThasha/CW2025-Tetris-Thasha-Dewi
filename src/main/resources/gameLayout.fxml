@@ -5,6 +5,7 @@
 
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.Group?>
+
 <StackPane fx:controller="com.comp2042.GuiController"
            xmlns:fx="http://javafx.com/fxml"
            styleClass="root">
@@ -73,10 +74,13 @@
                            layoutX="-120" layoutY="-115"/>
                     <Label text="Move Down - S / ↓" styleClass="STextLabel"
                            layoutX="-120" layoutY="-90"/>
-                    <Label text="MAIN MENU - ESC" styleClass="STextLabel"
+                    <Label text="DROP      - SPACE" styleClass="STextLabel"
                            layoutX="-120" layoutY="-65"/>
+                    <Label text="MAIN MENU - ESC" styleClass="STextLabel"
+                           layoutX="-120" layoutY="-40"/>
+                    <Label text="PAUSE     - TAB" styleClass="STextLabel"
+                           layoutX="-120" layoutY="-15"/>
                     <AnchorPane fx:id="ControlContainer"
-                                prefWidth="100" prefHeight="400"
                                 styleClass="controlContainer"
                                 layoutX="-125" layoutY="-240"/>
                 </AnchorPane>
@@ -88,6 +92,35 @@
                width="6000" height="6000"/>
     <GameOverPanel fx:id="gameOverPanel" visible="false"/>
     <Group fx:id="groupNotification" layoutX="7" layoutY="203"/>
+
+    <AnchorPane fx:id="pauseOverlay"
+                visible="false"
+                style="-fx-background-color: rgba(0,0,0,0.6);">
+
+        <Label text="PAUSED"
+               styleClass="pauseStyle1"
+               AnchorPane.topAnchor="150"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0"
+               alignment="CENTER"/>
+
+        <Label text="Press TAB to unpause"
+               styleClass="pauseStyle2"
+               AnchorPane.topAnchor="200"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0"
+               alignment="CENTER"/>
+    </AnchorPane>
+
+    <AnchorPane fx:id="ghostPane"
+                prefWidth="220"
+                prefHeight="490"
+                minWidth="220"
+                minHeight="490"
+                maxWidth="220"
+                maxHeight="490"
+                style="-fx-background-color: transparent;" />
+
 
     <stylesheets>
         <URL value="@window_style.css"/>

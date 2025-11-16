@@ -67,13 +67,28 @@
     -fx-border-radius: 10px;
     -fx-border-color: linear-gradient(#2A5058, #61a2b1);
     -fx-min-width: 120px;
-    -fx-min-height: 215px;
+    -fx-min-height: 270px;
     -fx-pref-width: 120px;
-    -fx-pref-height: 215px;
+    -fx-pref-height: 270px;
     -fx-alignment: center;
     -fx-padding: 6px;
 }
 /**CONTROLS CSS**/
+
+/**PAUSE CSS**/
+.pauseStyle1 {
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 38;
+    -fx-text-fill: white;
+}
+
+.pauseStyle2 {
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 32;
+    -fx-text-fill: white;
+}
+/**PAUSE CSS**/
+
 
 /**GAMEOVER CSS**/
 .gameOverStyle1 {

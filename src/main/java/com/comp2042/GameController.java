@@ -17,11 +17,38 @@ public class GameController implements InputEventListener {
         currentController = c;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public void stopGame() {
         viewGuiController.stopTimeline();
     }
 
+    @Override
+    public DownData onHardDropEvent(MoveEvent event) {
+        // drop until blocked and lock
+        board.hardDrop();
 
+        // clear rows and award score
+        ClearRow cleared = board.clearRows();
+        if (cleared.getLinesRemoved() > 0) {
+            board.getScore().add(cleared.getScoreBonus());
+        }
+
+        // spawn next brick (and check spawn collision -> game over)
+        boolean spawnCollision = board.createNewBrick();
+        // refresh GUI background + next preview because board changed
+        viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        viewGuiController.showNextBrick(board.getNextShapeInfo());
+
+        if (spawnCollision) {
+            viewGuiController.gameOver();
+        }
+
+        // return ClearRow then ViewData (same order used elsewhere)
+        return new DownData(cleared, board.getViewData());
+    }
 
     @Override
     public DownData onDownEvent(MoveEvent event) { // Trigger when brick moves down

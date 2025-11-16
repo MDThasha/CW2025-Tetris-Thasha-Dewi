@@ -1,6 +1,5 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.geometry.*?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.comp2042.MenuController"
@@ -20,6 +19,9 @@
 
         <Button text="QUIT" fx:id="quitBtn"
                 style="-fx-font-size: 18; -fx-padding: 10 40;" />
+
+        <Label text="Thasha Dewi Suresh Kumar"
+               style="-fx-font-size: 18; -fx-text-fill: white;" />
 
     </VBox>
 </StackPane>
