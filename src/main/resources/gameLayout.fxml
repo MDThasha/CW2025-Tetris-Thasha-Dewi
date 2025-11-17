@@ -64,7 +64,7 @@
                     <Label text="TIMER" styleClass="NTextLabel" layoutX="235" layoutY="-18"/>
                     <Label fx:id="timerLabel" text="0" styleClass="NTextLabel" layoutX="245" layoutY="5"/>
 
-                    <AnchorPane fx:id="scoreContainer"
+                    <AnchorPane fx:id="TimerContainer"
                                 styleClass="TimerContainer"
                                 layoutX="225" layoutY="-30"/>
 
