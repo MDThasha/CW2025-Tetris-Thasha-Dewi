@@ -38,9 +38,13 @@ public class ModeSelectController {
             GameController controller = new GameController(gui, this.playerName, mode);
 
             // Immediately start the timer if mode is TIME_LIMIT
-            if (mode == GameMode.TIME_LIMIT) {
-                Platform.runLater(() -> gui.startTimer(120));
-            }
+            Platform.runLater(() -> {
+                if (mode == GameMode.TIME_LIMIT) {
+                    gui.startCountDownTimer(120); // countdown for Time Limit
+                } else {
+                    gui.startTimer(); // count-up for other modes
+                }
+            });
 
             Main.getScene().setRoot(gameRoot);
         } catch (Exception ex) {

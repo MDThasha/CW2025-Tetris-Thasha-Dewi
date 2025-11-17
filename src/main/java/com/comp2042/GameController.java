@@ -140,8 +140,13 @@ public class GameController implements InputEventListener {
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
         viewGuiController.showNextBrick(board.getNextShapeInfo());
 
-        if (gameMode == GameMode.TIME_LIMIT) {
-            Platform.runLater(() -> viewGuiController.startTimer(120));  // Time limit for Time_limit mode
-        }
+        Platform.runLater(() -> {
+            if (gameMode == GameMode.TIME_LIMIT) {
+                viewGuiController.startCountDownTimer(120);  // countdown for Time_limit mode
+            } else {
+                viewGuiController.startTimer();      // count-up for other modes
+            }
+        });
     }
+
 }

@@ -61,34 +61,39 @@
                 </AnchorPane>
 
                 <AnchorPane prefWidth="150" prefHeight="50">
-                    <Label text="TIMER" styleClass="NTextLabel" layoutX="230" layoutY="-18"/>
-                    <Label fx:id="timerLabel" text="0" styleClass="NTextLabel" layoutX="247" layoutY="10"/>
+                    <Label text="TIMER" styleClass="NTextLabel" layoutX="235" layoutY="-18"/>
+                    <Label fx:id="timerLabel" text="0" styleClass="NTextLabel" layoutX="245" layoutY="5"/>
+
+                    <AnchorPane fx:id="scoreContainer"
+                                styleClass="TimerContainer"
+                                layoutX="225" layoutY="-30"/>
+
                 </AnchorPane>
 
 
                 <!--CONTROLS PANEL-->
                 <AnchorPane prefWidth="150" prefHeight="150">
                     <Label text="CONTROLS" styleClass="HTextLabel"
-                           layoutX="-120" layoutY="-230"/>
+                           layoutX="-120" layoutY="-280"/>
                     <Label text="Restart   - N" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-190"/>
+                           layoutX="-120" layoutY="-240"/>
                     <Label text="Rotate    - W / ↑" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-165"/>
+                           layoutX="-120" layoutY="-215"/>
                     <Label text="Move Left - A / ←" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-140"/>
+                           layoutX="-120" layoutY="-190"/>
                     <Label text="Move Right- D / →" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-115"/>
+                           layoutX="-120" layoutY="-165"/>
                     <Label text="Move Down - S / ↓" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-90"/>
+                           layoutX="-120" layoutY="-140"/>
                     <Label text="DROP      - SPACE" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-65"/>
+                           layoutX="-120" layoutY="-115"/>
                     <Label text="MAIN MENU - ESC" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-40"/>
+                           layoutX="-120" layoutY="-90"/>
                     <Label text="PAUSE     - TAB" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-15"/>
+                           layoutX="-120" layoutY="-65"/>
                     <AnchorPane fx:id="ControlContainer"
                                 styleClass="controlContainer"
-                                layoutX="-125" layoutY="-240"/>
+                                layoutX="-125" layoutY="-290"/>
                 </AnchorPane>
             </VBox>
         </AnchorPane>
@@ -101,7 +106,6 @@
     <Group fx:id="TimeBonus" layoutX="7" layoutY="150" styleClass="bonusStyle2">
         <Label fx:id="bonusTimeLabel"/>
     </Group>
-
 
     <AnchorPane fx:id="pauseOverlay"
                 visible="false"

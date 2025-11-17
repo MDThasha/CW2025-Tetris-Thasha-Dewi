@@ -423,8 +423,8 @@ public class GuiController implements Initializable {
         fade.play();
     }
 
-
-    public void startTimer(int seconds) {
+    //FOR COUNTDOWN TIME LIMIT MODE
+    public void startCountDownTimer(int seconds) {
         if (gameTimer != null) gameTimer.stop();
         timeLeft = new SimpleIntegerProperty(seconds);
         timerLabel.textProperty().bind(timeLeft.asString());
@@ -436,10 +436,24 @@ public class GuiController implements Initializable {
                 gameOver();
             }
         }));
+        gameTimer.setCycleCount(Timeline.INDEFINITE);
+        gameTimer.play();
+    }
+
+    //NORMAL TIMER FOR COUNTING UP
+    public void startTimer() {
+        if (gameTimer != null) gameTimer.stop();
+        timeLeft = new SimpleIntegerProperty(0); // start from 0
+        timerLabel.textProperty().bind(timeLeft.asString());
+
+        gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), ae -> {
+            timeLeft.set(timeLeft.get() + 1); // increment every second
+        }));
 
         gameTimer.setCycleCount(Timeline.INDEFINITE);
         gameTimer.play();
     }
+
 
     // GAME OVER
     public void gameOver() {
