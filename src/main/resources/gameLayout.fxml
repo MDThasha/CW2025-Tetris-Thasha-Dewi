@@ -67,29 +67,29 @@
                     <AnchorPane fx:id="TimerContainer"
                                 styleClass="TimerContainer"
                                 layoutX="225" layoutY="-30"/>
-
                 </AnchorPane>
 
 
                 <!--CONTROLS PANEL-->
+                <!--CONTROLS PANEL-->
                 <AnchorPane prefWidth="150" prefHeight="150">
                     <Label text="CONTROLS" styleClass="HTextLabel"
                            layoutX="-120" layoutY="-280"/>
-                    <Label text="Restart   - N" styleClass="STextLabel"
+                    <Label fx:id="restartLabel" text="Restart   - N" styleClass="STextLabel"
                            layoutX="-120" layoutY="-240"/>
-                    <Label text="Rotate    - W / ↑" styleClass="STextLabel"
+                    <Label fx:id="rotateLabel" text="Rotate    - W / ↑" styleClass="STextLabel"
                            layoutX="-120" layoutY="-215"/>
-                    <Label text="Move Left - A / ←" styleClass="STextLabel"
+                    <Label fx:id="moveLeftLabel" text="Move Left - A / ←" styleClass="STextLabel"
                            layoutX="-120" layoutY="-190"/>
-                    <Label text="Move Right- D / →" styleClass="STextLabel"
+                    <Label fx:id="moveRightLabel" text="Move Right- D / →" styleClass="STextLabel"
                            layoutX="-120" layoutY="-165"/>
-                    <Label text="Move Down - S / ↓" styleClass="STextLabel"
+                    <Label fx:id="moveDownLabel" text="Move Down - S / ↓" styleClass="STextLabel"
                            layoutX="-120" layoutY="-140"/>
-                    <Label text="DROP      - SPACE" styleClass="STextLabel"
+                    <Label fx:id="hardDropLabel" text="DROP      - SPACE" styleClass="STextLabel"
                            layoutX="-120" layoutY="-115"/>
-                    <Label text="MAIN MENU - ESC" styleClass="STextLabel"
+                    <Label fx:id="mainMenuLabel" text="MAIN MENU - ESC" styleClass="STextLabel"
                            layoutX="-120" layoutY="-90"/>
-                    <Label text="PAUSE     - TAB" styleClass="STextLabel"
+                    <Label fx:id="pauseLabel" text="PAUSE     - TAB" styleClass="STextLabel"
                            layoutX="-120" layoutY="-65"/>
                     <AnchorPane fx:id="ControlContainer"
                                 styleClass="controlContainer"

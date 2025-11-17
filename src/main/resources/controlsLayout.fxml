@@ -4,24 +4,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
+
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.comp2042.ControlsController"
             prefWidth="500" prefHeight="700" style="-fx-background-color: #111;">
-
     <VBox spacing="20" alignment="CENTER" AnchorPane.leftAnchor="0"
           AnchorPane.rightAnchor="0" AnchorPane.topAnchor="100">
 
         <Label text="CONTROLS" style="-fx-text-fill: white; -fx-font-size: 36px;" />
+        <Label text="Click control you want to change to edit Keybind" style="-fx-text-fill: white; -fx-font-size: 16px;" />
 
-        <Label text="Move Left  -  A / ←" style="-fx-text-fill: white; -fx-font-size: 20px;" />
-        <Label text="Move Right -  D / →" style="-fx-text-fill: white; -fx-font-size: 20px;" />
-        <Label text="Rotate     -  W / ↑" style="-fx-text-fill: white; -fx-font-size: 20px;" />
-        <Label text="Down       -  S / ↓" style="-fx-text-fill: white; -fx-font-size: 20px;" />
-        <Label text="Drop       -  SPACE" style="-fx-text-fill: white; -fx-font-size: 20px;" />
-        <Label text="Restart    -  N" style="-fx-text-fill: white; -fx-font-size: 20px;" />
-        <Label text="Main Menu  -  ESC" style="-fx-text-fill: white; -fx-font-size: 20px;" />
-        <Label text="Pause      -  TAB" style="-fx-text-fill: white; -fx-font-size: 20px;" />
+        <Button fx:id="moveLeftBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="moveRightBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="rotateBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="moveDownBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="hardDropBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="restartBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="pauseBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="mainMenuBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
 
         <Button text="Back" prefWidth="120" onAction="#goBack"
-                style="-fx-background-color: #333; -fx-text-fill: white;" />
+                style="-fx-background-color: #555; -fx-text-fill: white;" />
+
     </VBox>
 </AnchorPane>

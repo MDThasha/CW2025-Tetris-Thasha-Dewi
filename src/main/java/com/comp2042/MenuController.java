@@ -53,10 +53,28 @@ public class MenuController {
         quitBtn.setOnAction(e -> System.exit(0));  // Quit the application
     }
 
-    @FXML public void openControls() {                   // Open the controls menu
-        try { Parent controlsRoot = FXMLLoader.load(getClass().getClassLoader().getResource("controlsLayout.fxml"));
-            rootPane.getScene().setRoot(controlsRoot); } // swap root, keep same scene
-        catch (Exception e) { e.printStackTrace(); }     // Print any loading errors
+    @FXML public void openControls() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("controlsLayout.fxml"));
+            Parent controlsRoot = loader.load();
+
+            ControlsController controller = loader.getController();
+
+            KeyBindings bindings;
+            if (GuiController.currentController != null) {
+                bindings = GuiController.currentController.getKeyBindings();
+            } else {
+                bindings = KeyBindings.getInstance();
+            }
+
+            controller.setKeyBindings(bindings);
+            controller.setupButtons();
+
+            rootPane.getScene().setRoot(controlsRoot);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML public void openLeaderBoard() { // Open the leaderboard menu

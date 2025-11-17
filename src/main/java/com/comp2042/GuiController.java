@@ -31,6 +31,7 @@ import javafx.scene.Group;
 import javafx.fxml.FXML;
 import java.net.URL;
 import java.awt.*;
+import java.util.Set;
 
 public class GuiController implements Initializable {
     // FXML COMPONENTS
@@ -69,16 +70,32 @@ public class GuiController implements Initializable {
 
     private String playerName;
 
+    // GAME MODE STUFF
     private GameMode currentMode;
     private Timeline gameTimer;
     private IntegerProperty timeLeft;
+
+    // KEYBINDING STUFF
+    private KeyBindings keyBindings = KeyBindings.getInstance(); // default keys
+    public KeyBindings getKeyBindings() { return keyBindings; }
+    public void setKeyBindings(KeyBindings bindings) { this.keyBindings = bindings; }
+    public static GuiController currentController;
+
+    @FXML private Label restartLabel;
+    @FXML private Label rotateLabel;
+    @FXML private Label moveLeftLabel;
+    @FXML private Label moveRightLabel;
+    @FXML private Label moveDownLabel;
+    @FXML private Label hardDropLabel;
+    @FXML private Label mainMenuLabel;
+    @FXML private Label pauseLabel;
 
     // INITIALIZATION
     // Called automatically when the FXML is loaded to set up the UI and game
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38); // Load custom font for score and UI text
-
+        currentController = this;
         // Set up game panel to receive keyboard input
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
@@ -91,7 +108,7 @@ public class GuiController implements Initializable {
                 if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {  // Only handle movement keys if game is not paused or over
 
                     // MOVE BRICK LEFT
-                    if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
+                    if (keyBindings.getMoveLeft().contains(keyEvent.getCode())) {
                         refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),
                                 ((GameController) eventListener).getBoard().getBoardMatrix()
                         );
@@ -99,7 +116,7 @@ public class GuiController implements Initializable {
                     }
 
                     // MOVE BRICK RIGHT
-                    if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.D) {
+                    if (keyBindings.getMoveRight().contains(keyEvent.getCode())) {
                         refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),
                                 ((GameController) eventListener).getBoard().getBoardMatrix()
                         );
@@ -107,7 +124,7 @@ public class GuiController implements Initializable {
                     }
 
                     // MOVE BRICK ROTATE
-                    if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
+                    if (keyBindings.getRotate().contains(keyEvent.getCode())) {
                         refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)),
                                 ((GameController) eventListener).getBoard().getBoardMatrix()
                         );
@@ -115,13 +132,13 @@ public class GuiController implements Initializable {
                     }
 
                     // MOVE BRICK DOWN
-                    if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
+                    if (keyBindings.getMoveDown().contains(keyEvent.getCode())) {
                         moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
                         keyEvent.consume();
                     }
 
                     // PLACE BRICK AT BOTTOM WITHOUT FALLING ALL THE WAY DOWN
-                    if (keyEvent.getCode() == KeyCode.SPACE) {
+                    if (keyBindings.getHardDrop().contains(keyEvent.getCode())) {
                         DownData result = eventListener.onHardDropEvent(
                                 new MoveEvent(EventType.DOWN, EventSource.USER)
                         );
@@ -140,19 +157,19 @@ public class GuiController implements Initializable {
                 }
 
                 // PAUSE THE GAME
-                if (keyEvent.getCode() == KeyCode.TAB) {
+                if (keyBindings.getPause().contains(keyEvent.getCode())) {
                     togglePause();
                     keyEvent.consume();
                 }
 
                 // MAIN MENU FROM GAME
-                if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                if (keyBindings.getMainMenu().contains(keyEvent.getCode())) {
                     Main.loadMenu();
                     keyEvent.consume();
                 }
 
                 // RESTART GAME
-                if (keyEvent.getCode() == KeyCode.N) { // Restart
+                if (keyBindings.getRestart().contains(keyEvent.getCode())) { // Restart
                     newGame(null);
                 }
             }
@@ -164,6 +181,8 @@ public class GuiController implements Initializable {
         reflection.setFraction(0.8);
         reflection.setTopOpacity(0.9);
         reflection.setTopOffset(-12);
+
+        updateControlLabels();
     }
 
     // SETS UP VISUAL BOARD / INITIALIZE GAME VIEW
@@ -454,6 +473,48 @@ public class GuiController implements Initializable {
         gameTimer.play();
     }
 
+    // KEYBINDING REFLECT IN GAME VIEW
+    public void updateControlLabels() {
+        if (keyBindings == null) return;
+
+        restartLabel.setText("Restart   - " + formatKeys(keyBindings.getRestart()));
+        rotateLabel.setText("Rotate    - " + formatKeys(keyBindings.getRotate()));
+        moveLeftLabel.setText("Move Left - " + formatKeys(keyBindings.getMoveLeft()));
+        moveRightLabel.setText("Move Right- " + formatKeys(keyBindings.getMoveRight()));
+        moveDownLabel.setText("Move Down - " + formatKeys(keyBindings.getMoveDown()));
+        hardDropLabel.setText("DROP      - " + formatKeys(keyBindings.getHardDrop()));
+        mainMenuLabel.setText("MAIN MENU - " + formatKeys(keyBindings.getMainMenu()));
+        pauseLabel.setText("PAUSE     - " + formatKeys(keyBindings.getPause()));
+    }
+
+    // Helper method to format key names nicely
+    private String formatKeys(Set<KeyCode> keys) {
+        if (keys == null || keys.size() == 0) return "?";
+
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        for (KeyCode key : keys) {
+            if (count > 0) sb.append(" / ");
+            sb.append(formatKeyName(key));
+            count++;
+            if (count >= 2) break; // Only show first 2 keys to avoid clutter
+        }
+        return sb.toString();
+    }
+
+    // Format individual key names with arrows for arrow keys
+    private String formatKeyName(KeyCode key) {
+        switch (key) {
+            case UP: return "↑";
+            case DOWN: return "↓";
+            case LEFT: return "←";
+            case RIGHT: return "→";
+            case SPACE: return "SPACE";
+            case TAB: return "TAB";
+            case ESCAPE: return "ESC";
+            default: return key.getName();
+        }
+    }
 
     // GAME OVER
     public void gameOver() {
