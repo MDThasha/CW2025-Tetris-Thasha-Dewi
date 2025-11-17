@@ -1,9 +1,8 @@
 package com.comp2042;
 
 public final class ClearRow {
-    private final int linesRemoved;
+    private final int linesRemoved, scoreBonus;
     private final int[][] newMatrix;
-    private final int scoreBonus;
 
     public ClearRow(int linesRemoved, int[][] newMatrix, int scoreBonus) {
         this.linesRemoved = linesRemoved;

@@ -67,9 +67,9 @@
     -fx-border-radius: 10px;
     -fx-border-color: linear-gradient(#2A5058, #61a2b1);
     -fx-min-width: 120px;
-    -fx-min-height: 270px;
+    -fx-min-height: 300px;
     -fx-pref-width: 120px;
-    -fx-pref-height: 270px;
+    -fx-pref-height: 300px;
     -fx-alignment: center;
     -fx-padding: 6px;
 }

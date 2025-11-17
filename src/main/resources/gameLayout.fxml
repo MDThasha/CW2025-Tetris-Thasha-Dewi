@@ -69,30 +69,44 @@
                                 layoutX="225" layoutY="-30"/>
                 </AnchorPane>
 
+                <!-- HOLD section -->
+                <AnchorPane prefWidth="150" prefHeight="150">
+                    <Label text="HOLD" styleClass="nextBrickLabel"
+                           layoutX="-115" layoutY="-290"/>
+                    <AnchorPane fx:id="holdBrickContainer"
+                                prefWidth="100" prefHeight="120"
+                                styleClass="NBrickContainer"
+                                layoutX="-125" layoutY="-290"/>
+                </AnchorPane>
+
 
                 <!--CONTROLS PANEL-->
                 <AnchorPane prefWidth="150" prefHeight="150">
                     <Label text="CONTROLS" styleClass="HTextLabel"
-                           layoutX="-120" layoutY="-280"/>
-                    <Label fx:id="restartLabel" text="Restart   - N" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-240"/>
-                    <Label fx:id="rotateLabel" text="Rotate    - W / ↑" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-215"/>
-                    <Label fx:id="moveLeftLabel" text="Move Left - A / ←" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-190"/>
-                    <Label fx:id="moveRightLabel" text="Move Right- D / →" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-165"/>
-                    <Label fx:id="moveDownLabel" text="Move Down - S / ↓" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-140"/>
-                    <Label fx:id="hardDropLabel" text="DROP      - SPACE" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-115"/>
-                    <Label fx:id="mainMenuLabel" text="MAIN MENU - ESC" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-90"/>
-                    <Label fx:id="pauseLabel" text="PAUSE     - TAB" styleClass="STextLabel"
-                           layoutX="-120" layoutY="-65"/>
+                           layoutX="-120" layoutY="-300"/>
+                    <Label fx:id="restartLabel" text="Restart      - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-260"/>
+                    <Label fx:id="rotateLabel" text="Rotate        - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-235"/>
+                    <Label fx:id="moveLeftLabel" text="Move Left   - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-210"/>
+                    <Label fx:id="moveRightLabel" text="Move Right - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-185"/>
+                    <Label fx:id="moveDownLabel" text="Move Down   - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-160"/>
+                    <Label fx:id="hardDropLabel" text="DROP        - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-135"/>
+                    <Label fx:id="mainMenuLabel" text="MAIN MENU   - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-110"/>
+                    <Label fx:id="pauseLabel" text="PAUSE          - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-85"/>
+                    <Label fx:id="holdLabel" text="HOLD            - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-60"/>
+                    <Label fx:id="swapLabel" text="SWAP            - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-35"/>
                     <AnchorPane fx:id="ControlContainer"
                                 styleClass="controlContainer"
-                                layoutX="-125" layoutY="-290"/>
+                                layoutX="-125" layoutY="-310"/>
                 </AnchorPane>
             </VBox>
         </AnchorPane>

@@ -23,6 +23,8 @@ public class KeyBindings {
     private Set<KeyCode> restart = new HashSet<>();
     private Set<KeyCode> pause = new HashSet<>();
     private Set<KeyCode> mainMenu = new HashSet<>();
+    private Set<KeyCode> hold = new HashSet<>();
+    private Set<KeyCode> swap = new HashSet<>();
 
     public KeyBindings() {
         // Default bindings
@@ -35,6 +37,9 @@ public class KeyBindings {
         restart.add(KeyCode.N);
         pause.add(KeyCode.TAB);
         mainMenu.add(KeyCode.ESCAPE);
+
+        hold.add(KeyCode.C);
+        swap.add(KeyCode.V);
     }
 
     public Set<KeyCode> getMoveLeft() { return moveLeft; }
@@ -45,4 +50,6 @@ public class KeyBindings {
     public Set<KeyCode> getRestart() { return restart; }
     public Set<KeyCode> getPause() { return pause; }
     public Set<KeyCode> getMainMenu() { return mainMenu; }
+    public Set<KeyCode> getHold() { return hold; }
+    public Set<KeyCode> getSwap() { return swap; }
 }

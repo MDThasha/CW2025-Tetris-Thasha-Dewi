@@ -8,7 +8,7 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.comp2042.ControlsController"
             prefWidth="500" prefHeight="700" style="-fx-background-color: #111;">
     <VBox spacing="20" alignment="CENTER" AnchorPane.leftAnchor="0"
-          AnchorPane.rightAnchor="0" AnchorPane.topAnchor="100">
+          AnchorPane.rightAnchor="0" AnchorPane.topAnchor="50">
 
         <Label text="CONTROLS" style="-fx-text-fill: white; -fx-font-size: 36px;" />
         <Label text="Click control you want to change to edit Keybind" style="-fx-text-fill: white; -fx-font-size: 16px;" />
@@ -21,6 +21,8 @@
         <Button fx:id="restartBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
         <Button fx:id="pauseBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
         <Button fx:id="mainMenuBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="holdBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="swapBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
 
         <Button text="Back" prefWidth="120" onAction="#goBack"
                 style="-fx-background-color: #555; -fx-text-fill: white;" />

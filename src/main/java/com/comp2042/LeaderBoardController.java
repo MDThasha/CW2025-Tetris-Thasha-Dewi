@@ -8,23 +8,11 @@ import java.util.List;
 
 public class LeaderBoardController {
 
-    @FXML
-    private VBox leaderboardContainer;
+    @FXML private VBox leaderboardContainer;
 
-    @FXML
-    private void showClassic() {
-        showLeaderboardForMode(GameMode.CLASSIC, "CLASSIC MODE");
-    }
-
-    @FXML
-    private void showTimer() {
-        showLeaderboardForMode(GameMode.TIME_LIMIT, "TIMER MODE");
-    }
-
-    @FXML
-    private void showAllSame() {
-        showLeaderboardForMode(GameMode.ALL_SAME_BLOCK, "ALL SAME BLOCK");
-    }
+    @FXML private void showClassic() { showLeaderboardForMode(GameMode.CLASSIC, "CLASSIC MODE"); }
+    @FXML private void showTimer() { showLeaderboardForMode(GameMode.TIME_LIMIT, "TIMER MODE"); }
+    @FXML private void showAllSame() { showLeaderboardForMode(GameMode.ALL_SAME_BLOCK, "ALL SAME BLOCK"); }
 
     private void showLeaderboardForMode(GameMode mode, String titleText) {
         leaderboardContainer.getChildren().clear();

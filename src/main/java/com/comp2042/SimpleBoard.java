@@ -8,23 +8,23 @@ import java.awt.*;
 public class SimpleBoard implements Board {
 
     // BOARD DIMENSIONS
-    private final int width;
-    private final int height;
+    private final int width, height;
 
     private final BrickGenerator brickGenerator;
     private final BrickRotator brickRotator;
+
     private int[][] currentGameMatrix;     // Holds the background n locked bricks
     private Point currentOffset;           // Current brick position
     private final Score score;             // Player score
+
     private Brick nextBrick;
     private Brick currentBrick;
 
+    private Brick heldBrick = null;
+    private boolean hasSwappedThisTurn = false;
+
     private Class<? extends Brick> forcedBrickClass = null;
-
-    public void setNextBrickType(Class<? extends Brick> brickClass) {
-        this.forcedBrickClass = brickClass;
-    }
-
+    public void setNextBrickType(Class<? extends Brick> brickClass) { this.forcedBrickClass = brickClass; }
 
     // INITIALISE BOARD AND BRICKS
     public SimpleBoard(int width, int height) {
@@ -117,6 +117,7 @@ public class SimpleBoard implements Board {
     public boolean createNewBrick() {
         currentBrick = nextBrick;                   // Move nextBrick into play
         brickRotator.setBrick(currentBrick);
+        hasSwappedThisTurn = false;                 // TO CHECK SWAP OR NOT
         currentOffset = new Point(4, 2);
         if (forcedBrickClass != null) {
             try {
@@ -179,6 +180,8 @@ public class SimpleBoard implements Board {
     public void newGame() {
         currentGameMatrix = new int[width][height];
         score.reset();
+        heldBrick = null;
+        hasSwappedThisTurn = false;
         createNewBrick();
     }
 
@@ -204,5 +207,68 @@ public class SimpleBoard implements Board {
             p.y += 1; // Move down until collision
         }
         return p;
+    }
+
+    //HELD BRICK
+    @Override
+    public boolean holdBrick() {
+        if (hasSwappedThisTurn) return false;  // Can't hold/swap twice per brick
+
+        if (heldBrick == null) {
+            heldBrick = currentBrick;
+            currentBrick = nextBrick;
+            brickRotator.setBrick(currentBrick);
+            currentOffset = new Point(4, 2);
+
+            if (forcedBrickClass != null) {
+                try {
+                    nextBrick = forcedBrickClass.getDeclaredConstructor().newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                nextBrick = brickGenerator.getBrick();
+            }
+        } else {
+            // Already have a held brick swap with current
+            Brick temp = currentBrick;
+            currentBrick = heldBrick;
+            heldBrick = temp;
+            brickRotator.setBrick(currentBrick);
+            currentOffset = new Point(4, 2);
+        }
+
+        hasSwappedThisTurn = true;
+        return true;
+    }
+
+    // SWAP WITH HELD
+    @Override
+    public boolean swapBrick() {
+        if (hasSwappedThisTurn) return false;       // Can't hold/swap twice per brick
+        if (heldBrick == null) return holdBrick();  // If no held brick, act like hold
+
+        Brick temp = currentBrick;
+        currentBrick = heldBrick;
+        heldBrick = temp;
+        brickRotator.setBrick(currentBrick);
+        currentOffset = new Point(4, 2);
+
+        hasSwappedThisTurn = true;
+        return true;
+    }
+
+    // GET HELD FOR GUI
+    @Override
+    public NextShapeInfo getHeldBrickInfo() {
+        if (heldBrick == null) return null;
+        int[][] shape = heldBrick.getShapeMatrix().get(0);
+        return new NextShapeInfo(shape, 0);
+    }
+
+    // CHECK IF CAN HOLD OR SWAP
+    @Override
+    public boolean canHoldOrSwap() {
+        return !hasSwappedThisTurn;
     }
 }

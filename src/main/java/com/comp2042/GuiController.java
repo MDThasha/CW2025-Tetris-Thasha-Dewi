@@ -34,70 +34,73 @@ import java.awt.*;
 import java.util.Set;
 
 public class GuiController implements Initializable {
-    // FXML COMPONENTS
+
+    // GAME PANELS
     @FXML private GridPane gamePanel;
-    @FXML private Group groupNotification;
     @FXML private GridPane brickPanel;
-    @FXML private GameOverPanel gameOverPanel;
-    @FXML private AnchorPane nextBrickContainer;
-    @FXML private Label scoreLabel;
-    @FXML private AnchorPane pauseOverlay;
     @FXML private AnchorPane ghostPane;
+    @FXML private AnchorPane pauseOverlay;
+    @FXML private GameOverPanel gameOverPanel;
+
+    // BRICK PREVIEW UI
+    @FXML private AnchorPane nextBrickContainer;
+    @FXML private AnchorPane holdBrickContainer;
+
+    // LABELS
+    @FXML private Label scoreLabel;
     @FXML private Label timerLabel;
     @FXML private Label playerNameLabel;
+
+    // CONTROLS
+    @FXML private Label restartLabel, rotateLabel, moveLeftLabel, moveRightLabel;
+    @FXML private Label moveDownLabel, hardDropLabel, mainMenuLabel, pauseLabel;
+    @FXML private Label holdLabel, swapLabel;
+
+    // BONUS NOTIFICATIONS
+    @FXML private Group groupNotification;
     @FXML private Group TimeBonus;
     @FXML private Label bonusTimeLabel;
 
+    // CONSTANTS
+    private static final int BRICK_SIZE = 20;
+    private static final int GHOST_Y_OFFSET = 10;
 
-    //  GAME CONSTANTS
-    private static final int BRICK_SIZE = 20;       // Width/height of a single brick block
-    private static final int GHOST_Y_OFFSET = 10;   // Vertical offset for ghost brick visualization
+    // STATIC REFERENCES
+    public static GuiController currentController;
 
-    // RECTANGLE ARRAYS
-    // Arrays to manage the visual representation of bricks and game board
-    private Rectangle[][] ghostRectangles;       // ghost brick preview
-    private Rectangle[][] rectangles;            // currently falling brick
-    private Rectangle[][] nextBrickRects;        // next brick preview
-    private Rectangle[][] displayMatrix;         // fixed bricks on the board
+    // RECTAGLE ARRAYS (Visuals)
+    private Rectangle[][] displayMatrix;      // Fixed bricks on board
+    private Rectangle[][] rectangles;         // Currently falling brick
+    private Rectangle[][] ghostRectangles;    // Ghost brick preview
+    private Rectangle[][] nextBrickRects;     // Next brick preview
+    private Rectangle[][] holdBrickRects;     // Hold brick preview
 
-    // GAME STATE AND CONTROL
-    private InputEventListener eventListener;     // Interface to handle user/game events
-    private Timeline timeLine;                    // Timeline controlling automatic brick falling
-
-    // GAME STATUS FLAGS
-    private final BooleanProperty isPause = new SimpleBooleanProperty();    // True if the game is paused
-    private final BooleanProperty isGameOver = new SimpleBooleanProperty(); // True if the game has ended
-
-    private String playerName;
-
-    // GAME MODE STUFF
-    private GameMode currentMode;
+    // GAME STATE
+    private InputEventListener eventListener;
+    private Timeline timeLine;
     private Timeline gameTimer;
     private IntegerProperty timeLeft;
 
-    // KEYBINDING STUFF
-    private KeyBindings keyBindings = KeyBindings.getInstance(); // default keys
+    // GAME STATUS FLAGS
+    private final BooleanProperty isPause = new SimpleBooleanProperty();
+    private final BooleanProperty isGameOver = new SimpleBooleanProperty();
+
+    // GAME INFO
+    private String playerName;
+    private GameMode currentMode;
+
+    // KEYBINDINGS
+    private KeyBindings keyBindings = KeyBindings.getInstance();
+
     public KeyBindings getKeyBindings() { return keyBindings; }
     public void setKeyBindings(KeyBindings bindings) { this.keyBindings = bindings; }
-    public static GuiController currentController;
-
-    @FXML private Label restartLabel;
-    @FXML private Label rotateLabel;
-    @FXML private Label moveLeftLabel;
-    @FXML private Label moveRightLabel;
-    @FXML private Label moveDownLabel;
-    @FXML private Label hardDropLabel;
-    @FXML private Label mainMenuLabel;
-    @FXML private Label pauseLabel;
 
     // INITIALIZATION
-    // Called automatically when the FXML is loaded to set up the UI and game
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38); // Load custom font for score and UI text
         currentController = this;
-        // Set up game panel to receive keyboard input
-        gamePanel.setFocusTraversable(true);
+        gamePanel.setFocusTraversable(true);                                                                 // Set up game panel to receive keyboard input
         gamePanel.requestFocus();
 
         // KEYBOARD KEYBIND EVENT HANDLER
@@ -105,7 +108,8 @@ public class GuiController implements Initializable {
             @Override
             public void handle(KeyEvent keyEvent) {
 
-                if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {  // Only handle movement keys if game is not paused or over
+                // Only handle movement keys if game is not paused or over
+                if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
 
                     // MOVE BRICK LEFT
                     if (keyBindings.getMoveLeft().contains(keyEvent.getCode())) {
@@ -154,6 +158,22 @@ public class GuiController implements Initializable {
                         }
                         keyEvent.consume();
                     }
+
+                    // HOLD BRICK
+                    if (keyBindings.getHold().contains(keyEvent.getCode())) {
+                        refreshBrick(eventListener.onHoldEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),
+                                ((GameController) eventListener).getBoard().getBoardMatrix()
+                        );
+                        keyEvent.consume();
+                    }
+
+                    // SWAP BRICK
+                    if (keyBindings.getSwap().contains(keyEvent.getCode())) {
+                        refreshBrick(eventListener.onSwapEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),
+                                ((GameController) eventListener).getBoard().getBoardMatrix()
+                        );
+                        keyEvent.consume();
+                    }
                 }
 
                 // PAUSE THE GAME
@@ -175,7 +195,7 @@ public class GuiController implements Initializable {
             }
         });
 
-        // GAME OVER PANEL INITIAL SETUP
+        // GAME OVER PANEL
         gameOverPanel.setVisible(false); // Hide game over panel initially
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
@@ -292,6 +312,61 @@ public class GuiController implements Initializable {
                     nextBrickRects[r][c] = rect;
                 } else {
                     nextBrickRects[r][c] = null;                                // Empty cells stored as null
+                }
+            }
+        }
+    }
+
+    // SHOW HELD BRICK PREVIEW IN HOLD PANEL
+    public void showHeldBrick(NextShapeInfo heldShapeInfo) {
+        if (holdBrickContainer == null) return;
+        holdBrickContainer.getChildren().clear();
+
+        if (heldShapeInfo == null) return;  // No held brick yet
+
+        int[][] shape = heldShapeInfo.getShape();
+        if (shape == null || shape.length == 0 || shape[0].length == 0) return;
+
+        final int rows = shape.length;
+        final int cols = shape[0].length;
+        final double blockSize = BRICK_SIZE;
+
+        double containerWidth = holdBrickContainer.getWidth();
+        double containerHeight = holdBrickContainer.getHeight();
+
+        if (containerWidth <= 0) containerWidth = holdBrickContainer.getPrefWidth();
+        if (containerHeight <= 0) containerHeight = holdBrickContainer.getPrefHeight();
+
+        if (containerWidth <= 0 || containerHeight <= 0) {
+            Platform.runLater(() -> showHeldBrick(heldShapeInfo));
+            return;
+        }
+
+        double totalWidth = cols * blockSize;
+        double totalHeight = rows * blockSize;
+        double startX = Math.max(0, (containerWidth - totalWidth) / 2.0);
+        double startY = Math.max(0, (containerHeight - totalHeight) / 2.0);
+        holdBrickRects = new Rectangle[rows][cols];
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (shape[r][c] != 0) {
+                    Rectangle rect = new Rectangle(blockSize, blockSize);
+                    rect.setFill(getFillColor(shape[r][c]));
+                    rect.setArcWidth(6);
+                    rect.setArcHeight(6);
+                    rect.setStroke(Color.rgb(30, 30, 30, 0.5));
+                    rect.setStrokeWidth(1);
+
+                    double x = startX + c * blockSize;
+                    double y = startY + r * blockSize;
+                    rect.setLayoutX(x);
+                    rect.setLayoutY(y);
+
+                    holdBrickContainer.getChildren().add(rect);
+                    holdBrickRects[r][c] = rect;
+                } else {
+                    holdBrickRects[r][c] = null;
                 }
             }
         }
@@ -485,6 +560,9 @@ public class GuiController implements Initializable {
         hardDropLabel.setText("DROP      - " + formatKeys(keyBindings.getHardDrop()));
         mainMenuLabel.setText("MAIN MENU - " + formatKeys(keyBindings.getMainMenu()));
         pauseLabel.setText("PAUSE     - " + formatKeys(keyBindings.getPause()));
+
+        if (holdLabel != null) holdLabel.setText("HOLD      - " + formatKeys(keyBindings.getHold()));
+        if (swapLabel != null) swapLabel.setText("SWAP      - " + formatKeys(keyBindings.getSwap()));
     }
 
     // Helper method to format key names nicely
@@ -502,7 +580,7 @@ public class GuiController implements Initializable {
         return sb.toString();
     }
 
-    // Format individual key names with arrows for arrow keys
+    // Format individual key names with arrows for arroe keys
     private String formatKeyName(KeyCode key) {
         switch (key) {
             case UP: return "↑";

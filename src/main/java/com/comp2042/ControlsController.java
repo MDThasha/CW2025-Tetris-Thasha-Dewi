@@ -4,32 +4,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
 import java.util.Set;
 
 public class ControlsController {
 
-    @FXML private Button moveLeftBtn;
-    @FXML private Button moveRightBtn;
-    @FXML private Button rotateBtn;
-    @FXML private Button moveDownBtn;
-    @FXML private Button hardDropBtn;
-    @FXML private Button restartBtn;
-    @FXML private Button pauseBtn;
-    @FXML private Button mainMenuBtn;
+    @FXML private Button moveLeftBtn, moveRightBtn, rotateBtn, moveDownBtn,
+                         hardDropBtn, restartBtn, pauseBtn, mainMenuBtn, holdBtn, swapBtn;
+
+    @FXML public void initialize() { }
 
     private KeyBindings keyBindings;
+    public void setKeyBindings(KeyBindings bindings) { this.keyBindings = bindings; }
 
-    public void setKeyBindings(KeyBindings bindings) {
-        this.keyBindings = bindings;
-    }
-
-    @FXML
-    public void initialize() {
-        // Buttons will be set up after keyBindings is injected
-    }
-
-    // Call this after setKeyBindings() is called
     public void setupButtons() {
         if (keyBindings == null) {
             keyBindings = new KeyBindings();
@@ -43,23 +29,24 @@ public class ControlsController {
         setupButton(restartBtn, "Restart", keyBindings.getRestart());
         setupButton(pauseBtn, "Pause", keyBindings.getPause());
         setupButton(mainMenuBtn, "Main Menu", keyBindings.getMainMenu());
+        setupButton(holdBtn, "Hold", keyBindings.getHold());
+        setupButton(swapBtn, "Swap", keyBindings.getSwap());
     }
 
     private void setupButton(Button btn, String actionName, Set<KeyCode> keySet) {
-        // Set initial text
         updateButtonText(btn, actionName, keySet);
 
         btn.setOnAction(e -> {
             btn.setText(actionName + " - Press a key...");
             btn.setStyle("-fx-background-color: #555; -fx-text-fill: yellow;");
 
-            // Store the filter so we can remove it later
+            // Filter
             final javafx.event.EventHandler<KeyEvent>[] filterHolder = new javafx.event.EventHandler[1];
 
             javafx.event.EventHandler<KeyEvent> keyFilter = (KeyEvent keyEvent) -> {
                 KeyCode newKey = keyEvent.getCode();
 
-                // Ignore ESC to cancel
+                // Ignore ESC to cancel, so can set as a keybind
                 if (newKey == KeyCode.ESCAPE || newKey == KeyCode.UNDEFINED) {
                     updateButtonText(btn, actionName, keySet);
                     btn.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
@@ -83,15 +70,17 @@ public class ControlsController {
                             });
                         } catch (InterruptedException ex) {}
                     }).start();
-                } else {
-                    // Successfully set new key
+                }
+
+                // New key add
+                else {
                     keySet.clear();
                     keySet.add(newKey);
                     updateButtonText(btn, actionName, keySet);
                     btn.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
                 }
 
-                // Remove the filter after capturing one key
+                // Remove the filter
                 btn.getScene().removeEventFilter(KeyEvent.KEY_PRESSED, filterHolder[0]);
                 keyEvent.consume();
             };
@@ -103,6 +92,7 @@ public class ControlsController {
         });
     }
 
+    // Update UI
     private void updateButtonText(Button btn, String actionName, Set<KeyCode> keySet) {
         if (keySet.isEmpty()) {
             btn.setText(actionName + " - ?");
@@ -112,7 +102,7 @@ public class ControlsController {
     }
 
     private boolean isKeyUsedElsewhere(KeyCode key, Set<KeyCode> currentSet) {
-        // Check if key is used in any OTHER binding
+        // Check if key is used in any other binding
         return (keyBindings.getMoveLeft() != currentSet && keyBindings.getMoveLeft().contains(key)) ||
                 (keyBindings.getMoveRight() != currentSet && keyBindings.getMoveRight().contains(key)) ||
                 (keyBindings.getRotate() != currentSet && keyBindings.getRotate().contains(key)) ||
@@ -120,15 +110,15 @@ public class ControlsController {
                 (keyBindings.getHardDrop() != currentSet && keyBindings.getHardDrop().contains(key)) ||
                 (keyBindings.getRestart() != currentSet && keyBindings.getRestart().contains(key)) ||
                 (keyBindings.getPause() != currentSet && keyBindings.getPause().contains(key)) ||
-                (keyBindings.getMainMenu() != currentSet && keyBindings.getMainMenu().contains(key));
+                (keyBindings.getMainMenu() != currentSet && keyBindings.getMainMenu().contains(key)) ||
+                (keyBindings.getHold() != currentSet && keyBindings.getHold().contains(key)) ||
+                (keyBindings.getSwap() != currentSet && keyBindings.getSwap().contains(key));
     }
 
-    @FXML
-    public void goBack() {
+    @FXML public void goBack() {
         // Update the game's control labels if game is running
         if (GuiController.currentController != null) {
             GuiController.currentController.updateControlLabels();
-        }
-        Main.loadMenu();
+        } Main.loadMenu();
     }
 }

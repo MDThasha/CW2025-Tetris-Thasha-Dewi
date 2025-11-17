@@ -12,7 +12,6 @@ public class ModeSelectController {
     @FXML private Button timeBtn;
     @FXML private Button sameBtn;
     @FXML private Button backBtn;
-    @FXML private StackPane rootPane;
 
     private String playerName;
 
@@ -42,7 +41,7 @@ public class ModeSelectController {
                 if (mode == GameMode.TIME_LIMIT) {
                     gui.startCountDownTimer(120); // countdown for Time Limit
                 } else {
-                    gui.startTimer(); // count-up for other modes
+                    gui.startTimer();                     // count-up for other modes
                 }
             });
 
@@ -51,5 +50,4 @@ public class ModeSelectController {
             ex.printStackTrace();
         }
     }
-
 }

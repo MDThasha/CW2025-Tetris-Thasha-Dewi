@@ -1,7 +1,5 @@
 package com.comp2042;
 
-import com.comp2042.logic.bricks.Brick;
-
 public interface Board {
 
     boolean moveBrickDown();
@@ -15,7 +13,16 @@ public interface Board {
     ClearRow clearRows();
     Score getScore();
     void newGame();
+
+    // FOR NEXT SHAPE
     NextShapeInfo getNextShapeInfo();
 
+    // FOR HARD DROP
     boolean hardDrop();
-} //Defines how brick interacts with board, and Gameplay loop
+
+    // FOR HOLD AND SWAPPING
+    boolean holdBrick();
+    boolean swapBrick();
+    NextShapeInfo getHeldBrickInfo();
+    boolean canHoldOrSwap();
+}

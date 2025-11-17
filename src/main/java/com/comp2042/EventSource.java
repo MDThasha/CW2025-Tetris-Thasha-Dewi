@@ -1,4 +1,2 @@
 package com.comp2042;
-public enum EventSource { //enumeration
-    USER, THREAD
-}
+public enum EventSource { USER, THREAD }

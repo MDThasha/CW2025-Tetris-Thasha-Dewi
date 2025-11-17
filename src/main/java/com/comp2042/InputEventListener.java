@@ -7,4 +7,7 @@ public interface InputEventListener {
     ViewData onRotateEvent(MoveEvent event);
     void createNewGame();
     DownData onHardDropEvent(MoveEvent event);
+
+    ViewData onHoldEvent(MoveEvent event);
+    ViewData onSwapEvent(MoveEvent event);
 } // HOW GAME REACTS TO USER INPUT

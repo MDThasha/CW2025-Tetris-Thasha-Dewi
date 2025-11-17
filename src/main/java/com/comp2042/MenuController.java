@@ -20,7 +20,6 @@ public class MenuController {
     private static MenuController instance;
     public static MenuController getInstance() { return instance; }
 
-
     private String playerName;
     public void setPlayerName(String name) { this.playerName = name; }
     public String getPlayerName() {
