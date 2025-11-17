@@ -8,22 +8,51 @@ import java.util.List;
 
 public class LeaderBoardController {
 
-    @FXML private VBox leaderboardContainer;  // Container VBox in FXML where score entries will be displayed
+    @FXML
+    private VBox leaderboardContainer;
 
-    @FXML public void initialize() {
-        List<HighScoreManager.ScoreEntry> topScores = HighScoreManager.getTopScores();            // Get the top scores from HighScoreManager
-        leaderboardContainer.getChildren().clear();                                               // Clear old scores
+    @FXML
+    private void showClassic() {
+        showLeaderboardForMode(GameMode.CLASSIC, "CLASSIC MODE");
+    }
 
-        // Add the scores dynamically
-        for (int i = 0; i < topScores.size(); i++) {
-            HighScoreManager.ScoreEntry entry = topScores.get(i);
-            Label lbl = new Label((i + 1) + ". " + entry.name() + " - " + entry.score());
-            lbl.setStyle("-fx-font-size: 24; -fx-text-fill: white;");
-            leaderboardContainer.getChildren().add(lbl);
+    @FXML
+    private void showTimer() {
+        showLeaderboardForMode(GameMode.TIME_LIMIT, "TIMER MODE");
+    }
+
+    @FXML
+    private void showAllSame() {
+        showLeaderboardForMode(GameMode.ALL_SAME_BLOCK, "ALL SAME BLOCK");
+    }
+
+    private void showLeaderboardForMode(GameMode mode, String titleText) {
+        leaderboardContainer.getChildren().clear();
+
+        Label modeTitle = new Label(titleText);
+        modeTitle.setStyle("-fx-font-size: 32; -fx-text-fill: yellow; -fx-font-weight: bold;");
+        leaderboardContainer.getChildren().add(modeTitle);
+
+        List<HighScoreManager.ScoreEntry> scores = HighScoreManager.getTopScores(mode);
+
+        if (scores.isEmpty()) {
+            Label empty = new Label("No scores yet");
+            empty.setStyle("-fx-text-fill: white; -fx-font-size: 20;");
+            leaderboardContainer.getChildren().add(empty);
+            return;
+        }
+
+        int rank = 1;
+        for (HighScoreManager.ScoreEntry entry : scores) {
+            Label scoreLabel = new Label(rank + ". " + entry.name() + " - " + entry.score());
+            scoreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 20;");
+            leaderboardContainer.getChildren().add(scoreLabel);
+            rank++;
         }
     }
 
-    @FXML public void backToMenu() {
+    @FXML
+    private void backToMenu() {
         Main.loadMenu();
     }
 }

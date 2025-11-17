@@ -7,9 +7,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.fxml.FXML;
 
-public class MenuController {
+import java.io.IOException;
 
-    private static MenuController instance;
+public class MenuController {
 
     @FXML private Button startBtn;                                  // Button to start the game
     @FXML private Button quitBtn;                                   // Button to quit the application
@@ -17,16 +17,39 @@ public class MenuController {
     @FXML private TextField playerNameField;                        // Player name text field
 
     // Returns the singleton instance of this controller
-    public static MenuController getInstance() {
-        return instance;   // Assign this for global access
+    private static MenuController instance;
+    public static MenuController getInstance() { return instance; }
+
+
+    private String playerName;
+    public void setPlayerName(String name) { this.playerName = name; }
+    public String getPlayerName() {
+        // If field is empty, fallback to stored playerName, otherwise "Unknown"
+        String fieldName = playerNameField.getText().trim();
+        if (!fieldName.isEmpty()) return fieldName;
+        if (playerName != null && !playerName.isEmpty()) return playerName;
+        return "Unknown";
     }
 
     @FXML public void initialize() {
         instance = this;
-        startBtn.setOnAction(e -> {                       // Start the game
-            String playerName = getPlayerName();                     // Grab from textfield
-            Main.loadGame(playerName);                               // pass it to the game
+        startBtn.setOnAction(e -> {
+            String playerName = playerNameField.getText().trim();
+
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("selectMode.fxml"));
+                Parent modeRoot = loader.load(); // Load FXML
+
+                // Get the controller of the loaded FXML
+                ModeSelectController modeController = loader.getController();
+                modeController.setPlayerName(playerName); // Pass the player name
+
+                rootPane.getScene().setRoot(modeRoot); // Swap scene root
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         });
+
         quitBtn.setOnAction(e -> System.exit(0));  // Quit the application
     }
 
@@ -40,11 +63,6 @@ public class MenuController {
         try { Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("leaderBoard.fxml"));
             rootPane.getScene().setRoot(root); }
         catch (Exception e) {e.printStackTrace(); }
-    }
-
-    public String getPlayerName() {                         // Get Player name from text box
-        String name = playerNameField.getText().trim();
-        return name.isEmpty() ? "Unknown" : name;           // Default to "Unknown" if field is empty
     }
 }
 

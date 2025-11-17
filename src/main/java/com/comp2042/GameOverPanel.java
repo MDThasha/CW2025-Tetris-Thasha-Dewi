@@ -122,13 +122,11 @@ public class GameOverPanel extends StackPane {
     public void reset() {
         // Reset label position
         gameOverLabel.setTranslateY(0);
-
         // Reset style to red
         gameOverLabel.getStyleClass().remove("gameOverStyleWhite");
         if (!gameOverLabel.getStyleClass().contains("gameOverStyle1")) {
             gameOverLabel.getStyleClass().add("gameOverStyle1");
         }
-
         // Hide panel and overlay
         overlay.setFill(Color.rgb(0, 0, 0, 0));
         setVisible(false);

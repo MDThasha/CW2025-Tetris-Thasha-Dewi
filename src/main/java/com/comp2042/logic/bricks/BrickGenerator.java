@@ -4,5 +4,4 @@ public interface BrickGenerator {
     Brick getBrick();
     Brick getNextBrick();
 }
-
 // Defines how game creates and manages Bricks

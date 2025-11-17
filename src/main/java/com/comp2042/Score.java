@@ -4,7 +4,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.IntegerProperty;
 
 public final class Score {
-
     private final IntegerProperty score = new SimpleIntegerProperty(0);
     public IntegerProperty scoreProperty() {
         return score;

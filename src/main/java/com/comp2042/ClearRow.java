@@ -1,7 +1,6 @@
 package com.comp2042;
 
 public final class ClearRow {
-
     private final int linesRemoved;
     private final int[][] newMatrix;
     private final int scoreBonus;

@@ -3,6 +3,7 @@ package com.comp2042;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.GridPane;
@@ -36,6 +37,8 @@ public class GuiController implements Initializable {
     @FXML private Label scoreLabel;
     @FXML private AnchorPane pauseOverlay;
     @FXML private AnchorPane ghostPane;
+    @FXML private Label timerLabel;
+    @FXML private Label playerNameLabel;
 
     //  GAME CONSTANTS
     private static final int BRICK_SIZE = 20;       // Width/height of a single brick block
@@ -57,6 +60,10 @@ public class GuiController implements Initializable {
     private final BooleanProperty isGameOver = new SimpleBooleanProperty(); // True if the game has ended
 
     private String playerName;
+
+    private GameMode currentMode;
+    private Timeline gameTimer;
+    private IntegerProperty timeLeft;
 
     // INITIALIZATION
     // Called automatically when the FXML is loaded to set up the UI and game
@@ -384,6 +391,39 @@ public class GuiController implements Initializable {
     public void setPlayerName(String name) {
         this.playerName = (name == null || name.isEmpty()) ? "Unknown" : name;
     }
+    public void setPlayerNameLabel(String name) {
+        playerNameLabel.setText(name);
+    }
+
+    public void setGameMode(GameMode mode) {
+        this.currentMode = mode;
+    }
+
+    public GameMode getGameMode() {
+        return currentMode;
+    }
+
+    public void startTimer(int seconds) {
+        if (gameTimer != null) gameTimer.stop();
+
+        timeLeft = new SimpleIntegerProperty(seconds);
+
+        timerLabel.textProperty().bind(timeLeft.asString());
+
+        gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), ae -> {
+            if (timeLeft.get() > 0) {
+                timeLeft.set(timeLeft.get() - 1);
+            } else {
+                gameTimer.stop();
+                gameOver();
+            }
+        }));
+
+        gameTimer.setCycleCount(Timeline.INDEFINITE);
+        gameTimer.play();
+    }
+
+
 
     // GAME OVER
     public void gameOver() {
@@ -392,8 +432,8 @@ public class GuiController implements Initializable {
         try { finalScore = Integer.parseInt(scoreLabel.getText()); }
         catch (NumberFormatException e) { finalScore = 0; }
 
-        HighScoreManager.addScore(playerName, finalScore);                   // Add Score to HS with name
-        int highScore = HighScoreManager.getHighScore();                     // Get HS
+        HighScoreManager.addScore(playerName, finalScore, currentMode);                   // Add Score to HS with name
+        int highScore = HighScoreManager.getHighScore(currentMode);                     // Get HS
 
         gameOverPanel.showGameOver(finalScore, highScore);                   // Show final score and HS with the GO panel
         isGameOver.setValue(Boolean.TRUE);                                   // Mark game as over

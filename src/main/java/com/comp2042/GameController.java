@@ -1,27 +1,42 @@
 package com.comp2042;
 
+import com.comp2042.logic.bricks.Brick;
+import com.comp2042.logic.bricks.RandomBrickGenerator;
+import javafx.application.Platform;
+
 public class GameController implements InputEventListener {
 
-    private final Board board = new SimpleBoard(25, 10);  // Creats the game board
-    private final GuiController viewGuiController;                    // Make ui and listen to events
+    private final Board board;
+    private final GuiController viewGuiController;
     public static GuiController currentController;
 
     private final String playerName;
+    private final GameMode gameMode;
 
     public String getPlayerName() {
         return playerName;
     }
 
-    public GameController(GuiController c, String playerName) {
-        viewGuiController = c; // Stores gui reference
-        this.playerName = (playerName == null || playerName.isEmpty()) ? "Unknown" : playerName;
+    public GameController(GuiController c, String playerName, GameMode mode) {
 
-        board.createNewBrick(); // Gets first brick
+        this.viewGuiController = c;
+        this.playerName = (playerName == null || playerName.isEmpty()) ? "Unknown" : playerName;
+        this.gameMode = mode;
+
+        if (mode == GameMode.ALL_SAME_BLOCK) {
+            RandomBrickGenerator gen = new RandomBrickGenerator();
+            Class<? extends Brick> randomBrickClass = gen.getRandomBrickClass();
+            this.board = new SimpleBoard(25, 10, randomBrickClass);
+        } else {
+            this.board = new SimpleBoard(25, 10);
+        }
+
         viewGuiController.setEventListener(this); // Sends all events to this class
         viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData()); // Start display
         viewGuiController.bindScore(board.getScore().scoreProperty()); // Binds score to gui
         viewGuiController.showNextBrick(board.getNextShapeInfo()); // Next brick preview
 
+        viewGuiController.setPlayerName(playerName);
         currentController = c;
     }
 
@@ -37,16 +52,14 @@ public class GameController implements InputEventListener {
     public DownData onHardDropEvent(MoveEvent event) {
         // drop until blocked and lock
         board.hardDrop();
-        board.getScore().add(3);
-        // clear rows and award score
-        ClearRow cleared = board.clearRows();
+        board.getScore().add(3);  // Add score
+
+        ClearRow cleared = board.clearRows(); // clear Row
         if (cleared.getLinesRemoved() > 0) {
             board.getScore().add(cleared.getScoreBonus());
         }
-
-        // spawn next brick (and check spawn collision -> game over)
+        // spawn next brick
         boolean spawnCollision = board.createNewBrick();
-        // refresh GUI background + next preview because board changed
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
         viewGuiController.showNextBrick(board.getNextShapeInfo());
 
@@ -54,37 +67,35 @@ public class GameController implements InputEventListener {
             viewGuiController.gameOver();
         }
 
-        // return ClearRow then ViewData (same order used elsewhere)
         return new DownData(cleared, board.getViewData());
     }
 
     @Override
-    public DownData onDownEvent(MoveEvent event) { // Trigger when brick moves down
+    public DownData onDownEvent(MoveEvent event) {
         boolean canMove = board.moveBrickDown();
         ClearRow clearRow = null;
+
         if (!canMove) {
-            board.mergeBrickToBackground(); // Brick has landed ten merge into backgrond
-            clearRow = board.clearRows(); // Check for and clear completed rows
+            board.mergeBrickToBackground();
+            clearRow = board.clearRows();
 
             if (clearRow.getLinesRemoved() > 0) {
                 board.getScore().add(clearRow.getScoreBonus());
             }
 
-            if (board.createNewBrick()) { // Create new brick then if collision on spawn, game over
+            if (board.createNewBrick()) {
                 viewGuiController.gameOver();
             }
 
-            viewGuiController.refreshGameBackground(board.getBoardMatrix()); // Refresh game board visuals
-            viewGuiController.showNextBrick(board.getNextShapeInfo()); // Update the next brick preview after a new brick spawns
-        }
-
-        else {
-            if (event.getEventSource() == EventSource.USER) { // Add score for user-controlled drop (not auto drop)
+            viewGuiController.refreshGameBackground(board.getBoardMatrix());
+            viewGuiController.showNextBrick(board.getNextShapeInfo());
+        } else {
+            if (event.getEventSource() == EventSource.USER) { // Add score
                 board.getScore().add(1);
             }
         }
 
-        return new DownData(clearRow, board.getViewData()); // Return updated view data
+        return new DownData(clearRow, board.getViewData());
     }
 
     @Override
@@ -110,5 +121,9 @@ public class GameController implements InputEventListener {
         board.newGame();
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
         viewGuiController.showNextBrick(board.getNextShapeInfo());
+
+        if (gameMode == GameMode.TIME_LIMIT) {
+            Platform.runLater(() -> viewGuiController.startTimer(120));  // Time limit for Time_limit mode
+        }
     }
 }

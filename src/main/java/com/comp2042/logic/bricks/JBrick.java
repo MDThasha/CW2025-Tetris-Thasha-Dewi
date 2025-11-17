@@ -4,7 +4,7 @@ import com.comp2042.MatrixOperations;
 import java.util.ArrayList;
 import java.util.List;
 
-final class JBrick implements Brick {
+public final class JBrick implements Brick {
     private final List<int[][]> brickMatrix = new ArrayList<>();
     public JBrick() {
         brickMatrix.add(new int[][]{

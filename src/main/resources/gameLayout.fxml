@@ -60,6 +60,12 @@
                                 layoutX="225" layoutY="-15"/>
                 </AnchorPane>
 
+                <AnchorPane prefWidth="150" prefHeight="50">
+                    <Label text="TIMER" styleClass="NTextLabel" layoutX="230" layoutY="-18"/>
+                    <Label fx:id="timerLabel" text="0" styleClass="NTextLabel" layoutX="247" layoutY="10"/>
+                </AnchorPane>
+
+
                 <!--CONTROLS PANEL-->
                 <AnchorPane prefWidth="150" prefHeight="150">
                     <Label text="CONTROLS" styleClass="HTextLabel"

@@ -15,7 +15,6 @@ import javafx.util.Duration;
 import javafx.scene.Node;
 
 public class NotificationPanel extends BorderPane { // Animation and design of bonus score
-
     public NotificationPanel(String text) {
         setMinHeight(200);
         setMinWidth(220);

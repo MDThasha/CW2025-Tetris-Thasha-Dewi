@@ -26,6 +26,9 @@ public class Main extends Application {
         mainStage.show();
     }
 
+    public static Stage getStage() { return mainStage; }
+    public static Scene getScene() { return mainScene; }
+
     // Load Main Menu from the game scene
     public static void loadMenu() {
         try {
@@ -41,17 +44,18 @@ public class Main extends Application {
     }
 
     // Load the Game, From Menu scene. Start Game
-    public static void loadGame(String playerName) {
+    public static void loadGame(String playerName, GameMode mode) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getClassLoader().getResource("gameLayout.fxml"));
             Parent gameRoot = loader.load();
 
             GuiController guiController = loader.getController();
             guiController.setPlayerName(playerName);
-            GameController gameController = new GameController(guiController, playerName); // Pass player name via constructor
+            new GameController(guiController, playerName, mode); // Pass player name + mode
             mainScene.setRoot(gameRoot);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) {e.printStackTrace(); }
     }
 
     public static void main(String[] args) {

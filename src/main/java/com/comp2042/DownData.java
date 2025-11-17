@@ -8,7 +8,6 @@ public final class DownData {
         this.clearRow = clearRow;
         this.viewData = viewData;
     }
-
     public ClearRow getClearRow() {
         return clearRow;
     }

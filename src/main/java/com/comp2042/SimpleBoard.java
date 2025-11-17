@@ -19,16 +19,40 @@ public class SimpleBoard implements Board {
     private Brick nextBrick;
     private Brick currentBrick;
 
+    private Class<? extends Brick> forcedBrickClass = null;
+
+    public void setNextBrickType(Class<? extends Brick> brickClass) {
+        this.forcedBrickClass = brickClass;
+    }
+
+
     // INITIALISE BOARD AND BRICKS
     public SimpleBoard(int width, int height) {
+        this(width, height, null);  // calls the 3-argument constructor with no forced block
+    }
+
+    public SimpleBoard(int width, int height, Class<? extends Brick> forcedBrickClass) {
         this.width = width;
         this.height = height;
+        this.forcedBrickClass = forcedBrickClass;
+
         currentGameMatrix = new int[width][height];         // Empty game matrix
         brickGenerator = new RandomBrickGenerator();        // Random brick generator
         brickRotator = new BrickRotator();                  // Handles rotation of current brick
         score = new Score();                                // Initialise score
-        currentBrick = brickGenerator.getBrick();           // Get first brick
-        nextBrick = brickGenerator.getBrick();              // Get next brick
+
+        if (forcedBrickClass != null) {
+            try {
+                currentBrick = forcedBrickClass.getDeclaredConstructor().newInstance();
+                nextBrick    = forcedBrickClass.getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            currentBrick = brickGenerator.getBrick();
+            nextBrick    = brickGenerator.getBrick();
+        }
+
         brickRotator.setBrick(currentBrick);                // Set current brick for rotation
         currentOffset = new Point(4, 2);              // Default spawn position
     }
@@ -94,7 +118,15 @@ public class SimpleBoard implements Board {
         currentBrick = nextBrick;                   // Move nextBrick into play
         brickRotator.setBrick(currentBrick);
         currentOffset = new Point(4, 2);
-        nextBrick = brickGenerator.getBrick();      // Generate a new next brick
+        if (forcedBrickClass != null) {
+            try {
+                nextBrick = forcedBrickClass.getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            nextBrick = brickGenerator.getBrick();
+        }
         return MatrixOperations.intersect(          // Return true if new brick collides immediately (GAME OVER)
                 currentGameMatrix,
                 brickRotator.getCurrentShape(),

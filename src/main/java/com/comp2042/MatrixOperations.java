@@ -7,9 +7,7 @@ import java.util.Deque;
 import java.util.List;
 
 public class MatrixOperations {
-
     private MatrixOperations(){ }
-
     // CHECKS INTERSECTION
     public static boolean intersect(final int[][] matrix, final int[][] brick, int x, int y) {
         for (int i = 0; i < brick.length; i++) {

@@ -5,14 +5,23 @@ import java.util.*;
 
 public class HighScoreManager {
 
-    private static final String FILE_PATH = "highscores.txt";   // File to store persistent high scores
     private static final int MAX_ENTRIES = 10;                  // Maximum number of top scores to keep
     public record ScoreEntry(String name, int score) {}         // Record to store player's name and score as a single entry
 
+    // Get the filename per game mode
+    private static String getFilePath(GameMode mode) {
+        return switch (mode) {
+            case CLASSIC -> "highscores_classic.txt";
+            case TIME_LIMIT -> "highscores_timelimit.txt";
+            case ALL_SAME_BLOCK -> "highscores_sameshape.txt";
+        };
+    }
+
     // Returns a list of top scores with names in descending order
-    public static List<ScoreEntry> getTopScores() {
+    public static List<ScoreEntry> getTopScores(GameMode mode) {
+        String filePath = getFilePath(mode);
         List<ScoreEntry> scores = new ArrayList<>();                                     // List to hold scores read from file
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {    // Open file
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {     // Open file
             String line;
             while ((line = reader.readLine()) != null) {                                 // Read line by line
                 String[] parts = line.split(",");                                  // Split line into name and score
@@ -36,15 +45,19 @@ public class HighScoreManager {
     }
 
     // Add a new score and save top 10
-    public static void addScore(String name, int score) {
-        List<ScoreEntry> scores = getTopScores();                                          // Get existing top scores
+    public static void addScore(String name, int score, GameMode mode) {
+        if (name == null || name.isEmpty()) {
+            name = "Unknown";
+        }
+
+        List<ScoreEntry> scores = getTopScores(mode);                                      // Get existing top scores
         scores.add(new ScoreEntry(name, score));                                           // Add the new score
         scores.sort((a, b) -> Integer.compare(b.score(), a.score())); // Sort descending
         if (scores.size() > MAX_ENTRIES) {                                                 // Keep only top 10
             scores = scores.subList(0, MAX_ENTRIES);
         }
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH))) {      // Write updated scores back to file
+        try (PrintWriter writer = new PrintWriter(new FileWriter(getFilePath(mode))))  {      // Write updated scores back to file
             for (ScoreEntry entry : scores) {
                 writer.println(entry.name() + "," + entry.score());                  // Save each entry
             }
@@ -54,8 +67,8 @@ public class HighScoreManager {
     }
 
     // Return the highest score from the top scores, or 0 if none exist
-    public static int getHighScore() {
-        List<ScoreEntry> scores = getTopScores();
+    public static int getHighScore(GameMode mode) {
+        List<ScoreEntry> scores = getTopScores(mode);
         return scores.isEmpty() ? 0 : scores.get(0).score();
     }
 }
