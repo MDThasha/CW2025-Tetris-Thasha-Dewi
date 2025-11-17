@@ -37,7 +37,6 @@ public class KeyBindings {
         mainMenu.add(KeyCode.ESCAPE);
     }
 
-    // Rest of your getters/setters remain the same...
     public Set<KeyCode> getMoveLeft() { return moveLeft; }
     public Set<KeyCode> getMoveRight() { return moveRight; }
     public Set<KeyCode> getRotate() { return rotate; }

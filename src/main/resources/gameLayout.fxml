@@ -71,7 +71,6 @@
 
 
                 <!--CONTROLS PANEL-->
-                <!--CONTROLS PANEL-->
                 <AnchorPane prefWidth="150" prefHeight="150">
                     <Label text="CONTROLS" styleClass="HTextLabel"
                            layoutX="-120" layoutY="-280"/>
