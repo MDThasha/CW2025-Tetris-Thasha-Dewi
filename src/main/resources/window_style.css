@@ -162,4 +162,11 @@
     -fx-font-size: 40px;
     -fx-font-weight: bold;
 }
+
+.bonusStyle2 {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: Yellow;
+    -fx-translate-y: -60px;
+}
 /*BONUS SCORE CSS*/

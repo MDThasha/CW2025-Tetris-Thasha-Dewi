@@ -27,8 +27,8 @@ public class NotificationPanel extends BorderPane { // Animation and design of b
     }
 
     public void showScore(ObservableList<Node> list) {
-        FadeTransition ft = new FadeTransition(Duration.millis(2000), this);
-        TranslateTransition tt = new TranslateTransition(Duration.millis(2500), this);
+        FadeTransition ft = new FadeTransition(Duration.seconds(2), this);
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(2.5), this);
         tt.setToY(this.getLayoutY() - 40);
         ft.setFromValue(1);
         ft.setToValue(0);

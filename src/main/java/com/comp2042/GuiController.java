@@ -1,12 +1,17 @@
 package com.comp2042;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.Glow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.input.KeyEvent;
 import javafx.application.Platform;
@@ -39,6 +44,9 @@ public class GuiController implements Initializable {
     @FXML private AnchorPane ghostPane;
     @FXML private Label timerLabel;
     @FXML private Label playerNameLabel;
+    @FXML private Group TimeBonus;
+    @FXML private Label bonusTimeLabel;
+
 
     //  GAME CONSTANTS
     private static final int BRICK_SIZE = 20;       // Width/height of a single brick block
@@ -276,9 +284,7 @@ public class GuiController implements Initializable {
     };
 
     // Returns the corresponding color for a given brick value
-    private Paint getFillColor(int i) {
-        return (i >= 0 && i < COLORS.length) ? COLORS[i] : Color.WHITE;
-    }
+    private Paint getFillColor(int i) { return (i >= 0 && i < COLORS.length) ? COLORS[i] : Color.WHITE; }
 
     // REFRESH MOVING BRICKS AND GHOST BRICKS
     private void refreshBrick(ViewData brick, int[][] board) {
@@ -360,9 +366,7 @@ public class GuiController implements Initializable {
     }
 
     // SET EVENT LISTENER
-    public void setEventListener(InputEventListener eventListener) {
-        this.eventListener = eventListener;
-    }
+    public void setEventListener(InputEventListener eventListener) { this.eventListener = eventListener; }
 
     // BIND SCORE PROPERTY
     public void bindScore(IntegerProperty scoreProperty) {
@@ -388,28 +392,42 @@ public class GuiController implements Initializable {
     }
 
     // SET PLAYER NAME FOR HS
-    public void setPlayerName(String name) {
-        this.playerName = (name == null || name.isEmpty()) ? "Unknown" : name;
-    }
-    public void setPlayerNameLabel(String name) {
-        playerNameLabel.setText(name);
+    public void setPlayerName(String name) { this.playerName = (name == null || name.isEmpty()) ? "Unknown" : name; }
+    public void setPlayerNameLabel(String name) { playerNameLabel.setText(name); }
+
+    public void setGameMode(GameMode mode) { this.currentMode = mode; }
+    public GameMode getGameMode() { return currentMode; }
+
+    // Return the remaining seconds
+    public int getTimeLeft() {
+        return timeLeft.get(); // SimpleIntegerProperty
     }
 
-    public void setGameMode(GameMode mode) {
-        this.currentMode = mode;
+    // Update the timer
+    public void setTimeLeft(int seconds) {
+        timeLeft.set(seconds);
     }
 
-    public GameMode getGameMode() {
-        return currentMode;
+    // FOR TIME_LIMIT MODE BONUS TIME IF 4 CLEAR SAME TIME
+    public void showBonusTimeLabel(String text) {
+        bonusTimeLabel.setText(text);
+        bonusTimeLabel.setVisible(true);
+
+        bonusTimeLabel.setOpacity(1);
+        bonusTimeLabel.setTranslateY(-100);
+
+        FadeTransition fade = new FadeTransition(Duration.seconds(2), bonusTimeLabel);
+        fade.setFromValue(1);
+        fade.setToValue(0);
+        fade.setOnFinished(e -> bonusTimeLabel.setVisible(false));
+        fade.play();
     }
+
 
     public void startTimer(int seconds) {
         if (gameTimer != null) gameTimer.stop();
-
         timeLeft = new SimpleIntegerProperty(seconds);
-
         timerLabel.textProperty().bind(timeLeft.asString());
-
         gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), ae -> {
             if (timeLeft.get() > 0) {
                 timeLeft.set(timeLeft.get() - 1);
@@ -422,8 +440,6 @@ public class GuiController implements Initializable {
         gameTimer.setCycleCount(Timeline.INDEFINITE);
         gameTimer.play();
     }
-
-
 
     // GAME OVER
     public void gameOver() {
@@ -474,7 +490,5 @@ public class GuiController implements Initializable {
     }
 
     // PAUSE GAME
-    public void pauseGame(ActionEvent actionEvent) {
-        gamePanel.requestFocus();
-    }
+    public void pauseGame(ActionEvent actionEvent) { gamePanel.requestFocus(); }
 }

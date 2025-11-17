@@ -98,6 +98,10 @@
                width="6000" height="6000"/>
     <GameOverPanel fx:id="gameOverPanel" visible="false"/>
     <Group fx:id="groupNotification" layoutX="7" layoutY="203"/>
+    <Group fx:id="TimeBonus" layoutX="7" layoutY="150" styleClass="bonusStyle2">
+        <Label fx:id="bonusTimeLabel"/>
+    </Group>
+
 
     <AnchorPane fx:id="pauseOverlay"
                 visible="false"

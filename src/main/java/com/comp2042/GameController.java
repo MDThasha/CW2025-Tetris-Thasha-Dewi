@@ -57,7 +57,17 @@ public class GameController implements InputEventListener {
         ClearRow cleared = board.clearRows(); // clear Row
         if (cleared.getLinesRemoved() > 0) {
             board.getScore().add(cleared.getScoreBonus());
+
+            // TIMER MODE: Add 15s if player clears 4 rows at once
+            if (gameMode == GameMode.TIME_LIMIT && cleared.getLinesRemoved() == 4) {
+                Platform.runLater(() -> {
+                    int newTime = viewGuiController.getTimeLeft() + 15;
+                    viewGuiController.setTimeLeft(newTime);
+                    viewGuiController.showBonusTimeLabel("+15s");
+                });
+            }
         }
+
         // spawn next brick
         boolean spawnCollision = board.createNewBrick();
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
@@ -81,6 +91,14 @@ public class GameController implements InputEventListener {
 
             if (clearRow.getLinesRemoved() > 0) {
                 board.getScore().add(clearRow.getScoreBonus());
+
+                if (gameMode == GameMode.TIME_LIMIT && clearRow.getLinesRemoved() == 4) {
+                    Platform.runLater(() -> {
+                        int newTime = viewGuiController.getTimeLeft() + 15;
+                        viewGuiController.setTimeLeft(newTime);
+                        viewGuiController.showBonusTimeLabel("+15s1");
+                    });
+                }
             }
 
             if (board.createNewBrick()) {
