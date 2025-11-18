@@ -6,6 +6,6 @@ public class PlayerUtils {
 
     /** Validates and returns a player name, Returns "Unknown" if the name is null or empty. */
     public static String validatePlayerName(String name) {
-        return (name == null || name.isEmpty()) ? "Unknown" : name;
+        return (name == null || name.trim().isEmpty()) ? "Unknown" : name.trim();
     }
 }
