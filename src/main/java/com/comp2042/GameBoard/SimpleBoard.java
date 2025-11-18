@@ -1,5 +1,8 @@
-package com.comp2042;
+package com.comp2042.GameBoard;
 
+import com.comp2042.logic.bricks.NextShapeInfo;
+import com.comp2042.PlayerData.Score;
+import com.comp2042.logic.bricks.BrickRotator;
 import com.comp2042.logic.bricks.RandomBrickGenerator;
 import com.comp2042.logic.bricks.BrickGenerator;
 import com.comp2042.logic.bricks.Brick;
@@ -23,6 +26,23 @@ public class SimpleBoard implements Board {
     private Brick heldBrick = null;
     private boolean hasSwappedThisTurn = false;
 
+
+    // CONSTANTS
+    private static final Point SPAWN_POSITION = new Point(4, 2);
+
+    // HELPER
+    private Brick generateNextBrick() {
+        if (forcedBrickClass != null) {
+            try {
+                return forcedBrickClass.getDeclaredConstructor().newInstance();
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+                return brickGenerator.getBrick(); // Fallback to random if reflection fails
+            }
+        }
+        return brickGenerator.getBrick();
+    }
+
     private Class<? extends Brick> forcedBrickClass = null;
     public void setNextBrickType(Class<? extends Brick> brickClass) { this.forcedBrickClass = brickClass; }
 
@@ -41,20 +61,11 @@ public class SimpleBoard implements Board {
         brickRotator = new BrickRotator();                  // Handles rotation of current brick
         score = new Score();                                // Initialise score
 
-        if (forcedBrickClass != null) {
-            try {
-                currentBrick = forcedBrickClass.getDeclaredConstructor().newInstance();
-                nextBrick    = forcedBrickClass.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            currentBrick = brickGenerator.getBrick();
-            nextBrick    = brickGenerator.getBrick();
-        }
+        currentBrick = generateNextBrick();
+        nextBrick = generateNextBrick();
 
-        brickRotator.setBrick(currentBrick);                // Set current brick for rotation
-        currentOffset = new Point(4, 2);              // Default spawn position
+        brickRotator.setBrick(currentBrick);          // Set current brick for rotation
+        currentOffset = new Point(SPAWN_POSITION);    // Default spawn position
     }
 
     // MOVE BRICK DOWN ONE STEP; RETURN FALSE IF BLOCKED
@@ -118,16 +129,10 @@ public class SimpleBoard implements Board {
         currentBrick = nextBrick;                   // Move nextBrick into play
         brickRotator.setBrick(currentBrick);
         hasSwappedThisTurn = false;                 // TO CHECK SWAP OR NOT
-        currentOffset = new Point(4, 2);
-        if (forcedBrickClass != null) {
-            try {
-                nextBrick = forcedBrickClass.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            nextBrick = brickGenerator.getBrick();
-        }
+        currentOffset = new Point(SPAWN_POSITION);
+
+        nextBrick = generateNextBrick();
+
         return MatrixOperations.intersect(          // Return true if new brick collides immediately (GAME OVER)
                 currentGameMatrix,
                 brickRotator.getCurrentShape(),
@@ -140,6 +145,15 @@ public class SimpleBoard implements Board {
     @Override
     public int[][] getBoardMatrix() {
         return currentGameMatrix;
+    }
+
+    @Override
+    public void newGame() {
+        currentGameMatrix = new int[width][height];
+        score.reset();
+        heldBrick = null;
+        hasSwappedThisTurn = false;
+        createNewBrick();
     }
 
     @Override
@@ -176,15 +190,6 @@ public class SimpleBoard implements Board {
         return score;
     }
 
-    @Override
-    public void newGame() {
-        currentGameMatrix = new int[width][height];
-        score.reset();
-        heldBrick = null;
-        hasSwappedThisTurn = false;
-        createNewBrick();
-    }
-
     // GET INFO ABOUT NEXT BRICK (FOR GUI PREVIEW)
     @Override
     public NextShapeInfo getNextShapeInfo() {
@@ -218,24 +223,17 @@ public class SimpleBoard implements Board {
             heldBrick = currentBrick;
             currentBrick = nextBrick;
             brickRotator.setBrick(currentBrick);
-            currentOffset = new Point(4, 2);
+            currentOffset = new Point(SPAWN_POSITION);
 
-            if (forcedBrickClass != null) {
-                try {
-                    nextBrick = forcedBrickClass.getDeclaredConstructor().newInstance();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                nextBrick = brickGenerator.getBrick();
-            }
+            nextBrick = generateNextBrick();
+
         } else {
             // Already have a held brick swap with current
             Brick temp = currentBrick;
             currentBrick = heldBrick;
             heldBrick = temp;
             brickRotator.setBrick(currentBrick);
-            currentOffset = new Point(4, 2);
+            currentOffset = new Point(SPAWN_POSITION);
         }
 
         hasSwappedThisTurn = true;
@@ -252,7 +250,7 @@ public class SimpleBoard implements Board {
         currentBrick = heldBrick;
         heldBrick = temp;
         brickRotator.setBrick(currentBrick);
-        currentOffset = new Point(4, 2);
+        currentOffset = new Point(SPAWN_POSITION);
 
         hasSwappedThisTurn = true;
         return true;

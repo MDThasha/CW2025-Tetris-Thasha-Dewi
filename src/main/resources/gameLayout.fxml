@@ -1,4 +1,4 @@
-<?import com.comp2042.GameOverPanel?>
+<?import com.comp2042.Panels.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
@@ -6,7 +6,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.Group?>
 
-<StackPane fx:controller="com.comp2042.GuiController"
+<StackPane fx:controller="com.comp2042.Controllers.GuiController"
            xmlns:fx="http://javafx.com/fxml"
            styleClass="root">
 
@@ -69,44 +69,53 @@
                                 layoutX="225" layoutY="-30"/>
                 </AnchorPane>
 
+                <AnchorPane prefWidth="150" prefHeight="50">
+                    <Label fx:id="speedLabel" text="Level 1 - 400ms" styleClass="MTextLabel"
+                           layoutX="235" layoutY="25" />
+                    <AnchorPane fx:id="speedContainer"
+                                styleClass="SpeedContainer"
+                                layoutX="225" layoutY="5"/>
+                </AnchorPane>
+
+
                 <!-- HOLD section -->
                 <AnchorPane prefWidth="150" prefHeight="150">
                     <Label text="HOLD" styleClass="nextBrickLabel"
-                           layoutX="-115" layoutY="-290"/>
+                           layoutX="-115" layoutY="-355"/>
                     <AnchorPane fx:id="holdBrickContainer"
                                 prefWidth="100" prefHeight="120"
                                 styleClass="NBrickContainer"
-                                layoutX="-125" layoutY="-290"/>
+                                layoutX="-125" layoutY="-355"/>
                 </AnchorPane>
 
 
                 <!--CONTROLS PANEL-->
                 <AnchorPane prefWidth="150" prefHeight="150">
                     <Label text="CONTROLS" styleClass="HTextLabel"
-                           layoutX="-120" layoutY="-300"/>
+                           layoutX="-120" layoutY="-365"/>
                     <Label fx:id="restartLabel" text="Restart      - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-260"/>
+                           layoutX="-120" layoutY="-325"/>
                     <Label fx:id="rotateLabel" text="Rotate        - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-235"/>
+                           layoutX="-120" layoutY="-300"/>
                     <Label fx:id="moveLeftLabel" text="Move Left   - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-210"/>
+                           layoutX="-120" layoutY="-275"/>
                     <Label fx:id="moveRightLabel" text="Move Right - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-185"/>
+                           layoutX="-120" layoutY="-250"/>
                     <Label fx:id="moveDownLabel" text="Move Down   - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-160"/>
+                           layoutX="-120" layoutY="-225"/>
                     <Label fx:id="hardDropLabel" text="DROP        - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-135"/>
+                           layoutX="-120" layoutY="-200"/>
                     <Label fx:id="mainMenuLabel" text="MAIN MENU   - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-110"/>
+                           layoutX="-120" layoutY="-175"/>
                     <Label fx:id="pauseLabel" text="PAUSE          - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-85"/>
+                           layoutX="-120" layoutY="-150"/>
                     <Label fx:id="holdLabel" text="HOLD            - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-60"/>
+                           layoutX="-120" layoutY="-125"/>
                     <Label fx:id="swapLabel" text="SWAP            - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-35"/>
-                    <AnchorPane fx:id="ControlContainer"
-                                styleClass="controlContainer"
-                                layoutX="-125" layoutY="-310"/>
+                           layoutX="-120" layoutY="-100"/>
+                    <AnchorPane fx:id="ControlContainer"               styleClass="controlContainer"
+                                layoutX="-125" layoutY="-375"/>
+
                 </AnchorPane>
             </VBox>
         </AnchorPane>
@@ -114,7 +123,6 @@
 
     <Rectangle fx:id="blackScreen" fill="black" opacity="0" visible="false"
                width="6000" height="6000"/>
-    <GameOverPanel fx:id="gameOverPanel" visible="false"/>
     <Group fx:id="groupNotification" layoutX="7" layoutY="203"/>
     <Group fx:id="TimeBonus" layoutX="7" layoutY="150" styleClass="bonusStyle2">
         <Label fx:id="bonusTimeLabel"/>
@@ -131,7 +139,7 @@
                AnchorPane.rightAnchor="0"
                alignment="CENTER"/>
 
-        <Label text="Press TAB to unpause"
+        <Label fx:id="pauseKeybindLabel" text="Press TAB to unpause"
                styleClass="pauseStyle2"
                AnchorPane.topAnchor="200"
                AnchorPane.leftAnchor="0"
@@ -146,8 +154,13 @@
                 minHeight="490"
                 maxWidth="220"
                 maxHeight="490"
-                style="-fx-background-color: transparent;" />
+                style="-fx-background-color: transparent;"
+                mouseTransparent="true" />
 
+
+    <GameOverPanel fx:id="gameOverPanel"
+                   visible="false"
+                   pickOnBounds="false"/>
 
     <stylesheets>
         <URL value="@window_style.css"/>

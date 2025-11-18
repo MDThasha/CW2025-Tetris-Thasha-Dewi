@@ -1,3 +1,6 @@
-Unknown,940
-TWA,39
+TH,39
 Unknown,36
+Unknown,36
+Unknown,36
+WAD,33
+Unknown,33

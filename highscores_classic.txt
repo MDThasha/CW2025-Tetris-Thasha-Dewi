@@ -1,2 +1,9 @@
-THASA,33
+Unknown,65
+Unknown,39
+WASDW,39
+Unknown,36
+Unknown,36
+Unknown,36
+Unknown,36
+Thas,33
 Unknown,33

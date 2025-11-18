@@ -1,5 +1,8 @@
 package com.comp2042;
 
+import com.comp2042.Controllers.GameController;
+import com.comp2042.Controllers.GuiController;
+import com.comp2042.Event.GameMode;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,6 +13,7 @@ public class Main extends Application {
 
     private static Stage mainStage;  // Primary stage of the application
     private static Scene mainScene;  // Single scene used throughout
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -33,8 +37,8 @@ public class Main extends Application {
     public static void loadMenu() {
         try {
             // Stop the game if it's running
-            if (GameController.currentController != null) {
-                GameController.currentController.stopTimeline();
+            if (GuiController.currentController != null) {
+                GuiController.currentController.stopTimeline();
             }
             Parent menuRoot = FXMLLoader.load(Main.class.getClassLoader().getResource("mainMenu.fxml"));
             mainScene.setRoot(menuRoot); // just swap root, scene stays the same

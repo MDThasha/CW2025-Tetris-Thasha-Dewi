@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.GameBoard;
 
 import java.util.stream.Collectors;
 import java.util.ArrayDeque;
@@ -6,8 +6,12 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-public class MatrixOperations {
+public final class MatrixOperations {
     private MatrixOperations(){ }
+
+    // CONSTANTS
+    private static final int SCORE_PER_LINE_BASE = 50;
+
     // CHECKS INTERSECTION
     public static boolean intersect(final int[][] matrix, final int[][] brick, int x, int y) {
         for (int i = 0; i < brick.length; i++) {
@@ -84,8 +88,8 @@ public class MatrixOperations {
                 break;
             }
         }
-        int scoreBonus = 50 * clearedRows.size() * clearedRows.size();
-        return new ClearRow(clearedRows.size(), tmp, scoreBonus); //CALCULATE SCORE BONUS
+        int scoreBonus = SCORE_PER_LINE_BASE * clearedRows.size() * clearedRows.size();
+        return new ClearRow(clearedRows.size(), tmp, scoreBonus); // Calculates Score Bonus
     }
 
     public static List<int[][]> deepCopyList(List<int[][]> list){

@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.Panels;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
@@ -14,18 +14,22 @@ import javafx.util.Duration;
 public class GameOverPanel extends StackPane {
     public final Label gameOverLabel, scoreLabelGO, highScoreLabelGO, RnMMLabelGO;
     private final Rectangle overlay;
-    @FXML private Rectangle blackScreen;
 
     public GameOverPanel() {
+        // Make panel fill parent and receive events properly
+        setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
+
         // Transparent overlay
-        overlay = new Rectangle();overlay.setFill(Color.BLACK);
-        overlay.setOpacity(0); // start fully transparent
+        overlay = new Rectangle();
+        overlay.setFill(Color.BLACK);
+        overlay.setOpacity(0);
         overlay.widthProperty().bind(this.widthProperty());
         overlay.heightProperty().bind(this.heightProperty());
 
         // Game over label
         gameOverLabel = new Label("GAME OVER");
-        gameOverLabel.getStyleClass().add("gameOverStyle1"); // start with red
+        gameOverLabel.getStyleClass().add("gameOverStyle1");
         gameOverLabel.setAlignment(Pos.CENTER);
         StackPane.setAlignment(gameOverLabel, Pos.CENTER);
 
@@ -56,12 +60,18 @@ public class GameOverPanel extends StackPane {
         // Add overlay and all labels to panel
         getChildren().addAll(overlay, gameOverLabel, scoreLabelGO, highScoreLabelGO, RnMMLabelGO);
 
-        // Hide by default
+        // Hide by default and don't block input when hidden
         setVisible(false);
+        setMouseTransparent(true);
+        setPickOnBounds(false);
     }
 
-    public void showGameOver(int score, int highScore) {
+    public void showGameOver(int score, int highScore, String highScorePlayerName) {
         setVisible(true);
+        setMouseTransparent(false);
+        setPickOnBounds(true);
+        toFront();
+
         // Fade in dark overlay
         FadeTransition fade = new FadeTransition(Duration.seconds(1), overlay);
         fade.setFromValue(0.0);
@@ -76,7 +86,7 @@ public class GameOverPanel extends StackPane {
 
         // Update score labels
         scoreLabelGO.setText("SCORE: " + score);
-        highScoreLabelGO.setText("HIGHSCORE: " + highScore);
+        highScoreLabelGO.setText("HIGHSCORE: " + highScore + " (" + highScorePlayerName + ")");
 
         scoreLabelGO.setOpacity(0);
         highScoreLabelGO.setOpacity(0);
@@ -114,21 +124,24 @@ public class GameOverPanel extends StackPane {
             fadeRnMM.setToValue(1);
             fadeRnMM.setDelay(Duration.seconds(2.5));
             fadeRnMM.play();
-
         });
         pause.play();
     }
 
+    // Update the keybinding text
+    public void updateKeybindingText(String restartKey, String menuKey) {
+        RnMMLabelGO.setText("PRESS " + restartKey + " TO RESTART, " + menuKey + " FOR MAIN MENU");
+    }
+
     public void reset() {
-        // Reset label position
         gameOverLabel.setTranslateY(0);
-        // Reset style to red
         gameOverLabel.getStyleClass().remove("gameOverStyleWhite");
         if (!gameOverLabel.getStyleClass().contains("gameOverStyle1")) {
             gameOverLabel.getStyleClass().add("gameOverStyle1");
         }
-        // Hide panel and overlay
-        overlay.setFill(Color.rgb(0, 0, 0, 0));
+        overlay.setOpacity(0);
         setVisible(false);
+        setMouseTransparent(true);
+        setPickOnBounds(false);
     }
 }

@@ -1,4 +1,7 @@
-package com.comp2042;
+package com.comp2042.Event;
+
+import com.comp2042.GameBoard.DownData;
+import com.comp2042.GameBoard.ViewData;
 
 public interface InputEventListener {
     DownData onDownEvent(MoveEvent event);

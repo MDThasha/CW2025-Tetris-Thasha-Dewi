@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.PlayerData;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.IntegerProperty;
@@ -8,6 +8,7 @@ public final class Score {
     public IntegerProperty scoreProperty() {return score; }
     public void add(int i){ score.setValue(score.getValue() + i); }        // Add Value to current score
     public void reset() { score.setValue(0);}                              // reset score to 0
-}
+    public int getScore() { return score.getValue(); }
+} // WHAT SCORE IS
 
 

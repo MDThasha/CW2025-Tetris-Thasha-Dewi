@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.Event;
 
 import javafx.scene.input.KeyCode;
 import java.util.HashSet;

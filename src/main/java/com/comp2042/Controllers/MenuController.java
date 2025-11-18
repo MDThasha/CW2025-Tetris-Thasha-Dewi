@@ -1,5 +1,7 @@
-package com.comp2042;
+package com.comp2042.Controllers;
 
+import com.comp2042.Event.KeyBindings;
+import com.comp2042.Helper.PlayerUtils;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Button;
@@ -16,24 +18,24 @@ public class MenuController {
     @FXML public StackPane rootPane;                                // Root container of the menu scene
     @FXML private TextField playerNameField;                        // Player name text field
 
-    // Returns the singleton instance of this controller
     private static MenuController instance;
     public static MenuController getInstance() { return instance; }
 
+    // PLAYER NAME
     private String playerName;
     public void setPlayerName(String name) { this.playerName = name; }
     public String getPlayerName() {
-        // If field is empty, fallback to stored playerName, otherwise "Unknown"
+        // If field is empty, fallback to stored playerName, otherwise validate and return
         String fieldName = playerNameField.getText().trim();
-        if (!fieldName.isEmpty()) return fieldName;
-        if (playerName != null && !playerName.isEmpty()) return playerName;
+        if (!fieldName.isEmpty()) return PlayerUtils.validatePlayerName(fieldName);
+        if (playerName != null && !playerName.isEmpty()) return PlayerUtils.validatePlayerName(playerName);
         return "Unknown";
     }
 
     @FXML public void initialize() {
         instance = this;
         startBtn.setOnAction(e -> {
-            String playerName = playerNameField.getText().trim();
+            String playerName = PlayerUtils.validatePlayerName(playerNameField.getText().trim());
 
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("selectMode.fxml"));

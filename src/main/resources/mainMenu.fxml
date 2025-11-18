@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.comp2042.MenuController"
+           fx:controller="com.comp2042.Controllers.MenuController"
            fx:id="rootPane"
            style="-fx-background-color: black;">
 

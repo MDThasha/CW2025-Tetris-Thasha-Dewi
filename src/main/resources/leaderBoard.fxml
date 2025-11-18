@@ -7,7 +7,7 @@
 <?import javafx.scene.control.Button?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.comp2042.LeaderBoardController"
+           fx:controller="com.comp2042.Controllers.LeaderBoardController"
            style="-fx-background-color: black;">
 
     <VBox alignment="CENTER" spacing="20">

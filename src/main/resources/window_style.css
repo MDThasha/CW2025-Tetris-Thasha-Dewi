@@ -62,6 +62,12 @@
  -fx-text-fill: yellow;
 }
 
+.MTextLabel {
+ -fx-font-family: "Let's go Digital";
+ -fx-font-size: 15px;
+ -fx-text-fill: yellow;
+}
+
 .controlContainer {
     -fx-border-width: 4px;
     -fx-border-radius: 10px;
@@ -182,3 +188,15 @@
     -fx-padding: 6px;
 }
 /*BONUS SCORE CSS*/
+
+.SpeedContainer {
+    -fx-border-width: 4px;
+    -fx-border-radius: 10px;
+    -fx-border-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-min-width: 120px;
+    -fx-min-height: 60px;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 60px;
+    -fx-alignment: center;
+    -fx-padding: 6px;
+}

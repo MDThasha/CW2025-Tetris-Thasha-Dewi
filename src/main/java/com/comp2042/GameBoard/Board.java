@@ -1,4 +1,7 @@
-package com.comp2042;
+package com.comp2042.GameBoard;
+
+import com.comp2042.logic.bricks.NextShapeInfo;
+import com.comp2042.PlayerData.Score;
 
 public interface Board {
 
@@ -14,7 +17,7 @@ public interface Board {
     Score getScore();
     void newGame();
 
-    /** FOR NEXT SHAPE */
+    /** FOR NEXT SHAPE */ //test comment for javadoc
     NextShapeInfo getNextShapeInfo();
 
     // FOR HARD DROP

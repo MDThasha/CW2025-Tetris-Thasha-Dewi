@@ -1,9 +1,11 @@
-package com.comp2042;
+package com.comp2042.Controllers;
 
+import com.comp2042.Event.GameMode;
+import com.comp2042.Helper.PlayerUtils;
+import com.comp2042.Main;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -14,9 +16,8 @@ public class ModeSelectController {
     @FXML private Button backBtn;
 
     private String playerName;
-
     public void setPlayerName(String name) {
-        this.playerName = (name == null || name.isEmpty()) ? "Unknown" : name;
+        this.playerName = PlayerUtils.validatePlayerName(name);
     }
 
     @FXML
@@ -29,25 +30,17 @@ public class ModeSelectController {
 
     private void startGame(GameMode mode) {
         try {
+            System.out.println("Loading gameLayout.fxml...");
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("gameLayout.fxml"));
             Parent gameRoot = loader.load();
+            System.out.println("FXML loaded successfully!");
 
             GuiController gui = loader.getController();
-            gui.setGameMode(mode);  // set the mode first
+            gui.setGameMode(mode);
             GameController controller = new GameController(gui, this.playerName, mode);
 
-            // Immediately start the timer if mode is TIME_LIMIT
-            Platform.runLater(() -> {
-                if (mode == GameMode.TIME_LIMIT) {
-                    gui.startCountDownTimer(120); // countdown for Time Limit
-                } else {
-                    gui.startTimer();                     // count-up for other modes
-                }
-            });
-
             Main.getScene().setRoot(gameRoot);
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
+        catch (Exception ex) { System.err.println("ERROR loading game:"); ex.printStackTrace(); }
     }
 }

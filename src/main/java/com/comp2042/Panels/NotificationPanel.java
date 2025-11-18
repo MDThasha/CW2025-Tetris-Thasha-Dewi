@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.Panels;
 
 import javafx.animation.TranslateTransition;
 import javafx.animation.ParallelTransition;
