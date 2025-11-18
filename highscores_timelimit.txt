@@ -1,10 +1,3 @@
-Unknown,4091
-Unknown,3361
-Unknown,3219
-Unknown,2958
-Unknown,2672
-Unknown,2490
-Unknown,2345
-Unknown,2204
-Unknown,1936
-Unknown,161
+Unknown,940
+TWA,39
+Unknown,36

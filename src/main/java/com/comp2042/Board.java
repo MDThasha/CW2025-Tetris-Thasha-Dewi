@@ -14,7 +14,7 @@ public interface Board {
     Score getScore();
     void newGame();
 
-    // FOR NEXT SHAPE
+    /** FOR NEXT SHAPE */
     NextShapeInfo getNextShapeInfo();
 
     // FOR HARD DROP
