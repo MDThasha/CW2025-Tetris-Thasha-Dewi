@@ -123,7 +123,7 @@
 
     <Rectangle fx:id="blackScreen" fill="black" opacity="0" visible="false"
                width="6000" height="6000"/>
-    <Group fx:id="groupNotification" layoutX="7" layoutY="203"/>
+    <Pane fx:id="groupNotification" layoutX="7" layoutY="203"/>
     <Group fx:id="TimeBonus" layoutX="7" layoutY="150" styleClass="bonusStyle2">
         <Label fx:id="bonusTimeLabel"/>
     </Group>

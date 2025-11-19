@@ -200,3 +200,12 @@
     -fx-alignment: center;
     -fx-padding: 6px;
 }
+
+.popupStyle {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(0,0,0,0.75);
+    -fx-padding: 10px 18px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+}

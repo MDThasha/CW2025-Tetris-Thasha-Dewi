@@ -16,6 +16,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.input.KeyEvent;
 import javafx.application.Platform;
@@ -61,7 +62,7 @@ public class GuiController implements Initializable {
     @FXML private Label holdLabel, swapLabel;
 
     // BONUS NOTIFICATIONS
-    @FXML private Group groupNotification;
+    @FXML private Pane groupNotification;
     @FXML private Group TimeBonus;
     @FXML private Label bonusTimeLabel;
 
@@ -77,8 +78,14 @@ public class GuiController implements Initializable {
     
     public static final int initialSpeed = 400;            // Starting speed in ms
     private static final int minSpeed = 100;               // Maximum speed (fastest)
-    private static final int speedDecPerLvl = 25; // Speed increase per level
+    private static final int speedDecPerLvl = 25;         // Speed increase per level
     private static final int pointsPerLvl = 500;        // Points needed per level
+
+    private RandomEventManager eventManager;
+    private Rectangle blackoutOverlay;
+    private int savedSpeed;
+    private int savedLevel;
+    private boolean isTemporarySpeed = false;
 
     // STATIC REFERENCE
     public static GuiController currentController;
@@ -121,6 +128,23 @@ public class GuiController implements Initializable {
 
     private void showScoreNotification(int scoreBonus) {
         NotificationPanel notificationPanel = new NotificationPanel("+" + scoreBonus);
+        notificationPanel.setManaged(false);
+
+        // compute gamePanel center in scene, convert to groupNotification local coords
+        javafx.geometry.Bounds boardBounds = gamePanel.localToScene(gamePanel.getBoundsInLocal());
+        double sceneCenterX = boardBounds.getMinX() + boardBounds.getWidth() / 2.0;
+        double sceneCenterY = boardBounds.getMinY() + boardBounds.getHeight() / 2.0;
+        javafx.geometry.Point2D local = groupNotification.sceneToLocal(sceneCenterX, sceneCenterY);
+
+        // center the notification on the game board and offset a bit to the right/down
+        double w = notificationPanel.prefWidth(-1);
+        double h = notificationPanel.prefHeight(-1);
+        double offsetRight = -120; // tweak
+        double offsetDown = -180;  // tweak
+
+        notificationPanel.setLayoutX(local.getX() - w / 2.0 + offsetRight);
+        notificationPanel.setLayoutY(local.getY() - h / 2.0 + offsetDown);
+
         groupNotification.getChildren().add(notificationPanel);
         notificationPanel.showScore(groupNotification.getChildren());
     }
@@ -163,16 +187,32 @@ public class GuiController implements Initializable {
 
             // MOVE BRICK LEFT
             if (keyBindings.getMoveLeft().contains(keyEvent.getCode())) {
-                refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),
-                        getGameController().getBoard().getBoardMatrix()
-                ); keyEvent.consume();
+                // Check if controls are reversed
+                if (eventManager != null && eventManager.areControlsReversed()) {
+                    refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),
+                            getGameController().getBoard().getBoardMatrix()
+                    );
+                } else {
+                    refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),
+                            getGameController().getBoard().getBoardMatrix()
+                    );
+                }
+                keyEvent.consume();
             }
 
             // MOVE BRICK RIGHT
             if (keyBindings.getMoveRight().contains(keyEvent.getCode())) {
-                refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),
-                        getGameController().getBoard().getBoardMatrix()
-                ); keyEvent.consume();
+                // Check if controls are reversed
+                if (eventManager != null && eventManager.areControlsReversed()) {
+                    refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),
+                            getGameController().getBoard().getBoardMatrix()
+                    );
+                } else {
+                    refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),
+                            getGameController().getBoard().getBoardMatrix()
+                    );
+                }
+                keyEvent.consume();
             }
 
             // MOVE BRICK ROTATE
@@ -323,6 +363,7 @@ public class GuiController implements Initializable {
 
         timeLine.setCycleCount(Timeline.INDEFINITE);  // Repeat indefinitely
         timeLine.play();                              // Start the game loop
+        initEventManager();
     }
 
     // COLOR MANAGEMENT OF BRICKS
@@ -518,17 +559,25 @@ public class GuiController implements Initializable {
 
     // FOR TIME_LIMIT MODE BONUS TIME IF 4 CLEAR SAME TIME
     public void showBonusTimeLabel(String text) {
-        bonusTimeLabel.setText(text);
-        bonusTimeLabel.setVisible(true);
+        NotificationPanel notificationPanel = new NotificationPanel(text);
+        notificationPanel.setManaged(false);
 
-        bonusTimeLabel.setOpacity(1);
-        bonusTimeLabel.setTranslateY(-100);
+        javafx.geometry.Bounds boardBounds = gamePanel.localToScene(gamePanel.getBoundsInLocal());
+        double sceneCenterX = boardBounds.getMinX() + boardBounds.getWidth() / 2.0;
+        double sceneCenterY = boardBounds.getMinY() + boardBounds.getHeight() / 2.0;
+        javafx.geometry.Point2D local = groupNotification.sceneToLocal(sceneCenterX, sceneCenterY);
 
-        FadeTransition fade = new FadeTransition(Duration.seconds(2), bonusTimeLabel);
-        fade.setFromValue(1);
-        fade.setToValue(0);
-        fade.setOnFinished(e -> bonusTimeLabel.setVisible(false));
-        fade.play();
+        // center the notification on the game board and offset a bit to the right/down
+        double w = notificationPanel.prefWidth(-1);
+        double h = notificationPanel.prefHeight(-1);
+        double offsetRight = -120; // tweak
+        double offsetDown = -140;  // tweak
+
+        notificationPanel.setLayoutX(local.getX() - w / 2.0 + offsetRight);
+        notificationPanel.setLayoutY(local.getY() - h / 2.0 + offsetDown);
+
+        groupNotification.getChildren().add(notificationPanel);
+        notificationPanel.showScore(groupNotification.getChildren());
     }
 
     //FOR COUNTDOWN TIME LIMIT MODE
@@ -567,9 +616,10 @@ public class GuiController implements Initializable {
         currentSpeed = speed;
         currentLevel = level;
 
-        if (speedLabel != null) {
-            if (speed <= 100) { speedLabel.setText("Level MAX"); }
-            else { speedLabel.setText("Level " + level + " - " + speed + "ms"); }
+        if (speed <= minSpeed && !isTemporarySpeed) {
+            speedLabel.setText("Level MAX");
+        } else {
+            speedLabel.setText("Level " + level + " - " + speed + "ms");
         }
     }
 
@@ -577,6 +627,10 @@ public class GuiController implements Initializable {
     public void setCurrentSpeed(int speed) { this.currentSpeed = speed; }
 
     private void updateGameSpeed() {
+        if (isTemporarySpeed) {
+            return;
+        }
+
         int score = eventListener != null ?
                 getGameController().getBoard().getScore().getScore() : 0;
 
@@ -609,10 +663,175 @@ public class GuiController implements Initializable {
         }
     }
 
+    /**
+     * Initialize the random event manager
+     */
+    public void initEventManager() {
+        eventManager = new RandomEventManager(this);
+        eventManager.start();
+    }
+
+    /**
+     * Show event notification to player
+     */
+    public void showEventNotification(String message, String type) {
+        showSimplePopup(message, type);
+    }
+
+    // Call this instead of creating a NotificationPanel
+    public void showSimplePopup(String message, String type) {
+        javafx.application.Platform.runLater(() -> {
+            // Create popup label
+            Label popup = new Label(message);
+            popup.getStyleClass().add("popupStyle"); // optional CSS class
+            popup.setTextFill(Color.WHITE);
+
+            // color by type
+            if ("warning".equals(type)) popup.setTextFill(Color.web("#FF6B6B"));
+            else if ("success".equals(type)) popup.setTextFill(Color.web("#51CF66"));
+
+            // Make sized to content
+            popup.setWrapText(true);
+            popup.setMaxWidth(400);
+
+            // Add to the groupNotification (already in your FXML)
+            groupNotification.getChildren().add(popup);
+
+            // Ensure layout passes so pref sizes are available, then center in scene
+            popup.applyCss();
+            popup.layout();
+
+            // Center in Scene (fallback to parent if Scene not ready)
+            if (popup.getScene() != null) {
+                double w = popup.prefWidth(-1);
+                double h = popup.prefHeight(-1);
+                double sceneW = popup.getScene().getWidth();
+                double sceneH = popup.getScene().getHeight();
+                popup.setLayoutX((sceneW - w) / 2.0);
+                popup.setLayoutY((sceneH - h) / 2.0);
+            } else if (popup.getParent() != null) {
+                double pw = popup.getParent().getLayoutBounds().getWidth();
+                double ph = popup.getParent().getLayoutBounds().getHeight();
+                double w = popup.prefWidth(-1);
+                double h = popup.prefHeight(-1);
+                popup.setLayoutX((pw - w) / 2.0);
+                popup.setLayoutY((ph - h) / 2.0);
+            }
+
+            // Blink timeline: show, hide, show, hide -> remove
+            Timeline blink = new Timeline(
+                    new KeyFrame(Duration.ZERO,            e -> popup.setVisible(true)),
+                    new KeyFrame(Duration.seconds(0.35),   e -> popup.setVisible(false)),
+                    new KeyFrame(Duration.seconds(0.7),    e -> popup.setVisible(true)),
+                    new KeyFrame(Duration.seconds(1.05),   e -> popup.setVisible(false)),
+                    new KeyFrame(Duration.seconds(1.1),    e -> groupNotification.getChildren().remove(popup))
+            );
+            blink.setCycleCount(1);
+            blink.play();
+        });
+    }
+
+    /**
+     * Activate blackout effect - darkens bottom portion of screen
+     */
+    public void activateBlackout() {
+        if (blackoutOverlay == null) {
+            blackoutOverlay = new Rectangle();
+            blackoutOverlay.setFill(Color.BLACK);
+            blackoutOverlay.setOpacity(0.95);
+
+            // Position at bottom half of game panel
+            double panelHeight = gamePanel.getHeight();
+            double panelWidth = gamePanel.getWidth();
+
+            blackoutOverlay.setWidth(panelWidth > 0 ? panelWidth : 200);
+            blackoutOverlay.setHeight((panelHeight > 0 ? panelHeight : 500) / 2);
+            blackoutOverlay.setLayoutX(gamePanel.getLayoutX());
+            blackoutOverlay.setLayoutY(gamePanel.getLayoutY() + (panelHeight > 0 ? panelHeight : 500) / 2);
+
+            // Add to the parent of gamePanel
+            if (gamePanel.getParent() instanceof javafx.scene.layout.Pane) {
+                ((javafx.scene.layout.Pane) gamePanel.getParent()).getChildren().add(blackoutOverlay);
+            }
+        }
+        blackoutOverlay.setVisible(true);
+    }
+
+    /**
+     * Deactivate blackout effect
+     */
+    public void deactivateBlackout() {
+        if (blackoutOverlay != null) {
+            blackoutOverlay.setVisible(false);
+        }
+    }
+
+    /**
+     * Set temporary speed (for speed boost event)
+     */
+    public void setTemporarySpeed(int speed) {
+        if (!isTemporarySpeed) {
+            savedSpeed = currentSpeed;
+            isTemporarySpeed = true;
+        }
+
+        currentSpeed = speed;
+
+        if (timeLine != null) {
+            timeLine.stop();
+            timeLine.getKeyFrames().clear();
+            timeLine.getKeyFrames().add(
+                    new KeyFrame(Duration.millis(speed), e -> {
+                        if (!isPause.get() && !isGameOver.get()) {
+                            moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+                        }
+                    })
+            );
+            timeLine.setCycleCount(Timeline.INDEFINITE);
+            timeLine.play();
+        }
+
+        updateSpeedDisplay(speed, currentLevel);
+    }
+
+    /**
+     * Restore normal speed after event
+     */
+    public void restoreNormalSpeed() {
+        if (isTemporarySpeed) {
+            isTemporarySpeed = false;
+            currentSpeed = savedSpeed;
+
+            if (timeLine != null) {
+                timeLine.stop();
+                timeLine.getKeyFrames().clear();
+                timeLine.getKeyFrames().add(
+                        new KeyFrame(Duration.millis(currentSpeed), e -> {
+                            if (!isPause.get() && !isGameOver.get()) {
+                                moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+                            }
+                        })
+                );
+                timeLine.setCycleCount(Timeline.INDEFINITE);
+                timeLine.play();
+            }
+
+            updateSpeedDisplay(currentSpeed, currentLevel);
+        }
+    }
+
+    /**
+     * Get the event manager
+     */
+    public RandomEventManager getEventManager() {
+        return eventManager;
+    }
+
     // GAME OVER
     public void gameOver() {
         timeLine.stop();                                                     // Stop brick movement
         if (gameTimer != null) gameTimer.stop();                             // Stop timer
+        if (eventManager != null) eventManager.stop();
         int finalScore = getGameController().getBoard().getScore().getScore();
 
         HighScoreManager.addScore(playerName, finalScore, currentMode);                     // Add Score to HS with name
@@ -628,39 +847,43 @@ public class GuiController implements Initializable {
         isGameOver.set(true);                                                               // Mark game as over
     }
 
-    // START NEW GAME
     public void newGame(ActionEvent actionEvent) {
         timeLine.stop();
-        eventListener.createNewGame();            // Reset game logic
+        if (eventManager != null) eventManager.stop();
+        eventListener.createNewGame();
         gamePanel.requestFocus();
         timeLine.play();
         isPause.set(false);
         isGameOver.set(false);
-        gameOverPanel.reset();                    // Reset Game Over UI
+        gameOverPanel.reset();
+        initEventManager(); // Restart event system
     }
 
-    // STOP TIMELINE
     public void stopTimeline() {
         if (timeLine != null) {
             timeLine.stop();
         }
+        if (eventManager != null) {
+            eventManager.stop();
+        }
     }
 
-    // TOGGLE PAUSE
     public void togglePause() {
-        if (isGameOver.get()) return;    // Can't pause on game over
+        if (isGameOver.get()) return;
         boolean paused = isPause.get();
         isPause.set(!paused);
         if (!paused) {
             // Pause ON
             timeLine.stop();
-            if (gameTimer != null) gameTimer.stop();  // Stop the timer
+            if (gameTimer != null) gameTimer.stop();
+            if (eventManager != null) eventManager.pause();
             pauseOverlay.setVisible(true);
         } else {
             // Pause OFF
             pauseOverlay.setVisible(false);
             timeLine.play();
-            if (gameTimer != null) gameTimer.play();  // Resume the timer
+            if (gameTimer != null) gameTimer.play();
+            if (eventManager != null) eventManager.resume();
         }
     }
 
