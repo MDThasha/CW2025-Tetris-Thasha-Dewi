@@ -3,6 +3,7 @@ package com.comp2042;
 import com.comp2042.Controllers.GameController;
 import com.comp2042.Controllers.GuiController;
 import com.comp2042.Event.GameMode;
+import com.comp2042.Managers.AudioManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,6 +32,11 @@ public class Main extends Application {
         mainScene = new Scene(menuRoot); // Set single scene so if full screen it ddont change
         mainStage.setScene(mainScene);   // Show menu scene
         mainStage.show();
+
+        AudioManager.loadSound("land", "/sounds/land.wav");
+        AudioManager.loadSound("clear", "/sounds/clear.wav");
+        AudioManager.loadSound("gameover", "/sounds/gameover.wav");
+        AudioManager.loadBackgroundMusic("/sounds/TetrisMusic.wav");
     }
 
     /** Return the primary application Stage. */
@@ -45,6 +51,7 @@ public class Main extends Application {
             // Stop the game if it's running
             if (GuiController.currentController != null) {
                 GuiController.currentController.stopTimeline();
+                AudioManager.playBackgroundMusic();
             }
             Parent menuRoot = FXMLLoader.load(Main.class.getClassLoader().getResource("mainMenu.fxml"));
             mainScene.setRoot(menuRoot); // just swap root, scene stays the same

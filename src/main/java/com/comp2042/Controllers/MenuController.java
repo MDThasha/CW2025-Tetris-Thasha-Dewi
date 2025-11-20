@@ -2,6 +2,8 @@ package com.comp2042.Controllers;
 
 import com.comp2042.Event.KeyBindings;
 import com.comp2042.Helper.PlayerUtils;
+import com.comp2042.Managers.AudioManager;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Button;
@@ -51,12 +53,17 @@ public class MenuController {
 
     /** JavaFX initialize called after FXML injection.
      * <p>Registers event handlers for the Start and Quit buttons, sets the static instance
-     * reference, and passes the player name to the mode select controller when starting a game*/
+     * reference, and passes the player name to the mode select controller when starting a game adn start audio*/
     @FXML public void initialize() {
         instance = this;
+        volumeSlider.setValue(AudioManager.getVolume());
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            AudioManager.setVolume(newValue.floatValue());
+            AudioManager.setMusicVolume(newValue.floatValue() * 0.6f);
+        });
+
         startBtn.setOnAction(e -> {
             String playerName = PlayerUtils.validatePlayerName(playerNameField.getText().trim());
-
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("selectMode.fxml"));
                 Parent modeRoot = loader.load(); // Load FXML
@@ -69,9 +76,12 @@ public class MenuController {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+
         });
 
         quitBtn.setOnAction(e -> System.exit(0));  // Quit the application
+
+
     }
 
     /** Open the controls configuration screen.
@@ -109,5 +119,9 @@ public class MenuController {
             rootPane.getScene().setRoot(root); }
         catch (Exception e) {e.printStackTrace(); }
     }
+    //
+    @FXML private Slider volumeSlider;
+
+
 }
 

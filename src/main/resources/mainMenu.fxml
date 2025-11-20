@@ -27,6 +27,11 @@
         <Button text="QUIT" fx:id="quitBtn"
                 style="-fx-font-size: 24; -fx-padding: 10 40;" />
 
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="Volume:" style="-fx-text-fill: white;"/>
+            <Slider fx:id="volumeSlider" min="0" max="1" value="0.5" blockIncrement="0.1" prefWidth="200" />
+        </HBox>
+
         <Label text="Thasha Dewi Suresh Kumar"
                style="-fx-font-size: 18; -fx-text-fill: white;" />
 

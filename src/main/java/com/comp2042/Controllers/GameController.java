@@ -7,6 +7,7 @@ import com.comp2042.GameBoard.*;
 import com.comp2042.Event.GameMode;
 import com.comp2042.GameBoard.ViewData;
 import com.comp2042.Helper.PlayerUtils;
+import com.comp2042.Managers.AudioManager;
 import com.comp2042.logic.bricks.Brick;
 import com.comp2042.logic.bricks.RandomBrickGenerator;
 import javafx.application.Platform;
@@ -94,15 +95,17 @@ public class GameController implements InputEventListener {
         ClearRow clearRow = null;
 
         if (!canMove) {
+            AudioManager.playSound("land"); // place sound effect
             board.mergeBrickToBackground();
             clearRow = board.clearRows();
 
             if (clearRow.getLinesRemoved() > 0) {
                 board.getScore().add(clearRow.getScoreBonus());
                 CheckAndApplyBonusTime(clearRow);  // Apply bonus time
+                AudioManager.playSound("clear"); //clear row sound effect
             }
 
-            if (board.createNewBrick()) { viewGuiController.gameOver(); }
+            if (board.createNewBrick()) { viewGuiController.gameOver(); AudioManager.playSound("gameover");}
 
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
             viewGuiController.showNextBrick(board.getNextShapeInfo());
@@ -148,17 +151,19 @@ public class GameController implements InputEventListener {
     public DownData onHardDropEvent(MoveEvent event) {
         board.hardDrop();         // drop until blocked and lock
         board.getScore().add(3);  // Add score
+        AudioManager.playSound("land"); // placed sound effect
 
         ClearRow cleared = board.clearRows();
         if (cleared.getLinesRemoved() > 0) {
             board.getScore().add(cleared.getScoreBonus());
             CheckAndApplyBonusTime(cleared);  // Apply bonus time if applicable
+            AudioManager.playSound("clear");
         }
 
         boolean spawnCollision = board.createNewBrick();
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
         viewGuiController.showNextBrick(board.getNextShapeInfo());
-        if (spawnCollision) { viewGuiController.gameOver(); }
+        if (spawnCollision) { viewGuiController.gameOver(); AudioManager.playSound("gameover");}
         return new DownData(cleared, board.getViewData());
     }
 
