@@ -8,29 +8,45 @@ import com.comp2042.logic.bricks.BrickGenerator;
 import com.comp2042.logic.bricks.Brick;
 import java.awt.*;
 
+/** Simple board implementation of {@link Board}.
+ * <p>Manages the board matrix, the active/next/held bricks, score, and basic operations
+ * such as movement, rotation, hard drop, hold/swap and row clearing.</p>*/
 public class SimpleBoard implements Board {
 
-    // BOARD DIMENSIONS
+    /** Board dimensions*/
     private final int width, height;
 
+    /** Brick generator*/
     private final BrickGenerator brickGenerator;
+
+    /** Brick rotator*/
     private final BrickRotator brickRotator;
 
-    private int[][] currentGameMatrix;     // Holds the background n locked bricks
-    private Point currentOffset;           // Current brick position
-    private final Score score;             // Player score
+    /** Holds the background n locked bricks*/
+    private int[][] currentGameMatrix;
 
+    /** Current brick position*/
+    private Point currentOffset;
+
+    /** Player score*/
+    private final Score score;
+
+    /** next brick*/
     private Brick nextBrick;
+
+    /** current brick*/
     private Brick currentBrick;
 
+    /** set held brick to null at start*/
     private Brick heldBrick = null;
+
+    /** set swaped to null at start*/
     private boolean hasSwappedThisTurn = false;
 
-
-    // CONSTANTS
+    /** stet brick spawn location*/
     private static final Point SPAWN_POSITION = new Point(4, 2);
 
-    // HELPER
+    /** helper for next brick*/
     private Brick generateNextBrick() {
         if (forcedBrickClass != null) {
             try {
@@ -43,14 +59,26 @@ public class SimpleBoard implements Board {
         return brickGenerator.getBrick();
     }
 
+    /** used for testing*/
     private Class<? extends Brick> forcedBrickClass = null;
+
+    /** Set or clear the forced next-brick type.
+     *  When a non-null class is provided, calls to {@code generateNextBrick()} will attempt to
+     *  instantiate the provided class via reflection. Pass {@code null} to restore normal random generation.
+     *  @param brickClass the Brick subclass to force for the next generated bricks, or {@code null} to disable*/
     public void setNextBrickType(Class<? extends Brick> brickClass) { this.forcedBrickClass = brickClass; }
 
-    // INITIALISE BOARD AND BRICKS
+    /** Create a SimpleBoard with given width and height.
+     * @param width number of columns
+     * @param height number of rows*/
     public SimpleBoard(int width, int height) {
         this(width, height, null);  // calls the 3-argument constructor with no forced block
     }
 
+    /**Create a SimpleBoard, optionally forcing the next bricks to a specific class.
+     * @param width number of columns
+     * @param height number of rows
+     * @param forcedBrickClass optional brick class to force for generated bricks (may be null)*/
     public SimpleBoard(int width, int height, Class<? extends Brick> forcedBrickClass) {
         this.width = width;
         this.height = height;
@@ -68,7 +96,8 @@ public class SimpleBoard implements Board {
         currentOffset = new Point(SPAWN_POSITION);    // Default spawn position
     }
 
-    // MOVE BRICK DOWN ONE STEP; RETURN FALSE IF BLOCKED
+    /** MOVE BRICK DOWN ONE STEP;
+     * @return FALSE IF BLOCKED else tru*/
     @Override
     public boolean moveBrickDown() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -82,7 +111,8 @@ public class SimpleBoard implements Board {
         }
     }
 
-    // MOVE BRICK LEFT ONE STEP; RETURN FALSE IF BLOCKED
+    /** MOVE BRICK LEFT ONE STEP;
+     * @return FALSE IF BLOCKED else true*/
     @Override
     public boolean moveBrickLeft() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -96,7 +126,8 @@ public class SimpleBoard implements Board {
         }
     }
 
-    // MOVE BRICK RIGHT ONE STEP; RETURN FALSE IF BLOCKED
+    /** MOVE BRICK RIGHT ONE STEP;
+     * @return FALSE IF BLOCKED else true*/
     @Override
     public boolean moveBrickRight() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -110,7 +141,8 @@ public class SimpleBoard implements Board {
         }
     }
 
-    // ROTATE CURRENT BRICK LEFT; RETURN FALSE IF BLOCKED
+    /** ROTATE CURRENT BRICK LEFT;
+     * @return FALSE IF BLOCKED else true*/
     @Override
     public boolean rotateLeftBrick() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -123,7 +155,7 @@ public class SimpleBoard implements Board {
         }
     }
 
-    // SPAWN NEW BRICK
+    /** SPAWN NEW BRICK*/
     @Override
     public boolean createNewBrick() {
         currentBrick = nextBrick;                   // Move nextBrick into play
@@ -141,12 +173,14 @@ public class SimpleBoard implements Board {
         );
     }
 
-    // GET CURRENT BOARD MATRIX (INCLUDES LOCKED BRICKS)
+    /** Return a defensive copy of the internal board matrix.
+     * @return copy of the current board matrix (int[row][col])*/
     @Override
     public int[][] getBoardMatrix() {
         return currentGameMatrix;
     }
 
+    /** create new game*/
     @Override
     public void newGame() {
         currentGameMatrix = new int[width][height];
@@ -156,6 +190,7 @@ public class SimpleBoard implements Board {
         createNewBrick();
     }
 
+    /** gets th veiw data*/
     @Override
     public ViewData getViewData() {
         Point ghost = getHardDropPosition();    // Calculate ghost position
@@ -168,6 +203,7 @@ public class SimpleBoard implements Board {
         );
     }
 
+    /** merges placed bricks to bg*/
     @Override
     public void mergeBrickToBackground() {
         currentGameMatrix = MatrixOperations.merge(
@@ -178,6 +214,8 @@ public class SimpleBoard implements Board {
         );
     }
 
+    /** clears row
+     * @return clearRow*/
     @Override
     public ClearRow clearRows() {
         ClearRow clearRow = MatrixOperations.checkRemoving(currentGameMatrix);
@@ -185,19 +223,21 @@ public class SimpleBoard implements Board {
         return clearRow;
     }
 
+    /** gets current score
+     * @return score*/
     @Override
-    public Score getScore() {
-        return score;
-    }
+    public Score getScore() {return score; }
 
-    // GET INFO ABOUT NEXT BRICK (FOR GUI PREVIEW)
+    /** GET INFO ABOUT NEXT BRICK (FOR GUI PREVIEW)
+     * @return next shap info*/
     @Override
     public NextShapeInfo getNextShapeInfo() {
         int[][] shape = nextBrick.getShapeMatrix().get(0); // Get the default orientation
         return new NextShapeInfo(shape, 0);
     }
 
-    // HARD DROP CURRENT BRICK TO LOWEST POSITION AND MERGE
+    /** HARD DROP CURRENT BRICK TO LOWEST POSITION AND MERGE
+     * @return true*/
     @Override
     public boolean hardDrop() {
         while (moveBrickDown()) { }     // Keep moving down until blocked
@@ -205,7 +245,8 @@ public class SimpleBoard implements Board {
         return true;
     }
 
-    // CALCULATE GHOST POSITION (WHERE BRICK WOULD LAND)
+    /** CALCULATE GHOST POSITION (WHERE BRICK WOULD LAND)
+     * @return p positions*/
     public Point getHardDropPosition() {
         Point p = new Point(currentOffset);
         while (!MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), p.x, p.y + 1)) {
@@ -214,7 +255,8 @@ public class SimpleBoard implements Board {
         return p;
     }
 
-    //HELD BRICK
+    /** HELD BRICK
+     * @return true*/
     @Override
     public boolean holdBrick() {
         if (hasSwappedThisTurn) return false;  // Can't hold/swap twice per brick
@@ -240,7 +282,8 @@ public class SimpleBoard implements Board {
         return true;
     }
 
-    // SWAP WITH HELD
+    /** SWAP WITH HELD
+     * @return true*/
     @Override
     public boolean swapBrick() {
         if (hasSwappedThisTurn) return false;       // Can't hold/swap twice per brick
@@ -256,7 +299,8 @@ public class SimpleBoard implements Board {
         return true;
     }
 
-    // GET HELD FOR GUI
+    /** GET HELD FOR GUI
+     * @return GUI of next brick*/
     @Override
     public NextShapeInfo getHeldBrickInfo() {
         if (heldBrick == null) return null;
@@ -264,7 +308,9 @@ public class SimpleBoard implements Board {
         return new NextShapeInfo(shape, 0);
     }
 
-    // CHECK IF CAN HOLD OR SWAP
+
+    /** CHECK IF CAN HOLD OR SWAP
+     * @return not swaped yet*/
     @Override
     public boolean canHoldOrSwap() {
         return !hasSwappedThisTurn;

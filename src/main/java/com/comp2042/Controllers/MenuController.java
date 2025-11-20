@@ -11,27 +11,47 @@ import javafx.fxml.FXML;
 
 import java.io.IOException;
 
+/** Controller for the main menu UI (mainMenu.fxml).
+ * <p>Handles starting the game, opening control and leaderboard screens, and managing the
+ * player's display name.</p> */
 public class MenuController {
 
-    @FXML private Button startBtn;                                  // Button to start the game
-    @FXML private Button quitBtn;                                   // Button to quit the application
-    @FXML public StackPane rootPane;                                // Root container of the menu scene
-    @FXML private TextField playerNameField;                        // Player name text field
+    /** Button to start the game*/
+    @FXML private Button startBtn;
 
+    /** Button to quit the application*/
+    @FXML private Button quitBtn;
+
+    /** Root container of the menu scene*/
+    @FXML public StackPane rootPane;
+
+    /** Player name text field*/
+    @FXML private TextField playerNameField;
+
+    /** Singleton-like instance reference for easy access from other controllers.*/
     private static MenuController instance;
+
+    /** Singleton-like instance reference for easy access from other controllers.
+     * @return instance*/
     public static MenuController getInstance() { return instance; }
 
-    // PLAYER NAME
+    /** Stored player name*/
     private String playerName;
+
+    /** Set Player name*/
     public void setPlayerName(String name) { this.playerName = name; }
+
+    /** gets player name and If field is empty, fallback to stored playerName (UNKNOWN), otherwise validate and return*/
     public String getPlayerName() {
-        // If field is empty, fallback to stored playerName, otherwise validate and return
         String fieldName = playerNameField.getText().trim();
         if (!fieldName.isEmpty()) return PlayerUtils.validatePlayerName(fieldName);
         if (playerName != null && !playerName.isEmpty()) return PlayerUtils.validatePlayerName(playerName);
         return "Unknown";
     }
 
+    /** JavaFX initialize called after FXML injection.
+     * <p>Registers event handlers for the Start and Quit buttons, sets the static instance
+     * reference, and passes the player name to the mode select controller when starting a game*/
     @FXML public void initialize() {
         instance = this;
         startBtn.setOnAction(e -> {
@@ -54,6 +74,10 @@ public class MenuController {
         quitBtn.setOnAction(e -> System.exit(0));  // Quit the application
     }
 
+    /** Open the controls configuration screen.
+     * <p>Loads controlsLayout.fxml, injects the current KeyBindings (from the active GuiController
+     * if available or defaults), calls setupButtons() on the ControlsController, and swaps the scene root.</p>
+     * Exceptions are logged via stack trace if loading fails.*/
     @FXML public void openControls() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("controlsLayout.fxml"));
@@ -78,6 +102,8 @@ public class MenuController {
         }
     }
 
+    /** Open the leaderboard screen.
+     * Loads leaderBoard.fxml and swaps it into the scene root. Errors are printed to the console.*/
     @FXML public void openLeaderBoard() { // Open the leaderboard menu
         try { Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("leaderBoard.fxml"));
             rootPane.getScene().setRoot(root); }

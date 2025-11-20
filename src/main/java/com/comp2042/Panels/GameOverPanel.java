@@ -11,10 +11,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+/** Panel displayed when the game ends.
+ * <p>Provides a dark overlay, a large "GAME OVER" title, and score/highscore text with
+ * simple entrance animations. Can be shown, updated with current keybindings, and reset.</p>*/
 public class GameOverPanel extends StackPane {
+    /** Label display gameover, score and highscore and restart/exit to main menu keys*/
     public final Label gameOverLabel, scoreLabelGO, highScoreLabelGO, RnMMLabelGO;
+    /** Semi-transparent rectangle used to darken the background when the panel is shown. */
     private final Rectangle overlay;
 
+    /** Construct a GameOverPanel instance.
+     * <p>Initializes labels, the overlay, style classes and default visibility/input handling.
+     * The panel is hidden and mouse-transparent by default.</p>*/
     public GameOverPanel() {
         // Make panel fill parent and receive events properly
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -66,6 +74,10 @@ public class GameOverPanel extends StackPane {
         setPickOnBounds(false);
     }
 
+    /** Show the game-over panel with animated transitions and updated score information.
+     * @param score the player's score to display
+     * @param highScore the recorded high score to display
+     * @param highScorePlayerName the player name associated with the high score*/
     public void showGameOver(int score, int highScore, String highScorePlayerName) {
         setVisible(true);
         setMouseTransparent(false);
@@ -128,11 +140,15 @@ public class GameOverPanel extends StackPane {
         pause.play();
     }
 
-    // Update the keybinding text
+    /** Update the restart and main-menu instruction text to reflect current keybindings.
+     * @param restartKey the label/text for the restart key (e.g., "N")
+     * @param menuKey the label/text for the main menu key (e.g., "ESC")*/
     public void updateKeybindingText(String restartKey, String menuKey) {
         RnMMLabelGO.setText("PRESS " + restartKey + " TO RESTART, " + menuKey + " FOR MAIN MENU");
     }
 
+    /**Reset the panel to its initial hidden state and restore default styles/positions.
+     *<p>Does not affect score or high-score values; only visual state and interactivity are reset.</p>*/
     public void reset() {
         gameOverLabel.setTranslateY(0);
         gameOverLabel.getStyleClass().remove("gameOverStyleWhite");

@@ -29,7 +29,7 @@
 }
 /*NEXT BRICK CSS*/
 
-/* SCORE CSS */
+/* SCORE CSS*/
 .scoreContainer {
     -fx-border-width: 4px;
     -fx-border-radius: 10px;
@@ -41,7 +41,7 @@
     -fx-alignment: center;
     -fx-padding: 6px;
 }
-/* SCORE CSS */
+/* SCORE CSS*/
 
 /**CONTROLS CSS**/
 .NTextLabel {
@@ -106,8 +106,8 @@
 .gameOverStyleWhite {
     -fx-font-family: "Let's go Digital";
     -fx-font-size: 48;
-    -fx-text-fill: white;   /* only change text color */
-    -fx-background-color: transparent; /* remove red background */
+    -fx-text-fill: white;   /* only change text color*/
+    -fx-background-color: transparent; /* remove red background*/
 }
 
 .gameOverStyle2 {

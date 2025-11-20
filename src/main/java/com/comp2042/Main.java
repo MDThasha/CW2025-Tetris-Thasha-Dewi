@@ -9,12 +9,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/** JavaFX application entry point and helper methods for switching scenes (menu and game). */
 public class Main extends Application {
 
-    private static Stage mainStage;  // Primary stage of the application
-    private static Scene mainScene;  // Single scene used throughout
+    /** Primary Stage used by the application. */
+    private static Stage mainStage;
+    /** Single Scene instance reused; roots are swapped to change screens. so full screen dont effect game layout */
+    private static Scene mainScene;
 
-
+    /** Start the JavaFX application and show the main menu. */
     @Override
     public void start(Stage primaryStage) throws Exception {
         mainStage = primaryStage;
@@ -30,10 +33,13 @@ public class Main extends Application {
         mainStage.show();
     }
 
+    /** Return the primary application Stage. */
     public static Stage getStage() { return mainStage; }
+
+    /** Return the shared Scene instance. */
     public static Scene getScene() { return mainScene; }
 
-    // Load Main Menu from the game scene
+    /**  Load the main menu UI into the existing scene. Stops any running game timelines first.*/
     public static void loadMenu() {
         try {
             // Stop the game if it's running
@@ -47,7 +53,9 @@ public class Main extends Application {
         }
     }
 
-    // Load the Game, From Menu scene. Start Game
+    /** Load the game UI, initialise a GameController and start the game for the given player and mode.
+     * @param playerName the player's name
+     * @param mode the selected GameMode*/
     public static void loadGame(String playerName, GameMode mode) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getClassLoader().getResource("gameLayout.fxml"));
@@ -62,6 +70,7 @@ public class Main extends Application {
         }
     }
 
+    /** Launch the JavaFX application. */
     public static void main(String[] args) {
         launch(args);
     }

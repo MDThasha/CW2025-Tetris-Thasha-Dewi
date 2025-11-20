@@ -6,12 +6,18 @@ import com.comp2042.Helper.PlayerUtils;
 import java.io.*;
 import java.util.*;
 
+/** Utility for reading, writing and managing persistent high score lists per game mode. */
 public class HighScoreManager {
 
-    private static final int MAX_ENTRIES = 10;                  // Maximum number of top scores to keep
-    public record ScoreEntry(String name, int score) {}         // Record to store player's name and score as a single entry
+    /** Maximum number of high score entries to retain. */
+    private static final int MAX_ENTRIES = 10;
 
-    // Get the filename per game mode
+    /** Simple record storing a player name and score as a single entry. */
+    public record ScoreEntry(String name, int score) {}
+
+    /** Return the filename used to store high scores for the given game mode.
+     * @param mode the GameMode whose file path is requested
+     * @return the filename for the mode's high score storage */
     private static String getFilePath(GameMode mode) {
         return switch (mode) {
             case CLASSIC -> "highscores_classic.txt";
@@ -20,7 +26,10 @@ public class HighScoreManager {
         };
     }
 
-    // Add a new score and save top 10
+    /** Add a score for a player to the high score list for the given game mode and persist the result. only top 10
+     * @param name player name
+     * @param score the player's score
+     * @param mode the game mode to which the score belongs*/
     public static void addScore(String name, int score, GameMode mode) {
         name = PlayerUtils.validatePlayerName(name);
 
@@ -40,7 +49,9 @@ public class HighScoreManager {
         }
     }
 
-    // Returns a list of top scores with names in descending order
+    /** Read and return the top scores for a game mode from persistent storage.
+     * @param mode the GameMode to read scores for
+     * @return a List of ScoreEntry in descending order (highest first)*/
     public static List<ScoreEntry> getTopScores(GameMode mode) {
         String filePath = getFilePath(mode);
         List<ScoreEntry> scores = new ArrayList<>();                                     // List to hold scores read from file
@@ -67,13 +78,17 @@ public class HighScoreManager {
         return scores;
     }
 
-    // Return the highest score from the top scores, or 0 if none exist
+    /** Return the highest recorded score for the specified game mode, or 0 if none exist.
+     * @param mode the GameMode to query
+     * @return the top score or 0 */
     public static int getHighScore(GameMode mode) {
         List<ScoreEntry> scores = getTopScores(mode);
         return scores.isEmpty() ? 0 : scores.get(0).score();
     }
 
-    // Return the name of the player with the highest score, or "Unknown" if none exist
+    /** Return the player name associated with the highest recorded score for the specified mode, or "Unknown" if no scores are recorded.
+     * @param mode the GameMode to query
+     * @return player name of the top scorer or "Unknown" */
     public static String getHighScorePlayerName(GameMode mode) {
         List<ScoreEntry> scores = getTopScores(mode);
         return scores.isEmpty() ? "Unknown" : scores.get(0).name();

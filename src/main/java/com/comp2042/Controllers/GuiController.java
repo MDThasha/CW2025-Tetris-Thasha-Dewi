@@ -9,7 +9,6 @@ import com.comp2042.Panels.GameOverPanel;
 import com.comp2042.Panels.NotificationPanel;
 import com.comp2042.PlayerData.HighScoreManager;
 import com.comp2042.logic.bricks.NextShapeInfo;
-import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -37,95 +36,178 @@ import java.net.URL;
 import java.awt.*;
 import java.util.Set;
 
+/** Main GUI controller for the Tetris game.
+ *
+ * <p>Manages the JavaFX view (grid, previews, overlays), keyboard input, timers,
+ * visual notifications, and coordinates with the game logic via an InputEventListener.</p>*/
 public class GuiController implements Initializable {
 
     // GAME PANELS
+    /** GridPane that shows the static game board cells (visual background).*/
     @FXML private GridPane gamePanel;
+
+    /** GridPane for the currently falling brick (moving brick visuals).*/
     @FXML private GridPane brickPanel;
+
+    /** Pane used to draw ghost-preview rectangles.*/
     @FXML private AnchorPane ghostPane;
+
+    /** Overlay displayed when the game is paused.*/
     @FXML private AnchorPane pauseOverlay;
+
+    /** Panel shown on game over (injected custom control).*/
     @FXML private GameOverPanel gameOverPanel;
 
     // BRICK PREVIEW UI
-    @FXML private AnchorPane nextBrickContainer;
-    @FXML private AnchorPane holdBrickContainer;
+    /** Container for next / held brick previews.*/
+    @FXML private AnchorPane nextBrickContainer, holdBrickContainer;
 
     // LABELS
-    @FXML private Label scoreLabel;
-    @FXML private Label timerLabel;
-    @FXML private Label playerNameLabel;
-    @FXML private Label pauseKeybindLabel;
+    /** Labels displayed in the UI: score, timer, player name, pause, etc.*/
+    @FXML private Label scoreLabel, timerLabel, playerNameLabel, pauseKeybindLabel;
 
     // CONTROLS
-    @FXML private Label restartLabel, rotateLabel, moveLeftLabel, moveRightLabel;
-    @FXML private Label moveDownLabel, hardDropLabel, mainMenuLabel, pauseLabel;
-    @FXML private Label holdLabel, swapLabel;
+    /** Labels showing keybinding names for controls.*/
+    @FXML private Label restartLabel, rotateLabel, moveLeftLabel, moveRightLabel,
+                        moveDownLabel, hardDropLabel, mainMenuLabel, pauseLabel,
+                        holdLabel, swapLabel;
 
     // BONUS NOTIFICATIONS
+    /** Pane used as the absolute-position container for notifications (popups).*/
     @FXML private Pane groupNotification;
+
+    /** Group used for time-bonus UI (in FXML).*/
     @FXML private Group TimeBonus;
+
+    /** Label used to show bonus time text (e.g. "+15s").*/
     @FXML private Label bonusTimeLabel;
 
     // SPEED/LEVEL DISPLAY
+    /** Label that shows speed and level.*/
     @FXML private Label speedLabel;
-    private int currentSpeed = 400;  // Starting speed in ms
+
+    /** Starting Speed in ms*/
+    private int currentSpeed = 400;
+
+    /** Starting Level*/
     private int currentLevel = 1;
 
     // CONSTANTS
+    /** Brick pixel size on screen*/
     private static final int brickSize = 20;
-    private static final int ghostYOffset = 10;
-    private static final int brickPanelYOffset = -42;
-    
-    public static final int initialSpeed = 400;            // Starting speed in ms
-    private static final int minSpeed = 100;               // Maximum speed (fastest)
-    private static final int speedDecPerLvl = 25;         // Speed increase per level
-    private static final int pointsPerLvl = 500;        // Points needed per level
 
+    /** Ghost brick offset so it looks aligned*/
+    private static final int ghostYOffset = 10;
+
+    /** Brick panel offset so it looks aligned*/
+    private static final int brickPanelYOffset = -42;
+
+    /** Starting speed in ms*/
+    public static final int initialSpeed = 400;
+
+    /** Maximum speed (fastest)*/
+    private static final int minSpeed = 100;
+
+    /** Speed increase per level*/
+    private static final int speedDecPerLvl = 25;
+    
+    /** Additional points needed per level*/
+    private static final int pointsPerLvl = 500;
+
+    /** Random event manager that triggers game events.*/
     private RandomEventManager eventManager;
+
+    /** Random event Blackout overlay in game*/
     private Rectangle blackoutOverlay;
-    private int savedSpeed;
-    private int savedLevel;
+
+    /** Random event will sometimes change
+     * the speed this is to save the speed and level so that random event wont effect player level and base speed*/
+    private int savedSpeed, savedLevel;
+
+    /** temporary speed for a random event*/
     private boolean isTemporarySpeed = false;
 
     // STATIC REFERENCE
+    /** current Controller*/
     public static GuiController currentController;
 
     // RECTANGLE ARRAYS (Visuals)
-    private Rectangle[][] displayMatrix;      // Fixed bricks on board
-    private Rectangle[][] rectangles;         // Currently falling brick
-    private Rectangle[][] ghostRectangles;    // Ghost brick preview
+    /** Fixed bricks on board*/
+    private Rectangle[][] displayMatrix;
+
+    /** Currently falling brick*/
+    private Rectangle[][] rectangles;
+
+    /** Ghost brick preview*/
+    private Rectangle[][] ghostRectangles;
 
     // GAME STATE
+
+    /** Listens for random events*/
     private InputEventListener eventListener;
+
+    /** Main timeline*/
     private Timeline timeLine;
+
+    /** Gameplay timer*/
     private Timeline gameTimer;
+
+    /** Time left for Time limit mode*/
     private IntegerProperty timeLeft;
 
     // GAME STATUS FLAGS
+
+    /** Flag if game is paused*/
     private final BooleanProperty isPause = new SimpleBooleanProperty();
+
+    /** Flag if game is over*/
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
     // GAME INFO
+
+    /** Player name for the game used for score and highscores*/
     private String playerName;
+
+    /** Current mode of the game*/
     private GameMode currentMode;
 
     // KEYBINDINGS
+
+    /** Set instance for keybind*/
     private KeyBindings keyBindings = KeyBindings.getInstance();
+
+    /** Get current keybinds
+     * @return keyBindings*/
     public KeyBindings getKeyBindings() { return keyBindings; }
+
+    /** Set the keybindings */
     public void setKeyBindings(KeyBindings bindings) { this.keyBindings = bindings; }
 
     // SET EVENT LISTENER
+
+    /** Listens for random events to happen*/
     public void setEventListener(InputEventListener eventListener) { this.eventListener = eventListener; }
 
     // HELPERS
+
+    /** Helper for getting the game controller
+     * @returns (GameController) eventlistener*/
     private GameController getGameController() { return (GameController) eventListener; }
 
+    /** Finds out the game layout without vgap
+     * @param xPosition
+     * @returns layout X*/
     private double calculateBrickLayoutX(int xPosition) {
         return gamePanel.getLayoutX() + xPosition * brickPanel.getVgap() + xPosition * brickSize; }
 
+    /** Finds out the game layout without vgap
+     * @param yPosition
+     * @returns layout Y*/
     private double calculateBrickLayoutY(int yPosition) {
         return brickPanelYOffset + gamePanel.getLayoutY() + yPosition * brickPanel.getHgap() + yPosition * brickSize; }
 
+    /** When player clears row this shows te score bonus in the center of the game
+     * @param scoreBonus */
     private void showScoreNotification(int scoreBonus) {
         NotificationPanel notificationPanel = new NotificationPanel("+" + scoreBonus);
         notificationPanel.setManaged(false);
@@ -149,6 +231,8 @@ public class GuiController implements Initializable {
         notificationPanel.showScore(groupNotification.getChildren());
     }
 
+    /** Format the keybindings so no clutter
+     * @param keys */
     private String formatKeys(Set<KeyCode> keys) {
         if (keys == null || keys.size() == 0) return "?";
 
@@ -164,6 +248,11 @@ public class GuiController implements Initializable {
     }
 
     // INITIALIZATION
+
+    /** JavaFX initialization hook called after FXML injection.
+     * Loads fonts, sets up focus and key handler, initializes UI labels and speed display.
+     * @param location FXML location
+     * @param resources resources bundle */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
@@ -181,7 +270,10 @@ public class GuiController implements Initializable {
         updateSpeedDisplay(initialSpeed, 1);
     }
 
-    // HANDLE KEYBOARD INPUT
+    /** Handle keyboard input for gameplay.
+     * <p>Maps key presses to game actions (move/rotate/drop/hold/pause/etc.) using KeyBindings,
+     * calls eventListener methods, and consumes the event on handling.</p>
+     * @param keyEvent the key event from the scene*/
     private void handleKeyPress(KeyEvent keyEvent) {
         if (!isPause.get() && !isGameOver.get()) {
 
@@ -231,7 +323,7 @@ public class GuiController implements Initializable {
             // PLACE BRICK AT BOTTOM WITHOUT FALLING ALL THE WAY DOWN
             if (keyBindings.getHardDrop().contains(keyEvent.getCode())) {
                 DownData result = eventListener.onHardDropEvent(
-                        new MoveEvent(EventType.DOWN, EventSource.USER)
+                        new MoveEvent(EventType.DROP, EventSource.USER)
                 );
 
                 // Update moving brick visuals from returned ViewData
@@ -246,7 +338,7 @@ public class GuiController implements Initializable {
 
             // HOLD BRICK
             if (keyBindings.getHold().contains(keyEvent.getCode())) {
-                refreshBrick(eventListener.onHoldEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),
+                refreshBrick(eventListener.onHoldEvent(new MoveEvent(EventType.HOLD, EventSource.USER)),
                         getGameController().getBoard().getBoardMatrix()
                 );
                 keyEvent.consume();
@@ -254,7 +346,7 @@ public class GuiController implements Initializable {
 
             // SWAP BRICK
             if (keyBindings.getSwap().contains(keyEvent.getCode())) {
-                refreshBrick(eventListener.onSwapEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),
+                refreshBrick(eventListener.onSwapEvent(new MoveEvent(EventType.SWAP, EventSource.USER)),
                         getGameController().getBoard().getBoardMatrix()
                 );
                 keyEvent.consume();
@@ -279,7 +371,7 @@ public class GuiController implements Initializable {
         }
     }
 
-    // Format individual key names with arrows for arrow keys
+    /** Return a short, user-friendly name for a KeyCode (arrows, space, tab, etc.).*/
     private String formatKeyName(KeyCode key) {
         switch (key) {
             case UP: return "↑";
@@ -293,7 +385,8 @@ public class GuiController implements Initializable {
         }
     }
 
-    // KEYBINDING REFLECT IN GAME VIEW
+    /** Update UI labels to reflect current keybindings.
+     * Reads KeyBindings and updates each control label text shown in the in-game UI.*/
     public void updateControlLabels() {
         if (keyBindings == null) return;
 
@@ -314,7 +407,11 @@ public class GuiController implements Initializable {
         }
     }
 
-    // SETS UP VISUAL BOARD / INITIALIZE GAME VIEW
+    /** Initialize the visual game board and start the main game loop.
+     * <p>Creates rectangles for the static board, falling brick, and ghost preview, positions
+     * the brick panel, sets up the Timeline for automatic falling and starts the RandomEventManager.</p>
+     * @param boardMatrix the model board matrix used to populate the background grid
+     * @param brick view data for the current falling brick*/
     public void initGameView(int[][] boardMatrix, ViewData brick) {
 
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length]; // Create bg grid
@@ -366,21 +463,27 @@ public class GuiController implements Initializable {
         initEventManager();
     }
 
-    // COLOR MANAGEMENT OF BRICKS
+    /** Colours for bricks*/
     private static final Color[] COLORS = {
             Color.TRANSPARENT, Color.AQUA, Color.BLUEVIOLET, Color.DARKGREEN, Color.YELLOW, Color.RED, Color.BEIGE, Color.BURLYWOOD
     };
 
+    /** Get a random colour for brick*/
     private Paint getFillColor(int i) { return (i >= 0 && i < COLORS.length) ? COLORS[i] : Color.WHITE; }
 
-    // SET RECTANGLE DATA
+    /** Set colour for the brick
+     * @param color the colour
+     * @param rectangle the brick*/
     private void setRectangleData(int color, Rectangle rectangle) {
         rectangle.setFill(getFillColor(color));
         rectangle.setArcHeight(6); // Rounded edges
         rectangle.setArcWidth(6);
     }
 
-    // HELPER FOR SHOWING NEXT AND HEL BRICK PREVIEW IN CONTAINER
+
+    /** Render a brick preview (next/hold) inside a container AnchorPane.
+     * @param shapeInfo next/held shape information (may be null)
+     * @param container the AnchorPane to draw the preview into */
     private void showBrickPreview(NextShapeInfo shapeInfo, AnchorPane container) {
         if (container == null) return;
         container.getChildren().clear();
@@ -435,17 +538,21 @@ public class GuiController implements Initializable {
         }
     }
 
-    // SHOW NEXT BRICK PREVIEW IN PREVIEW PANEL
+    /** Shows next brick in panel*/
     public void showNextBrick(NextShapeInfo nextShapeInfo) {
         showBrickPreview(nextShapeInfo, nextBrickContainer);
     }
 
-    // SHOW HELD BRICK PREVIEW IN HOLD PANEL
+    /** Show held brick in panel*/
     public void showHeldBrick(NextShapeInfo heldShapeInfo) {
         showBrickPreview(heldShapeInfo, holdBrickContainer);
     }
 
-    // REFRESH MOVING BRICKS AND GHOST BRICKS
+    /** Refresh moving brick visuals and ghost preview, then update background.
+     * <p>Updates rectangles for the falling brick and ghost preview based on ViewData and
+     * repositions the brickPanel.</p>
+     * @param brick the ViewData for the current falling brick
+     * @param board the board matrix for refreshing the background*/
     private void refreshBrick(ViewData brick, int[][] board) {
         if (!isPause.get()) {
             Point ghost = brick.getGhostOffset(); // Get the current ghost offset
@@ -491,7 +598,8 @@ public class GuiController implements Initializable {
         refreshGameBackground(board); // refresh everytime
     }
 
-    // REFRESH BACKGROUND GRID - Updates the static board blocks that are already placed
+    /** Update the displayMatrix rectangles to match the board model.
+     * @param board the model board matrix*/
     public void refreshGameBackground(int[][] board) {
         for (int i = 2; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -500,7 +608,8 @@ public class GuiController implements Initializable {
         }
     }
 
-    // MOVE BRICK DOWN
+    /** Request a downward move via the eventListener and handle cleared rows and UI refresh.
+     * @param event the MoveEvent describing the source (USER or THREAD)*/
     private void moveDown(MoveEvent event) {
         if (!isPause.get()) {                                                   // Only move brick down if game is not paused
             DownData downData = eventListener.onDownEvent(event);                                    // Process movement through game logic
@@ -516,7 +625,8 @@ public class GuiController implements Initializable {
         gamePanel.requestFocus();  // Ensure the game panel retains focus for input
     }
 
-    // BIND SCORE PROPERTY
+    /** binds score to game and add a UI for the score in the game
+     * @param scoreProperty */
     public void bindScore(IntegerProperty scoreProperty) {
         scoreLabel.textProperty().bind(scoreProperty.asString());    // Bind score label text
 
@@ -540,24 +650,35 @@ public class GuiController implements Initializable {
         });
     }
 
-    // SET PLAYER NAME FOR HS
+    /** set player name as valid name*/
     public void setPlayerName(String name) { this.playerName = PlayerUtils.validatePlayerName(name); }
+
+    /** sets player name as text*/
     public void setPlayerNameLabel(String name) { playerNameLabel.setText(name); }
 
+    /** sets the game mode*/
     public void setGameMode(GameMode mode) { this.currentMode = mode; }
+
+    /** gets game mode
+     * @return the current mode*/
     public GameMode getGameMode() { return currentMode; }
 
-    // Return the remaining seconds
+
+    /** gets time left
+     * @return remianing time*/
     public int getTimeLeft() {
         return timeLeft.get(); // SimpleIntegerProperty
     }
 
-    // Update the timer
+    /** Sets the timer
+     * @param seconds*/
     public void setTimeLeft(int seconds) {
         timeLeft.set(seconds);
     }
 
-    // FOR TIME_LIMIT MODE BONUS TIME IF 4 CLEAR SAME TIME
+    /** Display a time-bonus notification (e.g. "+15s") centered over the game board is 4 row clear.
+     * @param text the text to display
+     * The notification is added to the notification pane and removed after animation.*/
     public void showBonusTimeLabel(String text) {
         NotificationPanel notificationPanel = new NotificationPanel(text);
         notificationPanel.setManaged(false);
@@ -580,7 +701,8 @@ public class GuiController implements Initializable {
         notificationPanel.showScore(groupNotification.getChildren());
     }
 
-    //FOR COUNTDOWN TIME LIMIT MODE
+    /** Start a countdown timer for TIME_LIMIT mode.
+     * @param seconds initial countdown seconds*/
     public void startCountDownTimer(int seconds) {
         if (gameTimer != null) gameTimer.stop();
         timeLeft = new SimpleIntegerProperty(seconds);
@@ -597,7 +719,7 @@ public class GuiController implements Initializable {
         gameTimer.play();
     }
 
-    //NORMAL TIMER FOR COUNTING UP
+    /** Start timer for count up for all modes but Time_Limit*/
     public void startTimer() {
         if (gameTimer != null) gameTimer.stop();
         timeLeft = new SimpleIntegerProperty(0); // start from 0
@@ -611,7 +733,8 @@ public class GuiController implements Initializable {
         gameTimer.play();
     }
 
-    // SPEED AND LEVEL DISPLAY STUFF
+    /** Compute level and speed from current score and update timeline if speed changed.
+     * Does nothing when a temporary speed event is active.*/
     public void updateSpeedDisplay(int speed, int level) {
         currentSpeed = speed;
         currentLevel = level;
@@ -623,9 +746,15 @@ public class GuiController implements Initializable {
         }
     }
 
+    /** get current speed to save if random event changes it
+     * @return currentSpeed*/
     public int getCurrentSpeed() { return currentSpeed; }
+
+    /** Set the current speed after event
+     * @param speed */
     public void setCurrentSpeed(int speed) { this.currentSpeed = speed; }
 
+    /** for speed event it updates the game speed atfer the event (bricks fall as same speed as before event)*/
     private void updateGameSpeed() {
         if (isTemporarySpeed) {
             return;
@@ -663,22 +792,21 @@ public class GuiController implements Initializable {
         }
     }
 
-    /**
-     * Initialize the random event manager
-     */
+    /** Initialize and start the random event manager used during gameplay.*/
     public void initEventManager() {
         eventManager = new RandomEventManager(this);
         eventManager.start();
     }
 
-    /**
-     * Show event notification to player
-     */
+    /** Show event notification to player*/
     public void showEventNotification(String message, String type) {
         showSimplePopup(message, type);
     }
 
-    // Call this instead of creating a NotificationPanel
+    /** Show event pop up when event is triggered.
+     * @param message the message to display
+     * @param type "warning" or "success" (affects color)
+     * Runs on the JavaFX Application Thread via Platform.runLater.*/
     public void showSimplePopup(String message, String type) {
         javafx.application.Platform.runLater(() -> {
             // Create popup label
@@ -731,9 +859,7 @@ public class GuiController implements Initializable {
         });
     }
 
-    /**
-     * Activate blackout effect - darkens bottom portion of screen
-     */
+    /** Activate blackout effect - darkens bottom portion of screen*/
     public void activateBlackout() {
         if (blackoutOverlay == null) {
             blackoutOverlay = new Rectangle();
@@ -757,18 +883,15 @@ public class GuiController implements Initializable {
         blackoutOverlay.setVisible(true);
     }
 
-    /**
-     * Deactivate blackout effect
-     */
+    /** Deactivate blackout effect*/
     public void deactivateBlackout() {
         if (blackoutOverlay != null) {
             blackoutOverlay.setVisible(false);
         }
     }
 
-    /**
-     * Set temporary speed (for speed boost event)
-     */
+    /** Set temporary speed (for speed boost event
+     * @param speed new temporary speed as 90 ms)*/
     public void setTemporarySpeed(int speed) {
         if (!isTemporarySpeed) {
             savedSpeed = currentSpeed;
@@ -794,9 +917,7 @@ public class GuiController implements Initializable {
         updateSpeedDisplay(speed, currentLevel);
     }
 
-    /**
-     * Restore normal speed after event
-     */
+    /** Restore normal speed after event*/
     public void restoreNormalSpeed() {
         if (isTemporarySpeed) {
             isTemporarySpeed = false;
@@ -820,14 +941,13 @@ public class GuiController implements Initializable {
         }
     }
 
-    /**
-     * Get the event manager
-     */
+    /** Get the event manager
+     * @return random event*/
     public RandomEventManager getEventManager() {
         return eventManager;
     }
 
-    // GAME OVER
+    /** GAME OVER marks gameover flag*/
     public void gameOver() {
         timeLine.stop();                                                     // Stop brick movement
         if (gameTimer != null) gameTimer.stop();                             // Stop timer
@@ -847,6 +967,8 @@ public class GuiController implements Initializable {
         isGameOver.set(true);                                                               // Mark game as over
     }
 
+    /** new game resets game
+     * @param actionEvent */
     public void newGame(ActionEvent actionEvent) {
         timeLine.stop();
         if (eventManager != null) eventManager.stop();
@@ -859,6 +981,7 @@ public class GuiController implements Initializable {
         initEventManager(); // Restart event system
     }
 
+    /** stops the timeline when leaving game*/
     public void stopTimeline() {
         if (timeLine != null) {
             timeLine.stop();
@@ -868,6 +991,7 @@ public class GuiController implements Initializable {
         }
     }
 
+    /** pauses game on pause*/
     public void togglePause() {
         if (isGameOver.get()) return;
         boolean paused = isPause.get();
@@ -887,6 +1011,7 @@ public class GuiController implements Initializable {
         }
     }
 
-    // PAUSE GAME
+    /** Handler to ensure the game panel regains focus after a pause UI action.
+     * @param actionEvent the UI event (unused)*/
     public void pauseGame(ActionEvent actionEvent) { gamePanel.requestFocus(); }
 }

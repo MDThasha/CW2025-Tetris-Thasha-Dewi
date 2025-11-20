@@ -8,16 +8,23 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import java.util.Set;
 
+/** This is the File Used to connect the controlsLayout.fxml, which is the Controls page in the game, to the game
+ * Manages the UI buttons that display and let the player rebind keys for game actions.*/
 public class ControlsController {
 
+    /** Buttons used in the controls UI. Each button shows the current keybinding and can be clicked to rebind its action.*/
     @FXML private Button moveLeftBtn, moveRightBtn, rotateBtn, moveDownBtn,
                          hardDropBtn, restartBtn, pauseBtn, mainMenuBtn, holdBtn, swapBtn;
 
-    @FXML public void initialize() { }
-
+    /** The KeyBindings model containing the current key mappings for all actions.*/
     private KeyBindings keyBindings;
+
+    /** Set the KeyBindings model used by this controller.
+     * @param bindings the KeyBindings instance to use for displaying and updating bindings*/
     public void setKeyBindings(KeyBindings bindings) { this.keyBindings = bindings; }
 
+    /** Populate and initialize all control buttons with their current key names.
+     * Adds event handlers so clicking a button will enter key-capture mode for rebinding.*/
     public void setupButtons() {
         if (keyBindings == null) {
             keyBindings = new KeyBindings();
@@ -35,6 +42,16 @@ public class ControlsController {
         setupButton(swapBtn, "Swap", keyBindings.getSwap());
     }
 
+    /** Configure a single Button to display its action name and capture a new keybinding when clicked.
+     *
+     * <p>updates the button label, installs a temporary key event filter on the scene
+     * to capture the next pressed key, validates that the key is not already used, and updates
+     * the provided key set. it also ignores the functions for esc, space,
+     * tab and arrow keys are pressed so they can be added as keybinds</p>
+     *
+     * @param btn the Button to configure
+     * @param actionName a readable name for the action (e.g., "Move Left")
+     * @param keySet the Set<KeyCode> where the selected binding is stored */
     private void setupButton(Button btn, String actionName, Set<KeyCode> keySet) {
         updateButtonText(btn, actionName, keySet);
 
@@ -95,6 +112,11 @@ public class ControlsController {
     }
 
     // Update UI
+    /** Update the button's label to show the action name and currently bound key.
+     *
+     * @param btn the button to update
+     * @param actionName readable action name
+     * @param keySet the set containing the currently bound KeyCode (may be empty)*/
     private void updateButtonText(Button btn, String actionName, Set<KeyCode> keySet) {
         if (keySet.isEmpty()) {
             btn.setText(actionName + " - ?");
@@ -103,6 +125,11 @@ public class ControlsController {
         }
     }
 
+    /** Check whether the given key is already bound to any other action.
+     *
+     * @param key the KeyCode to check
+     * @param currentSet the key set for the action being changed (excluded from the check)
+     * @return true if the key is used by another binding, false otherwise*/
     private boolean isKeyUsedElsewhere(KeyCode key, Set<KeyCode> currentSet) {
         // Check if key is used in any other binding
         return (keyBindings.getMoveLeft() != currentSet && keyBindings.getMoveLeft().contains(key)) ||
@@ -117,6 +144,8 @@ public class ControlsController {
                 (keyBindings.getSwap() != currentSet && keyBindings.getSwap().contains(key));
     }
 
+    /** Handler for the "Back" action in the controls UI.
+     * Updates in-game control labels if a game is active and returns to the main menu.*/
     @FXML public void goBack() {
         // Update the game's control labels if game is running
         if (GuiController.currentController != null) {
