@@ -18,11 +18,11 @@
         <Button fx:id="rotateBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
         <Button fx:id="moveDownBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
         <Button fx:id="hardDropBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="holdBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="swapBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
         <Button fx:id="restartBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
         <Button fx:id="pauseBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
         <Button fx:id="mainMenuBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
-        <Button fx:id="holdBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
-        <Button fx:id="swapBtn" prefWidth="200" style="-fx-background-color: #333; -fx-text-fill: white;" />
 
         <Button text="Back" prefWidth="120" onAction="#goBack"
                 style="-fx-background-color: #555; -fx-text-fill: white;" />
