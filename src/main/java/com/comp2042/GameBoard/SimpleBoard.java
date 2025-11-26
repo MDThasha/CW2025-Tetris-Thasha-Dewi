@@ -1,10 +1,10 @@
 package com.comp2042.GameBoard;
 
-import com.comp2042.logic.bricks.NextShapeInfo;
+import com.comp2042.logic.NextShapeInfo;
 import com.comp2042.PlayerData.Score;
-import com.comp2042.logic.bricks.BrickRotator;
-import com.comp2042.logic.bricks.RandomBrickGenerator;
-import com.comp2042.logic.bricks.BrickGenerator;
+import com.comp2042.logic.BrickRotator;
+import com.comp2042.logic.RandomBrickGenerator;
+import com.comp2042.logic.BrickGenerator;
 import com.comp2042.logic.bricks.Brick;
 import java.awt.*;
 
@@ -61,12 +61,6 @@ public class SimpleBoard implements Board {
 
     /** used for testing*/
     private Class<? extends Brick> forcedBrickClass = null;
-
-    /** Set or clear the forced next-brick type.
-     *  When a non-null class is provided, calls to {@code generateNextBrick()} will attempt to
-     *  instantiate the provided class via reflection. Pass {@code null} to restore normal random generation.
-     *  @param brickClass the Brick subclass to force for the next generated bricks, or {@code null} to disable*/
-    public void setNextBrickType(Class<? extends Brick> brickClass) { this.forcedBrickClass = brickClass; }
 
     /** Create a SimpleBoard with given width and height.
      * @param width number of columns
@@ -307,7 +301,6 @@ public class SimpleBoard implements Board {
         int[][] shape = heldBrick.getShapeMatrix().get(0);
         return new NextShapeInfo(shape, 0);
     }
-
 
     /** CHECK IF CAN HOLD OR SWAP
      * @return not swaped yet*/

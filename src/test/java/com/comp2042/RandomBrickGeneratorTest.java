@@ -1,7 +1,7 @@
 package com.comp2042;
 
 import com.comp2042.logic.bricks.Brick;
-import com.comp2042.logic.bricks.RandomBrickGenerator;
+import com.comp2042.logic.RandomBrickGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

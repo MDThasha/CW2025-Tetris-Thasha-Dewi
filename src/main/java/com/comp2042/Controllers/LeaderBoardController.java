@@ -2,7 +2,7 @@ package com.comp2042.Controllers;
 
 import com.comp2042.Event.GameMode;
 import com.comp2042.Main;
-import com.comp2042.PlayerData.HighScoreManager;
+import com.comp2042.Managers.HighScoreManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;

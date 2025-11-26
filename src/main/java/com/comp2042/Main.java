@@ -1,8 +1,6 @@
 package com.comp2042;
 
-import com.comp2042.Controllers.GameController;
 import com.comp2042.Controllers.GuiController;
-import com.comp2042.Event.GameMode;
 import com.comp2042.Managers.AudioManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -39,9 +37,6 @@ public class Main extends Application {
         AudioManager.loadBackgroundMusic("/sounds/TetrisMusic.wav");
     }
 
-    /** Return the primary application Stage. */
-    public static Stage getStage() { return mainStage; }
-
     /** Return the shared Scene instance. */
     public static Scene getScene() { return mainScene; }
 
@@ -60,22 +55,7 @@ public class Main extends Application {
         }
     }
 
-    /** Load the game UI, initialise a GameController and start the game for the given player and mode.
-     * @param playerName the player's name
-     * @param mode the selected GameMode*/
-    public static void loadGame(String playerName, GameMode mode) {
-        try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getClassLoader().getResource("gameLayout.fxml"));
-            Parent gameRoot = loader.load();
 
-            GuiController guiController = loader.getController();
-            guiController.setPlayerName(playerName);
-            new GameController(guiController, playerName, mode); // Pass player name + mode
-            mainScene.setRoot(gameRoot);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /** Launch the JavaFX application. */
     public static void main(String[] args) {
