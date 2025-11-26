@@ -40,11 +40,7 @@ public final class MatrixOperations {
      * @param targetY row index to check (must be >= 0 and < matrix.length)
      * @return true if out of bounds, false otherwise */
     private static boolean checkOutOfBound(int[][] matrix, int targetX, int targetY) {
-        boolean returnValue = true;
-        if (targetX >= 0 && targetY < matrix.length && targetX < matrix[targetY].length) {
-            returnValue = false;
-        }
-        return returnValue;
+        return targetX < 0 || targetY >= matrix.length || targetX >= matrix[targetY].length;
     }
 
     /** Create a deep copy of a 2D int matrix.

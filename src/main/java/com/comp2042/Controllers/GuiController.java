@@ -8,8 +8,8 @@ import com.comp2042.Helper.PlayerUtils;
 import com.comp2042.Managers.RandomEventManager;
 import com.comp2042.Panels.GameOverPanel;
 import com.comp2042.Panels.NotificationPanel;
-import com.comp2042.PlayerData.HighScoreManager;
-import com.comp2042.logic.bricks.NextShapeInfo;
+import com.comp2042.Managers.HighScoreManager;
+import com.comp2042.logic.NextShapeInfo;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -31,7 +31,6 @@ import javafx.scene.paint.Paint;
 import java.util.ResourceBundle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import javafx.scene.Group;
 import javafx.fxml.FXML;
 import java.net.URL;
 import java.awt.*;
@@ -65,7 +64,7 @@ public class GuiController implements Initializable {
 
     // LABELS
     /** Labels displayed in the UI: score, timer, player name, pause, etc.*/
-    @FXML private Label scoreLabel, timerLabel, playerNameLabel, pauseKeybindLabel;
+    @FXML private Label scoreLabel, timerLabel, pauseKeybindLabel;
 
     // CONTROLS
     /** Labels showing keybinding names for controls.*/
@@ -76,12 +75,6 @@ public class GuiController implements Initializable {
     // BONUS NOTIFICATIONS
     /** Pane used as the absolute-position container for notifications (popups).*/
     @FXML private Pane groupNotification;
-
-    /** Group used for time-bonus UI (in FXML).*/
-    @FXML private Group TimeBonus;
-
-    /** Label used to show bonus time text (e.g. "+15s").*/
-    @FXML private Label bonusTimeLabel;
 
     // SPEED/LEVEL DISPLAY
     /** Label that shows speed and level.*/
@@ -122,8 +115,8 @@ public class GuiController implements Initializable {
     private Rectangle blackoutOverlay;
 
     /** Random event will sometimes change
-     * the speed this is to save the speed and level so that random event wont effect player level and base speed*/
-    private int savedSpeed, savedLevel;
+     * the speed this is to save the speed and level so that random event won't affect player level and base speed*/
+    private int savedSpeed;
 
     /** temporary speed for a random event*/
     private boolean isTemporarySpeed = false;
@@ -175,14 +168,11 @@ public class GuiController implements Initializable {
     // KEYBINDINGS
 
     /** Set instance for keybind*/
-    private KeyBindings keyBindings = KeyBindings.getInstance();
+    private final KeyBindings keyBindings = KeyBindings.getInstance();
 
     /** Get current keybinds
      * @return keyBindings*/
     public KeyBindings getKeyBindings() { return keyBindings; }
-
-    /** Set the keybindings */
-    public void setKeyBindings(KeyBindings bindings) { this.keyBindings = bindings; }
 
     // SET EVENT LISTENER
 
@@ -235,7 +225,7 @@ public class GuiController implements Initializable {
     /** Format the keybindings so no clutter
      * @param keys */
     private String formatKeys(Set<KeyCode> keys) {
-        if (keys == null || keys.size() == 0) return "?";
+        if (keys == null || keys.isEmpty()) return "?";
 
         StringBuilder sb = new StringBuilder();
         int count = 0;
@@ -654,16 +644,8 @@ public class GuiController implements Initializable {
     /** set player name as valid name*/
     public void setPlayerName(String name) { this.playerName = PlayerUtils.validatePlayerName(name); }
 
-    /** sets player name as text*/
-    public void setPlayerNameLabel(String name) { playerNameLabel.setText(name); }
-
     /** sets the game mode*/
     public void setGameMode(GameMode mode) { this.currentMode = mode; }
-
-    /** gets game mode
-     * @return the current mode*/
-    public GameMode getGameMode() { return currentMode; }
-
 
     /** gets time left
      * @return remianing time*/
@@ -942,12 +924,6 @@ public class GuiController implements Initializable {
         }
     }
 
-    /** Get the event manager
-     * @return random event*/
-    public RandomEventManager getEventManager() {
-        return eventManager;
-    }
-
     /** GAME OVER marks gameover flag*/
     public void gameOver() {
         timeLine.stop();                                                     // Stop brick movement
@@ -1011,8 +987,4 @@ public class GuiController implements Initializable {
             if (eventManager != null) eventManager.resume();
         }
     }
-
-    /** Handler to ensure the game panel regains focus after a pause UI action.
-     * @param actionEvent the UI event (unused)*/
-    public void pauseGame(ActionEvent actionEvent) { gamePanel.requestFocus(); }
 }

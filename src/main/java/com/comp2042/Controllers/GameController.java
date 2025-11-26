@@ -9,7 +9,7 @@ import com.comp2042.GameBoard.ViewData;
 import com.comp2042.Helper.PlayerUtils;
 import com.comp2042.Managers.AudioManager;
 import com.comp2042.logic.bricks.Brick;
-import com.comp2042.logic.bricks.RandomBrickGenerator;
+import com.comp2042.logic.RandomBrickGenerator;
 import javafx.application.Platform;
 
 /** This File is used to control the main game logic and is mediator between the Board and the GUI
@@ -86,7 +86,7 @@ public class GameController implements InputEventListener {
      * awards 1 point if the source is the user, user manually moves it down.
      * If it cannot move down, the brick is merged into the background, (placed)
      * rows are cleared and scored, bonus time may be applied if it is TIME_LIMIT mode,
-     * and a new brick is spawned (which may trigger game over if it collides with placed brick (the background).</p>
+     * and a new brick is spawned (which may trigger game over if it collides with placed brick (the background)).</p>
      * @param event the MoveEvent that triggered the action
      * @return a {@code DownData} object containing any cleared rows and the current view data*/
     @Override

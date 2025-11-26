@@ -133,7 +133,7 @@ public class RandomEventManager {
         });
     }
 
-    /** deactivates REVERSE CONTROLS EVENT*/
+    /** deactivates REVERSE CONTROLS EVENT */
     private void deactivateReverseControls() {
         controlsReversed = false;
         Platform.runLater(() -> {
@@ -149,7 +149,7 @@ public class RandomEventManager {
         });
     }
 
-    /** deactivates BLACKOUT EVENT*/
+    /** deactivates BLACKOUT EVENT */
     private void deactivateBlackout() {
         Platform.runLater(() -> {
             guiController.deactivateBlackout();

@@ -3,7 +3,6 @@ package com.comp2042.Controllers;
 import com.comp2042.Event.GameMode;
 import com.comp2042.Helper.PlayerUtils;
 import com.comp2042.Main;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.fxml.FXMLLoader;

@@ -33,24 +33,6 @@ public class MenuController {
     /** Singleton-like instance reference for easy access from other controllers.*/
     private static MenuController instance;
 
-    /** Singleton-like instance reference for easy access from other controllers.
-     * @return instance*/
-    public static MenuController getInstance() { return instance; }
-
-    /** Stored player name*/
-    private String playerName;
-
-    /** Set Player name*/
-    public void setPlayerName(String name) { this.playerName = name; }
-
-    /** gets player name and If field is empty, fallback to stored playerName (UNKNOWN), otherwise validate and return*/
-    public String getPlayerName() {
-        String fieldName = playerNameField.getText().trim();
-        if (!fieldName.isEmpty()) return PlayerUtils.validatePlayerName(fieldName);
-        if (playerName != null && !playerName.isEmpty()) return PlayerUtils.validatePlayerName(playerName);
-        return "Unknown";
-    }
-
     /** JavaFX initialize called after FXML injection.
      * <p>Registers event handlers for the Start and Quit buttons, sets the static instance
      * reference, and passes the player name to the mode select controller when starting a game adn start audio*/

@@ -116,7 +116,7 @@ public class ControlsController {
      *
      * @param btn the button to update
      * @param actionName readable action name
-     * @param keySet the set containing the currently bound KeyCode (may be empty)*/
+     * @param keySet the set containing the currently bound KeyCode (maybe empty)*/
     private void updateButtonText(Button btn, String actionName, Set<KeyCode> keySet) {
         if (keySet.isEmpty()) {
             btn.setText(actionName + " - ?");

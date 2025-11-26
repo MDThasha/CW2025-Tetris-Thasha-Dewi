@@ -95,24 +95,6 @@ public class AudioManager {
         }
     }
 
-    /** Pause the background music (stop playback but keep the clip loaded and position available). */
-    public static void pauseBackgroundMusic() {
-        if (backgroundMusic != null && isMusicPlaying) {
-            backgroundMusic.stop();
-            isMusicPlaying = false;
-        }
-    }
-
-    /** Stop and close the background music clip, releasing system resources.
-     * <p>After calling this the background clip will be closed and must be reloaded to play again.</p>*/
-    public static void stopBackgroundMusic() {
-        if (backgroundMusic != null) {
-            backgroundMusic.stop();
-            backgroundMusic.close();
-            isMusicPlaying = false;
-        }
-    }
-
     /** Set the background music volume.
      * @param value volume in range 0.0 - 1.0 */
     public static void setMusicVolume(float value) {

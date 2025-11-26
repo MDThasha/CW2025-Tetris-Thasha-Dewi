@@ -13,8 +13,6 @@ public final class ViewData {
     /** Current Y position of the brick on the board*/
     private final int yPosition;
 
-    /** Next brick's shape matrix for preview*/
-    private final int[][] nextBrickData;
 
     /** Offset for ghost preview (where brick would land)*/
     private final Point ghostOffset;
@@ -30,12 +28,11 @@ public final class ViewData {
         this.brickData = brickData;
         this.xPosition = xPosition;
         this.yPosition = yPosition;
-        this.nextBrickData = nextBrickData;
         this.ghostOffset = ghostOffset;
     }
 
     /** Get the ghost offset for the current brick
-     * @return a defensive copy of the ghost offset Point (may be null)*/
+     * @return a defensive copy of the ghost offset Point (maybe null)*/
     public Point getGhostOffset() { return ghostOffset; }
 
     /** Get a copy of the current brick's shape matrix
@@ -50,7 +47,4 @@ public final class ViewData {
      * @return the current Y (row) position of the brick on the board*/
     public int getyPosition() { return yPosition; }
 
-    /** Get a copy of the next brick's shape matrix for preview
-     * @return a deep copy of the next brick's shape matrix used for preview*/
-    public int[][] getNextBrickData() { return MatrixOperations.copy(nextBrickData); }
 }
