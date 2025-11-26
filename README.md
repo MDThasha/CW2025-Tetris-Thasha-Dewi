@@ -402,3 +402,4 @@ Updates:
 | High Score Not Saving on Quick Exit   | If the player exited immediately after game over, the high score sometimes failed to save.                                                   | Moved high-score saving into `gameOver()` before the UI transition starts, ensuring the write operation always completes.                    |
 
 -----------------------------------------------------------------------------------------------------
+
