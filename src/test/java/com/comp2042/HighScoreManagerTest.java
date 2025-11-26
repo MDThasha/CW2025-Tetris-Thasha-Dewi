@@ -1,7 +1,7 @@
 package com.comp2042;
 
 import com.comp2042.Event.GameMode;
-import com.comp2042.PlayerData.HighScoreManager;
+import com.comp2042.Managers.HighScoreManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
