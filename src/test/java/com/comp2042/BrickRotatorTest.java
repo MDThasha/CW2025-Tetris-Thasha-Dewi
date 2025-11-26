@@ -1,9 +1,9 @@
 package com.comp2042;
 
 import com.comp2042.logic.bricks.Brick;
-import com.comp2042.logic.bricks.BrickRotator;
+import com.comp2042.logic.BrickRotator;
 import com.comp2042.logic.bricks.IBrick;
-import com.comp2042.logic.bricks.NextShapeInfo;
+import com.comp2042.logic.NextShapeInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

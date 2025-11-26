@@ -1,4 +1,6 @@
-package com.comp2042.logic.bricks;
+package com.comp2042.logic;
+
+import com.comp2042.logic.bricks.Brick;
 
 /** manages the current brick and its rotation index. */
 public class BrickRotator {

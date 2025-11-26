@@ -1,6 +1,6 @@
 package com.comp2042.GameBoard;
 
-import com.comp2042.logic.bricks.NextShapeInfo;
+import com.comp2042.logic.NextShapeInfo;
 import com.comp2042.PlayerData.Score;
 
 /** Updates game board model

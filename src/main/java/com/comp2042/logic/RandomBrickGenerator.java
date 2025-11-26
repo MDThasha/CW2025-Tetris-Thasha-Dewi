@@ -1,4 +1,6 @@
-package com.comp2042.logic.bricks;
+package com.comp2042.logic;
+
+import com.comp2042.logic.bricks.*;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -37,13 +39,6 @@ public class RandomBrickGenerator implements BrickGenerator {
             nextBricks.add(brickList.get(ThreadLocalRandom.current().nextInt(brickList.size())));
         }
         return nextBricks.poll();
-    }
-
-    /** Peek at the next brick without removing it from the queue.
-     * @return next brick.peek which check what is next*/
-    @Override
-    public Brick getNextBrick() {
-        return nextBricks.peek();
     }
 
     /** Return the runtime class of a randomly selected brick type (useful for tests/tools).

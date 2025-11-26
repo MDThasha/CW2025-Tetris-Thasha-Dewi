@@ -1,4 +1,4 @@
-package com.comp2042.PlayerData;
+package com.comp2042.Managers;
 
 import com.comp2042.Event.GameMode;
 import com.comp2042.Helper.PlayerUtils;

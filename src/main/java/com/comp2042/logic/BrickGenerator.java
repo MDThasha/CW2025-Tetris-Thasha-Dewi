@@ -1,4 +1,6 @@
-package com.comp2042.logic.bricks;
+package com.comp2042.logic;
+
+import com.comp2042.logic.bricks.Brick;
 
 /** Produces bricks for the game.
  * provide a stream of {@link Brick} instances used by the board.*/
@@ -8,7 +10,4 @@ public interface BrickGenerator {
      * @return the next {@link Brick} to be placed on the board*/
     Brick getBrick();
 
-    /** Peek at the upcoming brick without advancing the generator.
-     * @return the next {@link Brick} that {@link #getBrick()} would return, or null if not available*/
-    Brick getNextBrick();
 }
