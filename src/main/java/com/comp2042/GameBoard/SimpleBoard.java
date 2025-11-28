@@ -6,6 +6,7 @@ import com.comp2042.logic.BrickRotator;
 import com.comp2042.logic.RandomBrickGenerator;
 import com.comp2042.logic.BrickGenerator;
 import com.comp2042.logic.bricks.Brick;
+
 import java.awt.*;
 
 /** Simple board implementation of {@link Board}.

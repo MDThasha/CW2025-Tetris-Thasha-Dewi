@@ -1,15 +1,16 @@
 package com.comp2042.Controllers;
 
-import com.comp2042.*;
 import com.comp2042.Event.*;
 import com.comp2042.GameBoard.DownData;
 import com.comp2042.GameBoard.ViewData;
 import com.comp2042.Helper.PlayerUtils;
+import com.comp2042.Main;
 import com.comp2042.Managers.RandomEventManager;
 import com.comp2042.Panels.GameOverPanel;
 import com.comp2042.Panels.NotificationPanel;
 import com.comp2042.Managers.HighScoreManager;
 import com.comp2042.logic.NextShapeInfo;
+
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;

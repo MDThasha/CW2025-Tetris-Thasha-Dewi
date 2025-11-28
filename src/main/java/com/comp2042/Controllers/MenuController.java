@@ -4,6 +4,7 @@ import com.comp2042.Event.KeyBindings;
 import com.comp2042.Helper.PlayerUtils;
 import com.comp2042.Helper.UIHover;
 import com.comp2042.Managers.AudioManager;
+
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
@@ -15,7 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.fxml.FXML;
 import javafx.util.Duration;
-import com.comp2042.Helper.UIHover;
 import javafx.scene.text.Text;
 
 import java.io.IOException;

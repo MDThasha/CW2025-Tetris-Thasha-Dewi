@@ -3,7 +3,6 @@ package com.comp2042.Helper;
 import javafx.animation.ScaleTransition;
 import javafx.scene.control.Button;
 import javafx.util.Duration;
-import java.util.Objects;
 
 /** Helper to add hover/scale behaviour and style-class for Buttons. */
 public final class UIHover {

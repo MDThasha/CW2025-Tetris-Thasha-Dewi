@@ -10,6 +10,7 @@ import com.comp2042.Helper.PlayerUtils;
 import com.comp2042.Managers.AudioManager;
 import com.comp2042.logic.bricks.Brick;
 import com.comp2042.logic.RandomBrickGenerator;
+
 import javafx.application.Platform;
 
 /** This File is used to control the main game logic and is mediator between the Board and the GUI
