@@ -2,6 +2,7 @@ package com.comp2042.Controllers;
 
 import com.comp2042.Event.GameMode;
 import com.comp2042.Helper.PlayerUtils;
+import com.comp2042.Helper.UIHover;
 import com.comp2042.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -42,6 +43,9 @@ public class ModeSelectController {
         timeBtn.setOnAction(e -> startGame(GameMode.TIME_LIMIT));
         sameBtn.setOnAction(e -> startGame(GameMode.ALL_SAME_BLOCK));
         backBtn.setOnAction(e -> Main.loadMenu());
+
+        UIHover.apply(true,"menu-button",classicBtn, timeBtn, sameBtn, backBtn);
+
     }
 
     /**Load the main game FXML, create the GameController and start a new game.

@@ -381,17 +381,18 @@ public class GuiController implements Initializable {
     public void updateControlLabels() {
         if (keyBindings == null) return;
 
-        restartLabel.setText("Restart   - " + formatKeys(keyBindings.getRestart()));
-        rotateLabel.setText("Rotate    - " + formatKeys(keyBindings.getRotate()));
-        moveLeftLabel.setText("Move Left - " + formatKeys(keyBindings.getMoveLeft()));
-        moveRightLabel.setText("Move Right- " + formatKeys(keyBindings.getMoveRight()));
-        moveDownLabel.setText("Move Down - " + formatKeys(keyBindings.getMoveDown()));
+        rotateLabel.setText("ROTATE    - " + formatKeys(keyBindings.getRotate()));
+        moveLeftLabel.setText("MOVE LEFT - " + formatKeys(keyBindings.getMoveLeft()));
+        moveRightLabel.setText("MOVE RIGHT- " + formatKeys(keyBindings.getMoveRight()));
+        moveDownLabel.setText("MOVE DOWN - " + formatKeys(keyBindings.getMoveDown()));
         hardDropLabel.setText("DROP      - " + formatKeys(keyBindings.getHardDrop()));
-        mainMenuLabel.setText("MAIN MENU - " + formatKeys(keyBindings.getMainMenu()));
-        pauseLabel.setText("PAUSE     - " + formatKeys(keyBindings.getPause()));
 
         if (holdLabel != null) holdLabel.setText("HOLD      - " + formatKeys(keyBindings.getHold()));
         if (swapLabel != null) swapLabel.setText("SWAP      - " + formatKeys(keyBindings.getSwap()));
+
+        restartLabel.setText("RESTART   - " + formatKeys(keyBindings.getRestart()));
+        mainMenuLabel.setText("MAIN MENU - " + formatKeys(keyBindings.getMainMenu()));
+        pauseLabel.setText("PAUSE     - " + formatKeys(keyBindings.getPause()));
 
         if (pauseKeybindLabel != null) {
             pauseKeybindLabel.setText("Press " + formatKeys(keyBindings.getPause()) + " to unpause");

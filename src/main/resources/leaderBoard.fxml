@@ -4,39 +4,40 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
+<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.comp2042.Controllers.LeaderBoardController"
-           style="-fx-background-color: black;">
+           styleClass="root-pane">
 
-    <VBox alignment="CENTER" spacing="20">
+    <VBox alignment="CENTER" spacing="20" styleClass="menu-vbox">
 
         <Label text="LEADERBOARD"
-               style="-fx-font-size: 48; -fx-text-fill: white;" />
+               styleClass="text4" />
 
-        <!-- Mode selection buttons -->
+        <!-- Mode selection buttons (use mode-button class) -->
         <HBox spacing="20" alignment="CENTER">
-            <Button text="CLASSIC" onAction="#showClassic"
-                    style="-fx-background-color:#333;-fx-text-fill:white; " />
-            <Button text="TIMER" onAction="#showTimer"
-                    style="-fx-background-color:#333;-fx-text-fill:white;" />
-            <Button text="ALL SAME BLOCK" onAction="#showAllSame"
-                    style="-fx-background-color:#333;-fx-text-fill:white;" />
+            <Button fx:id="classicBtn" text="CLASSIC" onAction="#showClassic"
+                    styleClass="menu-button mode-button" />
+            <Button fx:id="timerBtn" text="TIME LIMIT" onAction="#showTimer"
+                    styleClass="menu-button mode-button" />
+            <Button fx:id="allSameBtn" text="ALL SAME" onAction="#showAllSame"
+                    styleClass="menu-button mode-button" />
         </HBox>
 
         <VBox alignment="CENTER">
             <VBox fx:id="leaderboardContainer"
                   alignment="CENTER"
                   spacing="10"
-                  style="-fx-background-color: Black;
-                  -fx-max-width: 2000px; -fx-max-height: 1000px;
-                  -fx-padding: 10;
-                  -fx-background-radius: 10;"/>
+                  styleClass="leaderboard-container"/>
         </VBox>
 
-        <Button text="Back" prefWidth="120" onAction="#backToMenu"
-                style="-fx-background-color: #333; -fx-text-fill: white;" />
+        <Button fx:id="backBtn" text="Back" prefWidth="120" onAction="#backToMenu"
+                styleClass="menu-button back-button" />
 
     </VBox>
+    <stylesheets>
+        <URL value="@window_style.css"/>
+    </stylesheets>
 </StackPane>

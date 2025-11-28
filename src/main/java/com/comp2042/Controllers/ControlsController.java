@@ -1,11 +1,13 @@
 package com.comp2042.Controllers;
 
 import com.comp2042.Event.KeyBindings;
+import com.comp2042.Helper.UIHover;
 import com.comp2042.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.application.Platform;
 import java.util.Set;
 
 /** This is the File Used to connect the controlsLayout.fxml, which is the Controls page in the game, to the game
@@ -13,8 +15,7 @@ import java.util.Set;
 public class ControlsController {
 
     /** Buttons used in the controls UI. Each button shows the current keybinding and can be clicked to rebind its action.*/
-    @FXML private Button moveLeftBtn, moveRightBtn, rotateBtn, moveDownBtn,
-                         hardDropBtn, restartBtn, pauseBtn, mainMenuBtn, holdBtn, swapBtn;
+    @FXML private Button moveLeftBtn, moveRightBtn, rotateBtn, moveDownBtn, hardDropBtn, restartBtn, pauseBtn, mainMenuBtn, holdBtn, swapBtn, back;
 
     /** The KeyBindings model containing the current key mappings for all actions.*/
     private KeyBindings keyBindings;
@@ -57,58 +58,71 @@ public class ControlsController {
 
         btn.setOnAction(e -> {
             btn.setText(actionName + " - Press a key...");
-            btn.setStyle("-fx-background-color: #555; -fx-text-fill: yellow;");
+            if (!btn.getStyleClass().contains("key-capturing")) {
+                btn.getStyleClass().add("key-capturing");
+            }
 
-            // Filter
             final javafx.event.EventHandler<KeyEvent>[] filterHolder = new javafx.event.EventHandler[1];
 
             javafx.event.EventHandler<KeyEvent> keyFilter = (KeyEvent keyEvent) -> {
                 KeyCode newKey = keyEvent.getCode();
 
-                // Ignore ESC to cancel, so can set as a keybind
+                // Cancel capture if ESC or undefined (treat ESC as cancel)
                 if (newKey == KeyCode.ESCAPE || newKey == KeyCode.UNDEFINED) {
-                    updateButtonText(btn, actionName, keySet);
-                    btn.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+                    Platform.runLater(() -> {
+                        updateButtonText(btn, actionName, keySet);
+                        btn.getStyleClass().remove("key-capturing");
+                    });
                     btn.getScene().removeEventFilter(KeyEvent.KEY_PRESSED, filterHolder[0]);
                     keyEvent.consume();
                     return;
                 }
 
-                // Check if key is already used
+                // Check if key already used
                 if (isKeyUsedElsewhere(newKey, keySet)) {
-                    btn.setText(actionName + " - Key already used!");
-                    btn.setStyle("-fx-background-color: #333; -fx-text-fill: red;");
+                    Platform.runLater(() -> {
+                        btn.setText(actionName + " - Key already used!");
+                        btn.setStyle("-fx-background-color: #333; -fx-text-fill: red;");
+                    });
 
-                    // Reset after 1 second
+                    // Reset after 1 second (on FX thread)
                     new Thread(() -> {
-                        try {
-                            Thread.sleep(1000);
-                            javafx.application.Platform.runLater(() -> {
-                                updateButtonText(btn, actionName, keySet);
-                                btn.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
-                            });
-                        } catch (InterruptedException ex) {}
+                        try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
+                        Platform.runLater(() -> {
+                            updateButtonText(btn, actionName, keySet);
+                            btn.getStyleClass().remove("key-capturing");
+                            btn.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+                        });
                     }).start();
-                }
-
-                // New key add
-                else {
+                } else {
+                    // Accept the new key
                     keySet.clear();
                     keySet.add(newKey);
-                    updateButtonText(btn, actionName, keySet);
-                    btn.setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+                    Platform.runLater(() -> {
+                        updateButtonText(btn, actionName, keySet);
+                        btn.getStyleClass().remove("key-capturing");
+                    });
                 }
 
-                // Remove the filter
+                // Remove filter and consume the event
                 btn.getScene().removeEventFilter(KeyEvent.KEY_PRESSED, filterHolder[0]);
                 keyEvent.consume();
             };
 
             filterHolder[0] = keyFilter;
-
-            // Add event filter to capture keys BEFORE they're consumed by the scene
+            // Add event filter to capture the next key press
             btn.getScene().addEventFilter(KeyEvent.KEY_PRESSED, keyFilter);
         });
+    }
+
+    /** to start UI effects */
+    @FXML
+    public void initialize() {
+        setupButtons();
+
+        // Add smooth hover to each button
+        UIHover.apply(true, "control-button", moveLeftBtn, moveRightBtn, rotateBtn, moveDownBtn, hardDropBtn, holdBtn, swapBtn, restartBtn, pauseBtn, mainMenuBtn, back);
+
     }
 
     // Update UI
@@ -152,4 +166,5 @@ public class ControlsController {
             GuiController.currentController.updateControlLabels();
         } Main.loadMenu();
     }
+
 }

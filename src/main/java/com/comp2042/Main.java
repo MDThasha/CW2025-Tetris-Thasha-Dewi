@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /** JavaFX application entry point and helper methods for switching scenes (menu and game). */
@@ -21,9 +22,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         mainStage = primaryStage;
         mainStage.setResizable(true);     // Allow resizing
-        mainStage.setMinHeight(700);      // Minimum height of window
+        mainStage.setMinHeight(800);      // Minimum height of window
         mainStage.setMinWidth(500);       // Minimum width of window
         mainStage.setTitle("TetrisJFX");  // Window title
+        Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
 
         // Load main menu FXML as initial screen
         Parent menuRoot = FXMLLoader.load(getClass().getClassLoader().getResource("mainMenu.fxml"));
@@ -54,8 +56,6 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
-
-
 
     /** Launch the JavaFX application. */
     public static void main(String[] args) {

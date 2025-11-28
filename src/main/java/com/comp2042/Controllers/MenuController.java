@@ -2,7 +2,11 @@ package com.comp2042.Controllers;
 
 import com.comp2042.Event.KeyBindings;
 import com.comp2042.Helper.PlayerUtils;
+import com.comp2042.Helper.UIHover;
 import com.comp2042.Managers.AudioManager;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
@@ -10,6 +14,9 @@ import javafx.scene.control.Button;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.fxml.FXML;
+import javafx.util.Duration;
+import com.comp2042.Helper.UIHover;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 
@@ -18,8 +25,8 @@ import java.io.IOException;
  * player's display name.</p> */
 public class MenuController {
 
-    /** Button to start the game*/
-    @FXML private Button startBtn;
+    /** Buttons to start the game*/
+    @FXML private Button startBtn, controlsBtn, LeadBtn;
 
     /** Button to quit the application*/
     @FXML private Button quitBtn;
@@ -29,6 +36,9 @@ public class MenuController {
 
     /** Player name text field*/
     @FXML private TextField playerNameField;
+
+    @FXML private Text titleGlow;
+    @FXML private Text titleMain;
 
     /** Singleton-like instance reference for easy access from other controllers.*/
     private static MenuController instance;
@@ -43,6 +53,11 @@ public class MenuController {
             AudioManager.setVolume(newValue.floatValue());
             AudioManager.setMusicVolume(newValue.floatValue() * 0.6f);
         });
+
+        // call after FXML injected
+        UIHover.apply(true,"menu-button",startBtn, controlsBtn, LeadBtn, quitBtn);
+
+        startTitlePulse();
 
         startBtn.setOnAction(e -> {
             String playerName = PlayerUtils.validatePlayerName(playerNameField.getText().trim());
@@ -104,6 +119,23 @@ public class MenuController {
     //
     @FXML private Slider volumeSlider;
 
+
+    /** For Tetris tile to move (animated) */
+    private void startTitlePulse() {
+        FadeTransition fade = new FadeTransition(Duration.seconds(1.9), titleGlow);
+        fade.setFromValue(0.00);
+        fade.setToValue(0.72);
+        fade.setAutoReverse(true);
+        fade.setCycleCount(Animation.INDEFINITE);
+        fade.play();
+
+        ScaleTransition s = new ScaleTransition(Duration.seconds(1.9), titleMain);
+        s.setFromX(1.02); s.setFromY(1.02);
+        s.setToX(1.10); s.setToY(1.10);
+        s.setAutoReverse(true);
+        s.setCycleCount(Animation.INDEFINITE);
+        s.play();
+    }
 
 }
 

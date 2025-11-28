@@ -1,6 +1,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-
+<?import java.net.URL?>
+<?import javafx.scene.text.Text?>
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.comp2042.Controllers.MenuController"
            fx:id="rootPane"
@@ -8,32 +9,36 @@
 
     <VBox alignment="CENTER" spacing="30">
 
-        <Label text="TETRIS"
-               style="-fx-font-size: 48; -fx-text-fill: white;" />
+        <StackPane>
+            <Text fx:id="titleGlow" text="TETRIS" styleClass="tetris-glow" />
+            <Text fx:id="titleMain" text="TETRIS" styleClass="tetris-text" />
+        </StackPane>
 
         <TextField fx:id="playerNameField" promptText="Enter your name"
-                   style="-fx-font-size: 14; -fx-padding: 10 40;
-                   -fx-max-height: 100px; -fx-max-width: 200px;"/>
+                   styleClass="menu-field" />
 
         <Button text="START GAME" fx:id="startBtn"
-                style="-fx-font-size: 24; -fx-padding: 10 40;" />
+                styleClass="menu-button" />
 
         <Button text="Controls" fx:id="controlsBtn" onAction="#openControls"
-                style="-fx-font-size: 24; -fx-padding: 10 40;" />
+                styleClass="menu-button" />
 
         <Button text="LeaderBoard" fx:id="LeadBtn" onAction="#openLeaderBoard"
-                style="-fx-font-size: 24; -fx-padding: 10 40;" />
+                styleClass="menu-button" />
 
         <Button text="QUIT" fx:id="quitBtn"
-                style="-fx-font-size: 24; -fx-padding: 10 40;" />
+                styleClass="menu-button" />
 
         <HBox alignment="CENTER" spacing="10">
-            <Label text="Volume:" style="-fx-text-fill: white;"/>
+            <Label text="Volume:" styleClass="text2"/>
             <Slider fx:id="volumeSlider" min="0" max="1" value="0.5" blockIncrement="0.1" prefWidth="200" />
         </HBox>
 
-        <Label text="Thasha Dewi Suresh Kumar"
-               style="-fx-font-size: 18; -fx-text-fill: white;" />
+        <Label text="Credit: Thasha Dewi Suresh Kumar"
+               styleClass="text2" />
 
     </VBox>
+    <stylesheets>
+        <URL value="@window_style.css"/>
+    </stylesheets>
 </StackPane>

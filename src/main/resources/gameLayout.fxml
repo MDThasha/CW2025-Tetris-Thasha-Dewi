@@ -94,25 +94,25 @@
                     <Label text="CONTROLS" styleClass="HTextLabel"
                            layoutX="-120" layoutY="-365"/>
                     <Label fx:id="rotateLabel" text="Rotate        - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-300"/>
-                    <Label fx:id="moveLeftLabel" text="Move Left   - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-275"/>
-                    <Label fx:id="moveRightLabel" text="Move Right - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-250"/>
-                    <Label fx:id="moveDownLabel" text="Move Down   - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-225"/>
-                    <Label fx:id="hardDropLabel" text="DROP        - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-200"/>
-                    <Label fx:id="holdLabel" text="HOLD            - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-125"/>
-                    <Label fx:id="swapLabel" text="SWAP            - " styleClass="STextLabel"
-                           layoutX="-120" layoutY="-100"/>
-                    <Label fx:id="restartLabel" text="Restart      - " styleClass="STextLabel"
                            layoutX="-120" layoutY="-325"/>
-                    <Label fx:id="mainMenuLabel" text="MAIN MENU   - " styleClass="STextLabel"
+                    <Label fx:id="moveLeftLabel" text="Move Left   - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-300"/>
+                    <Label fx:id="moveRightLabel" text="Move Right - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-275"/>
+                    <Label fx:id="moveDownLabel" text="Move Down   - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-250"/>
+                    <Label fx:id="hardDropLabel" text="DROP        - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-225"/>
+                    <Label fx:id="holdLabel" text="HOLD            - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-200"/>
+                    <Label fx:id="swapLabel" text="SWAP            - " styleClass="STextLabel"
                            layoutX="-120" layoutY="-175"/>
-                    <Label fx:id="pauseLabel" text="PAUSE          - " styleClass="STextLabel"
+                    <Label fx:id="restartLabel" text="Restart      - " styleClass="STextLabel"
                            layoutX="-120" layoutY="-150"/>
+                    <Label fx:id="mainMenuLabel" text="MAIN MENU   - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-125"/>
+                    <Label fx:id="pauseLabel" text="PAUSE          - " styleClass="STextLabel"
+                           layoutX="-120" layoutY="-100"/>
                     <AnchorPane fx:id="ControlContainer"               styleClass="controlContainer"
                                 layoutX="-125" layoutY="-375"/>
 

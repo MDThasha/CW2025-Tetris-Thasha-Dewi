@@ -2,6 +2,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
+<?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
@@ -9,11 +10,15 @@
            style="-fx-background-color: black;">
     <VBox alignment="CENTER" spacing="20">
         <Label text="SELECT GAME MODE"
-               style="-fx-font-size: 36; -fx-text-fill: white;" />
+               styleClass="text1" />
 
-        <Button text="Classic" fx:id="classicBtn" style="-fx-font-size: 24; -fx-padding: 10 40;"/>
-        <Button text="Time Limit" fx:id="timeBtn" style="-fx-font-size: 24; -fx-padding: 10 40;"/>
-        <Button text="All Same Block" fx:id="sameBtn" style="-fx-font-size: 24; -fx-padding: 10 40;"/>
-        <Button text="Back" fx:id="backBtn" style="-fx-font-size: 24; -fx-padding: 10 40;"/>
+        <Button text="Classic" fx:id="classicBtn" styleClass="menu-button"/>
+        <Button text="Time Limit" fx:id="timeBtn" styleClass="menu-button"/>
+        <Button text="All Same Block" fx:id="sameBtn" styleClass="menu-button"/>
+        <Button text="Back" fx:id="backBtn" styleClass="menu-button"/>
     </VBox>
+
+    <stylesheets>
+        <URL value="@window_style.css"/>
+    </stylesheets>
 </StackPane>

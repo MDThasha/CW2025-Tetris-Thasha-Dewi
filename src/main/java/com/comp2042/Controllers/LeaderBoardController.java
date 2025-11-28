@@ -1,11 +1,16 @@
 package com.comp2042.Controllers;
 
 import com.comp2042.Event.GameMode;
+import com.comp2042.Helper.UIHover;
 import com.comp2042.Main;
 import com.comp2042.Managers.HighScoreManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.animation.ScaleTransition;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.util.Duration;
 
 import java.util.List;
 /**Controller for the leaderboard UI (leaderBoard.fxml).
@@ -14,6 +19,9 @@ public class LeaderBoardController {
 
     /** Container VBox that holds the leaderboard title and score entries (injected from FXML).*/
     @FXML private VBox leaderboardContainer;
+
+    /** Mode buttons.*/
+    @FXML private Button classicBtn, timerBtn, allSameBtn, backBtn;
 
     /** Show scores for Classic mode.
      * Bound to the "Classic" button in the leaderboard FXML.*/
@@ -35,14 +43,18 @@ public class LeaderBoardController {
         leaderboardContainer.getChildren().clear();
 
         Label modeTitle = new Label(titleText);
-        modeTitle.setStyle("-fx-font-size: 32; -fx-text-fill: yellow; -fx-font-weight: bold;");
+        if (!modeTitle.getStyleClass().contains("text1")) {
+            modeTitle.getStyleClass().add("text1");
+        }
         leaderboardContainer.getChildren().add(modeTitle);
 
         List<HighScoreManager.ScoreEntry> scores = HighScoreManager.getTopScores(mode);
 
         if (scores.isEmpty()) {
             Label empty = new Label("No scores yet");
-            empty.setStyle("-fx-text-fill: white; -fx-font-size: 20;");
+            if (!empty.getStyleClass().contains("text3")) {
+                empty.getStyleClass().add("text3");
+            }
             leaderboardContainer.getChildren().add(empty);
             return;
         }
@@ -50,10 +62,19 @@ public class LeaderBoardController {
         int rank = 1;
         for (HighScoreManager.ScoreEntry entry : scores) {
             Label scoreLabel = new Label(rank + ". " + entry.name() + " - " + entry.score());
-            scoreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 20;");
+            if (!scoreLabel.getStyleClass().contains("text3")) {
+                scoreLabel.getStyleClass().add("text3");
+            }
             leaderboardContainer.getChildren().add(scoreLabel);
             rank++;
         }
+    }
+
+    /**Initialize button hovers and smooth animation*/
+    @FXML
+    public void initialize() {
+        // Add smooth hover/scale to mode buttons and back button
+        UIHover.apply(true,"mode-button",classicBtn, timerBtn, allSameBtn, backBtn);
     }
 
     /**Return to the main menu.
