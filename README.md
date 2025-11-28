@@ -152,6 +152,21 @@ Run all until each show "BUILD SUCCESS" in terminal
   * Updated FXML to show Next Brick panel on the right of game board.
 
 
+* Held Brick Panel
+    * Displays the currently held brick in the game.
+    * Implemented using RandomBrickGenerator in SimpleBoard, GameController and GuiController.
+    * Updated FXML to show Held Brick panel on the left of game board.
+
+* GameOver screen
+  * Now has animation and shows player final score, highscore of the game mode played along with name of the holder of the highscore, and displays what to do next.
+  * Implemented in GameOverPanel and Updated CSS. 
+
+
+* Main Menu
+  * Has animating title
+  * Implemented in MenuController, `startTitlePulse`, Also Implemented button hover animations for all buttons.
+  * Updated FXML for all layouts and menu screens.
+
 * Score Display
   * Live-updating score.
   * Updated FXML to display Score on the right of game panel.
@@ -274,6 +289,11 @@ Reasons:
 | RandomEventManager | Manages random events for the game                |
 | HighScoreManager   | Manages top 10 high scores for all the game modes |
 
+#### 7.1.4 Helper
+| Class Name  | Description                                                             |
+|-------------|-------------------------------------------------------------------------|
+| PlayerUtils | Helper class for validating player name.                                |
+| UIHover     | Helper class that standardizes UI for buttons style and hover animation |
 -------------------------------------------------------------------------------------------------------------------------------------------------
 # 7.2 Modified Java Classes
 ## 7.2.1 Controllers
