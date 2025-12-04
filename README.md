@@ -255,9 +255,10 @@ The Game has background music and sound effects:
 * Animations for better UI
 * Multiplayer Mode
 * Save Current Game when Quit, To allow players to continue where they left off.
+* Descriptions for game modes.
 
 Reasons: 
-* Time constraints and complexity of implementation. 
+* Time constraints mainly and complexity of implementation. 
 
 -----------------------------------------------------------------------------------------------------
 
@@ -295,9 +296,9 @@ Reasons:
 | PlayerUtils | Helper class for validating player name.                                |
 | UIHover     | Helper class that standardizes UI for buttons style and hover animation |
 -------------------------------------------------------------------------------------------------------------------------------------------------
-# 7.2 Modified Java Classes
-## 7.2.1 Controllers
-### GameController
+### 7.2 Modified Java Classes
+### 7.2.1 Controllers
+#### GameController
 | Change                     | Detailed Description                                                                                                                                                                                                                                                                                         |
 |----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Added Game Mode Handling   | Introduced `private final GameMode gameMode;` to bind the selected mode (Classic, All Same Block, Time Limit) directly to controller logic. This ensures all gameplay flow (scoring, spawning, event processing) becomes mode-dependent and consistent across the application.                               |
@@ -311,7 +312,7 @@ Reasons:
 | Swap Event                 | Added `onSwapEvent()` which triggers `swapBrick()` and refreshes the held preview. Distinguishes explicitly between first-time hold and subsequent swaps.                                                                                                                                                    |
 
 
-### GuiController – Major Changes
+#### GuiController – Major Changes
 | Area                                | Detailed Description                                                                                                                                                                                                                                                                                                                                                               |
 |-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | FXML Bindings Expansion             | Added all required FXML links `pauseOverlay`, `nextBrickContainer`, `holdBrickContainer`, `scoreLabel`, `timerLabel`, `pauseKeybindLabel`, `restartLabel`, `rotateLabel`, `moveLeftLabel`, `moveRightLabel`, `moveDownLabel`, `hardDropLabel`, `mainMenuLabel`, `pauseLabel`, `holdLabel`, `swapLabel`, `speedLabel`                                                               |
@@ -327,8 +328,8 @@ Reasons:
 | Game Flow & State Management        | Extended `newGame()`, `pauseGame()`, `stopTimeline()` and `gameOver()` to handle: <br>• event manager resets, <br>• visual cleanup for overlays/ghosts, <br>• timer resets, <br>• saving final scores and high score entries, <br>• lockouts for paused/over states.                                                                                                               |
 
  
-## 7.2.2 Event
-### EventType
+### 7.2.2 Event
+#### EventType
 
 New event types added to support advanced interaction:
 * `HOLD` – Triggers brick holding and preview update
@@ -338,7 +339,7 @@ New event types added to support advanced interaction:
 Allow the controller and input listeners to differentiate distinct user actions instead of overloading movement events.
 
 
-### InputEventListener
+#### InputEventListener
 Extended to detect and dispatch:
 * Swap key → sends `SWAP` event
 * Hold key → sends `HOLD` event
@@ -348,8 +349,8 @@ Extended to detect and dispatch:
 Listener ensures input is ignored when paused or during events.
 
 
-## 7.2.3 GameBoard
-### Board
+### 7.2.3 GameBoard
+#### Board
 | Enhancement                | Detailed Explanation                                                                                                                                     |
 |----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Next & Held Brick Support  | Added `getNextShapeInfo` and `getHeldBrickInfo` so the GUI can render upcoming and held bricks without modifying board state.                            |
@@ -357,13 +358,13 @@ Listener ensures input is ignored when paused or during events.
 | Hold/Swap Validation       | Added `canHoldOrSwap()` to enforce “one hold/swap per falling cycle”. Prevents players from repeatedly swapping to abuse brick sequencing.               |
 
 
-### MatrixOperations
+#### MatrixOperations
 * Added `SCORE_PER_LINE_BASE = 50`
   Used in the row-clearing algorithm to compute final score:
   `score = SCORE_PER_LINE_BASE * numberOfLinesCleared^2`
 
 
-## SimpleBoard – Major Changes
+#### SimpleBoard – Major Changes
 | Feature                     | Detailed Technical Description                                                                                                                                                                                            |
 |-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Next Brick Generation       | Added `generateNextBrick()` which always prepares one upcoming brick ahead of time, separating generation from immediate spawning. This allows consistent next-brick previews and eliminates the old generator function.  |
@@ -375,27 +376,27 @@ Listener ensures input is ignored when paused or during events.
 | Held Brick UI Support       | Added `getHeldBrickInfo()` to supply shape and rotation data for the GUI preview panel.                                                                                                                                   |
 
 
-### ViewData
+#### ViewData
 * Added `getGhostOffset()`
   Returns how far the brick can fall from its current position, used to render ghost bricks accurately.
 
 
-## 7.2.4 Logic
-### Brick Classes (I, J, L, O, S, T, Z)
+### 7.2.4 Logic
+#### Brick Classes (I, J, L, O, S, T, Z)
 Updates:
 * Declared `public final class` → ensures immutability and safe reuse for previews.
 * Prevents subclassing issues and unintended state sharing when the same brick reference is shown in both active play and preview panels.
 
 
-### BrickGenerator & RandomBrickGenerator
+#### BrickGenerator & RandomBrickGenerator
 * Removed `getNextBrick()`
 * Brick sequencing moved fully into `SimpleBoard` so that:
     * Previews, spawning, swapping, and mode-specific rules all use one unified source of truth.
     * To prevents desynchronization between GUI preview and actual brick generation.
 
 
-## 7.2.3 Panels
-### GameOverPanel
+### 7.2.3 Panels
+#### GameOverPanel
 | Change            | Detailed Description                                                                    |
 |-------------------|-----------------------------------------------------------------------------------------|
 | Score Display     | Shows final score, high score, and player name. Applies fade-in animation for emphasis. |
@@ -404,7 +405,7 @@ Updates:
 | Reset Logic       | Added `reset()` to fully reset panel state, clear animations, and prepare for new game. |
 
 
-### Main
+#### Main
 | Change             | Detailed Description                                                                   |
 |--------------------|----------------------------------------------------------------------------------------|
 | Start Method       | Loads audio resources, initializes root scene, and opens main menu using `loadMenu()`. |
@@ -413,7 +414,7 @@ Updates:
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
-### 5.3 Unexpected Problems:
+#### 5.3 Unexpected Problems:
 | Issue                               | Description                                                                                                                                  | Solution                                                                                                                             |
 |-------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | Ghost Brick Misalignment            | During early testing, the ghost brick sometimes appeared shifted some pixels below the correct landing position, especially after rotations. | Adjusted the Y-offset calculation and ensured the ghost position uses the same board collision logic as the falling brick.           |
